@@ -1,7 +1,7 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: The World Ends With Jimbo
---- MOD_ID: TWETY
---- PREFIX: twety
+--- MOD_ID: TWEWY
+--- PREFIX: twewy
 --- MOD_AUTHOR: [parchmentEngineer]
 --- MOD_DESCRIPTION: Adds jokers inspired by the brands and pins of The World Ends With You
 --- BADGE_COLOUR: 814BA8
@@ -718,7 +718,7 @@ table.insert(stuffToAdd, {
 })
 
 for k,v in pairs(stuffToAdd) do
-	if v.name ~= "blank" then
+	if v.name ~= "blank" and v.name ~= "testing" then
 		SMODS[v.object_type](v)
 	end
 end
@@ -731,7 +731,7 @@ function Back.apply_to_run(self)
 		G.E_MANAGER:add_event(Event({
 			func = function()
 				for _,tempName in ipairs({"flamesApart", "swiftStorm", "oneStroke", "oneGrain", "freshLine"}) do
-					local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_twety_'..tempName, nil)
+					local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_twewy_'..tempName, nil)
 					card:add_to_deck()
 					G.jokers:emplace(card)
 				end
