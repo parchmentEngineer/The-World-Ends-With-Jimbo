@@ -91,8 +91,8 @@ let jokers = [
 	{
 		name: 'Fly Line',
 		text: [
-			"Gains {C:mult}+15{} Mult after",
-			"playing {C:attention}flushes{} in all",
+			"Gains {C:mult}+25{} Mult after",
+			"playing {C:attention}flushes{} of all",
 			"four suits",
 			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)",
 			"{C:inactive}(Progress: _ _ _ _){}",

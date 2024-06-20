@@ -130,7 +130,7 @@ table.insert(stuffToAdd, {
 		name = 'Fly Line',
 		text = {
 			"Gains {C:mult}+#1#{} Mult after playing",
-			"{C:attention}flushes{} in all four suits",
+			"{C:attention}flushes{} of all four suits",
 			"{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)",
 			"{C:inactive}(Progress: {V:1}#3# {V:2}#4# {V:3}#5# {V:4}#6#{C:inactive}){}",
 		}
