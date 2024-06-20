@@ -15,7 +15,7 @@ let jokers = [
 			"any card is bought",
 			"{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)"
 		],
-		image_url: "img/tile005.png",
+		image_url: "site/img/tile005.png",
 		rarity: "Common"
 	},
 	{
@@ -26,7 +26,7 @@ let jokers = [
 			"you {C:chips}+250{} Chips",
 			"{C:inactive}(Currently 0/8){}"
 		],
-		image_url: "img/tile001.png",
+		image_url: "site/img/tile001.png",
 		rarity: "Common"
 	},
 	{
@@ -37,7 +37,7 @@ let jokers = [
 			"hand contains a {C:attention}Three",
 			"{C:attention}of a Kind{}"
 		],
-		image_url: "img/tile002.png",
+		image_url: "site/img/tile002.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -47,7 +47,7 @@ let jokers = [
 			"{C:dark_edition}Foil Cards{} if played hand",
 			"contains a {C:attention}Three of a Kind{}"
 		],
-		image_url: "img/tile003.png",
+		image_url: "site/img/tile003.png",
 		rarity: "Rare"
 	},
 	{
@@ -57,7 +57,7 @@ let jokers = [
 			"hand contains",
 			"a {C:attention}Three of a Kind{}"
 		],
-		image_url: "img/tile004.png",
+		image_url: "site/img/tile004.png",
 		rarity: "Rare"
 	},
 	{
@@ -66,7 +66,7 @@ let jokers = [
 			"{C:attention}-2{} hand size",
 			"Scored {C:attention}8s{} give {C:mult}+24{} Mult",
 		],
-		image_url: "img/tile007.png",
+		image_url: "site/img/tile007.png",
 		rarity: "Common"
 	},
 	{
@@ -76,7 +76,7 @@ let jokers = [
 			"this joker and all cards",
 			"held in hand become {C:attention}Mult Cards{}"
 		],
-		image_url: "img/tile008.png",
+		image_url: "site/img/tile008.png",
 		rarity: "Common"
 	},
 	{
@@ -85,7 +85,7 @@ let jokers = [
 			"Retrigger all",
 			"{C:attention}Mult Cards{}"
 		],
-		image_url: "img/tile009.png",
+		image_url: "site/img/tile009.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -97,7 +97,7 @@ let jokers = [
 			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)",
 			"{C:inactive}(Progress: _ _ _ _){}",
 		],
-		image_url: "img/tile010.png",
+		image_url: "site/img/tile010.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -108,7 +108,7 @@ let jokers = [
 			"resets each round",
 			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
 		],
-		image_url: "img/tile011.png",
+		image_url: "site/img/tile011.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -119,7 +119,7 @@ let jokers = [
 			"you {C:attention}reroll{} the shop",
 			"{C:inactive}(Currently {C:attention}+0{C:inactive} hand size)"
 		],
-		image_url: "img/tile013.png",
+		image_url: "site/img/tile013.png",
 		rarity: "Common"
 	},
 	{
@@ -128,7 +128,7 @@ let jokers = [
 			"Whenever you use a",
 			"{C:attention}consumable{} during a round, draw {C:attention}4{} cards"
 		],
-		image_url: "img/tile014.png",
+		image_url: "site/img/tile014.png",
 		rarity: "Common"
 	},
 	{
@@ -138,7 +138,7 @@ let jokers = [
 			"{C:money}$20{} you have, to a maximum of {C:attention}+10{}",
 			"{C:inactive}(Currently {C:attention}+0{C:inactive} hand size)"
 		],
-		image_url: "img/tile015.png",
+		image_url: "site/img/tile015.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -147,7 +147,7 @@ let jokers = [
 			"{C:attention}+7{} hand size on the",
 			"{C:attention}final hand{} of each round"
 		],
-		image_url: "img/tile016.png",
+		image_url: "site/img/tile016.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -156,7 +156,7 @@ let jokers = [
 			"When you play a {C:attention}Straight{}",
 			"{C:attention}Flush{} or a {C:attention}secret hand{}, draw your {C:dark_edition}entire deck{}"
 		],
-		image_url: "img/tile017.png",
+		image_url: "site/img/tile017.png",
 		rarity: "Rare"
 	},
 	{
@@ -165,7 +165,7 @@ let jokers = [
 			"Played {C:attention}Steel{} cards become {C:attention}Glass{}, and held {C:attention}Glass{}",
 			"cards become {C:attention}Steel{}"
 		],
-		image_url: "img/tile025.png",
+		image_url: "site/img/tile025.png",
 		rarity: "Common"
 	},
 	{
@@ -176,7 +176,7 @@ let jokers = [
 			"using a {C:spectral}Spectral{} card",
 			"{C:inactive}(Inactive!){}"
 		],
-		image_url: "img/tile026.png",
+		image_url: "site/img/tile026.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -187,7 +187,7 @@ let jokers = [
 			"with {C:money}$4{} or less",
 			"{C:inactive}(Currently {X:mult,C:white}x1{C:inactive} Mult){}"
 		],
-		image_url: "img/tile027.png",
+		image_url: "site/img/tile027.png",
 		rarity: "Rare"
 	},
 	{
@@ -196,7 +196,7 @@ let jokers = [
 			"Gain {C:money}$2{} each round",
 			"{C:attention}+1{} card slot in shop"
 		],
-		image_url: "img/tile031.png",
+		image_url: "site/img/tile031.png",
 		rarity: "Common"
 	},
 	{
@@ -206,7 +206,7 @@ let jokers = [
 			"value whenever an",
 			"{C:attention}Ace{} is scored"
 		],
-		image_url: "img/tile032.png",
+		image_url: "site/img/tile032.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -217,7 +217,7 @@ let jokers = [
 			"shop to {C:money}$1{}",
 			"{C:inactive}(Except for rerolls){}"
 		],
-		image_url: "img/tile033.png",
+		image_url: "site/img/tile033.png",
 		rarity: "Rare"
 	},
 	{
@@ -227,7 +227,7 @@ let jokers = [
 			"with all four suits, gain",
 			"a {C:tarot}Tarot{} and a {C:planet}Planet{}"
 		],
-		image_url: "img/tile020.png",
+		image_url: "site/img/tile020.png",
 		rarity: "Common"
 	},
 	{
@@ -238,7 +238,7 @@ let jokers = [
 			"a {C:spectral}Spectral Tag{}",
 			"{C:inactive}(3 remaining){}"
 		],
-		image_url: "img/tile019.png",
+		image_url: "site/img/tile019.png",
 		rarity: "Common"
 	},
 	{
@@ -248,7 +248,7 @@ let jokers = [
 			"you have not played this",
 			"game upgrades it {C:attention}2{} times"
 		],
-		image_url: "img/tile021.png",
+		image_url: "site/img/tile021.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -259,7 +259,7 @@ let jokers = [
 			"{C:inactive}Inactive: Gain {C:money}$2{}",
 			"Swap effects on skip"
 		],
-		image_url: "img/tile037.png",
+		image_url: "site/img/tile037.png",
 		rarity: "Common"
 	},
 	{
@@ -270,7 +270,7 @@ let jokers = [
 			"cards, destroy them and",
 			"gain {C:attention}5{} random tags"
 		],
-		image_url: "img/tile038.png",
+		image_url: "site/img/tile038.png",
 		rarity: "Common"
 	},
 	{
@@ -281,7 +281,7 @@ let jokers = [
 			"{C:attention}+1{} consumable slot",
 			"{C:inactive}(Currently {C:attention}+0{C:inactive} slots){}"
 		],
-		image_url: "img/tile039.png",
+		image_url: "site/img/tile039.png",
 		rarity: "Uncommon"
 	},
 	{
@@ -290,7 +290,7 @@ let jokers = [
 			"Destroy all scored",
 			"{C:attention}face{} cards"
 		],
-		image_url: "img/tile043.png",
+		image_url: "site/img/tile043.png",
 		rarity: "Common"
 	},
 	{
@@ -302,7 +302,7 @@ let jokers = [
 			"has {C:mult}24{} or more Mult",
 			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
 		],
-		image_url: "img/tile044.png",
+		image_url: "site/img/tile044.png",
 		rarity: "Common"
 	},
 	{
@@ -312,7 +312,7 @@ let jokers = [
 			"cards, all scoring cards in",
 			"your next played hand become {C:dark_edition}Holographic{}"
 		],
-		image_url: "img/tile045.png",
+		image_url: "site/img/tile045.png",
 		rarity: "Rare"
 	},
 ]
