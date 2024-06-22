@@ -43,7 +43,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = "Demon's Hatred",
 		text = {
-			"Gains {C:mult}+#1#{} Mult per hand",
+			"This joker gains {C:mult}+#1#{} Mult per hand",
 			"Destroys a random joker",
 			"on blind selection if this",
 			"has {C:mult}#3#{} or more Mult",
@@ -61,13 +61,17 @@ table.insert(stuffToAdd, {
 	calculate = function(self, card, context)
 		if context.cardarea == G.jokers and context.joker_main then
 			card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.multGain
+			if card.ability.extra.mult >= card.ability.extra.multMax then
+				local eval = function(card) return (true) end
+				juice_card_until(card, eval, true)
+			end
 			return {
 				message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
 				mult_mod = card.ability.extra.mult,
 			}
 		end
 		
-		if context.setting_blind and not card.getting_sliced and not context.blueprint and card.ability.extra.mult > card.ability.extra.multMax then
+		if context.setting_blind and not card.getting_sliced and not context.blueprint and card.ability.extra.mult >= card.ability.extra.multMax then
 			local destructable_jokers = {}
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] ~= card and not G.jokers.cards[i].ability.eternal and not G.jokers.cards[i].getting_sliced then destructable_jokers[#destructable_jokers+1] = G.jokers.cards[i] end

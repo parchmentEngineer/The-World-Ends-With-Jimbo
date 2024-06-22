@@ -40,15 +40,15 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Lightning Rook',
 		text = {
-			"Gains {C:money}$#1#{} of sell",
-			"value whenever an",
-			"{C:attention}Ace{} is scored"
+			"This joker gains {C:money}$#1#{} of",
+			"sell value whenever",
+			"an {C:attention}Ace{} is scored"
 		}
 	},
 	rarity = 2,
 	cost = 6,
 	discovered = true,
-	blueprint_compat = true,
+	blueprint_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.sellGain}}
@@ -60,7 +60,7 @@ table.insert(stuffToAdd, {
 			card.ability.extra_value = card.ability.extra_value + card.ability.extra.sellGain
 			card:set_cost()
 			card_eval_status_text(card, 'extra', nil, nil, nil, {
-				message = localize('k_val_up'),
+				message = "Value up!",
 				colour = G.C.MONEY
 			})
 		end
@@ -91,8 +91,58 @@ table.insert(stuffToAdd, {
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.newPrice}}
 	end,
+	add_to_deck = function(self, card, from_debuff)
+		G.E_MANAGER:add_event(Event({func = function()
+            for k, v in pairs(G.I.CARD) do
+                if v.set_cost then v:set_cost() end
+            end
+            return true end 
+		}))
+	end
+})
+
+-- Her Royal Highness
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "herRoyalHighness",
+	key = "herRoyalHighness",
+	config = {extra = {}},
+	pos = {x = 4, y = 5},
+	loc_txt = {
+		name = 'Her Royal Highness',
+		text = {
+			"Duplicate {C:money}Gold{} cards held",
+			"in hand at end of round",
+			"{C:inactive}(Triggers after they pay out){}"
+		}
+	},
+	rarity = 2,
+	cost = 6,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
 	calculate = function(self, card, context)
-		
+		if context.end_of_round and context.individual and context.cardarea == G.hand then
+			if context.other_card.ability.effect == 'Gold Card' then
+				G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+				local _card = copy_card(context.other_card, nil, nil, G.playing_card)
+				_card:add_to_deck()
+				table.insert(G.playing_cards, _card)
+				G.deck.config.card_limit = G.deck.config.card_limit + 1
+				_card.states.visible = nil
+				G.hand:emplace(_card)
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						_card:start_materialize()
+						return true
+					end
+				})) 
+				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Copied!"})
+			end
+		end
 	end
 })
 

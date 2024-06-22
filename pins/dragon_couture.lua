@@ -18,8 +18,8 @@ table.insert(stuffToAdd, {
 			"{C:inactive}(Currently {C:attention}+#2#{C:inactive} hand size)"
 		}
 	},
-	rarity = 1,
-	cost = 5,
+	rarity = 2,
+	cost = 6,
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",
@@ -59,7 +59,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 1,
-	cost = 5,
+	cost = 3,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -135,7 +135,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 2,
-	cost = 7,
+	cost = 6,
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",

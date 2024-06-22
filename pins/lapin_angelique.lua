@@ -120,7 +120,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Skull Rabbit',
 		text = {
-			"Gains {X:mult,C:white} X#1# {} Mult",
+			"This joker gains {X:mult,C:white} X#1# {} Mult",
 			"when hand is played",
 			"with {C:money}$4{} or less",
 			"{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult){}"
@@ -149,6 +149,89 @@ table.insert(stuffToAdd, {
 				message = localize{type='variable',key='a_xmult',vars={card.ability.extra.xMult}},
 				Xmult_mod = card.ability.extra.xMult,
 			}
+		end
+	end
+})
+
+-- Web Spider
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "webSpider",
+	key = "webSpider",
+	config = {extra = {xMult = 2}},
+	pos = {x = 4, y = 4},
+	loc_txt = {
+		name = 'Web Spider',
+		text = {
+			"{X:mult,C:white} X#1# {} Mult if the played",
+			"hand is exactly {C:attention}Level 2{}"
+		}
+	},
+	rarity = 2,
+	cost = 7,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.xMult}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.jokers and context.joker_main and G.GAME.hands[context.scoring_name].level == 2 then
+			return {
+				message = localize{type='variable',key='a_xmult',vars={card.ability.extra.xMult}},
+				Xmult_mod = card.ability.extra.xMult,
+			}
+		end
+	end
+})
+
+-- Lolita Skull
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "lolitaSkull",
+	key = "lolitaSkull",
+	config = {extra = {xMult = 4}},
+	pos = {x = 5, y = 4},
+	loc_txt = {
+		name = 'Lolita Skull',
+		text = {
+			"{X:mult,C:white} X#1# {} Mult if you have",
+			"{C:attention}4{} or more {C:hearts}Hearts{}",
+			"held in hand"
+		}
+	},
+	rarity = 3,
+	cost = 10,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.xMult}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.jokers and context.joker_main then
+			local hearts = 0
+			for _, v in ipairs(G.hand.cards) do
+				if v:is_suit("Hearts") then
+					hearts = hearts + 1
+				end
+			end
+			if hearts >= 4 then
+				for _, v in ipairs(G.hand.cards) do
+					if v:is_suit("Hearts") then
+						G.E_MANAGER:add_event(Event({
+							func = function()
+								v:juice_up()
+								return true
+							end
+						})) 
+					end
+				end
+				return {
+					message = localize{type='variable',key='a_xmult',vars={card.ability.extra.xMult}},
+					Xmult_mod = card.ability.extra.xMult,
+				}
+			end
 		end
 	end
 })

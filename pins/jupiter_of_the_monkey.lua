@@ -19,7 +19,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 1,
-	cost = 5,
+	cost = 2,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -106,7 +106,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 1,
-	cost = 5,
+	cost = 2,
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",
@@ -169,6 +169,124 @@ table.insert(stuffToAdd, {
 		if context.cardarea == G.jokers and context.before and G.GAME.hands[context.scoring_name].played == 1 then
 			level_up_hand(card, context.scoring_name, false, card.ability.extra.upgrades)
 		end
+	end
+})
+
+-- Izanagi
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "izanagi",
+	key = "izanagi",
+	config = {extra = {}},
+	pos = {x = 4, y = 3},
+	loc_txt = {
+		name = 'Izanagi',
+		text = {
+			"Apply a {C:red}Red Seal{} to",
+			"the leftmost card of the",
+			"first hand each round"
+		}
+	},
+	rarity = 3,
+	cost = 8,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
+	calculate = function(self, card, context)
+        if context.cardarea == G.jokers and context.before and not context.blueprint and G.GAME.current_round.hands_played == 0 then
+			play_sound('tarot1')
+			--G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+			context.scoring_hand[1]:set_seal('Red', nil, true)
+			--return true end }))
+
+			return {
+				message = "Sealed!",
+				colour = G.C.RED,
+				card = self
+			}
+		end
+	end
+})
+
+-- Masamune
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "masamune",
+	key = "masamune",
+	config = {extra = {}},
+	pos = {x = 5, y = 3},
+	loc_txt = {
+		name = 'Masamune',
+		text = {
+			"Gain a {C:tarot}Tarot{} card when",
+			"you score a {C:attention}Lucky Card{}"
+		}
+	},
+	rarity = 1,
+	cost = 3,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {}}
+	end,
+	calculate = function(self, card, context)
+		if context.individual
+		and context.other_card.ability.effect == "Lucky Card"
+		and context.cardarea == G.play
+		and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+			G.E_MANAGER:add_event(Event({
+				trigger = 'before',
+				delay = 0.0,
+				func = (function()
+					if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+						local card = create_card('Tarot', G.consumeables)
+						card:add_to_deck()
+						G.consumeables:emplace(card)
+						G.GAME.consumeable_buffer = 0
+						end
+					return true
+				end)})
+			)
+			card_eval_status_text(card, 'extra', nil, nil, nil, {message = "+1 Tarot!", colour = G.C.SECONDARY_SET.Tarot})
+				
+		end
+	end
+})
+
+-- Onikiri
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "onikiri",
+	key = "onikiri",
+	config = {extra = {bonusSlots = 3}},
+	pos = {x = 6, y = 3},
+	loc_txt = {
+		name = 'Onikiri',
+		text = {
+			"{C:attention}+#1#{} consumable slots"
+		}
+	},
+	rarity = 1,
+	cost = 3,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.bonusSlots}}
+	end,
+	add_to_deck = function(self, card, from_debuff)
+		G.E_MANAGER:add_event(Event({func = function()
+			G.consumeables.config.card_limit = G.consumeables.config.card_limit + card.ability.extra.bonusSlots
+			return true end }))
+	end,
+	remove_from_deck = function(self, card, from_debuff)
+		G.E_MANAGER:add_event(Event({func = function()
+			G.consumeables.config.card_limit = G.consumeables.config.card_limit - card.ability.extra.bonusSlots
+			return true end }))
 	end
 })
 
