@@ -4,7 +4,8 @@
 --- PREFIX: twewy
 --- MOD_AUTHOR: [parchmentEngineer]
 --- MOD_DESCRIPTION: Adds jokers inspired by the brands and pins of The World Ends With You
---- BADGE_COLOUR: 814BA8
+--- BADGE_COLOUR: 3333CC
+--- DISPLAY_NAME: TWEWJ
 
 ----------------------------------------------
 ------------MOD CODE -------------------------
@@ -60,6 +61,14 @@ table.insert(stuffToAdd, {
 	path = "jokers.png",
 	px = 71,
 	py = 95
+})
+
+table.insert(stuffToAdd, {
+	object_type = "Atlas",
+	key = "modicon",
+	path = "icon.png",
+	px = 32,
+	py = 32
 })
 
 -- File loading based on Relic-Jokers
