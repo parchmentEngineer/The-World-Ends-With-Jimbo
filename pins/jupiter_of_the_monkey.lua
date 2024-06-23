@@ -100,7 +100,7 @@ table.insert(stuffToAdd, {
 		name = 'Unjo',
 		text = {
 			"After skipping {C:attention}#1#{}",
-			"{C:purple}Arcana Packs{}, gain",
+			"{C:tarot}Arcana Packs{}, gain",
 			"a {C:spectral}Spectral Tag{}",
 			"{C:inactive}(#2# remaining){}"
 		}
@@ -147,7 +147,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "mitama",
 	key = "mitama",
-	config = {extra = {upgrades = 2}},
+	config = {extra = {upgrades = 3}},
 	pos = {x = 3, y = 3},
 	loc_txt = {
 		name = 'Mitama',

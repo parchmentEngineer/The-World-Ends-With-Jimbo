@@ -30,7 +30,7 @@ main {
   text-align: center;
   color: white;
   padding: 1rem;
-  width: min(70rem, 100%);
+  width: min(85rem, 100%);
   margin: 1rem auto;
   font-size: 1.5rem;
 }

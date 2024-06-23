@@ -18,7 +18,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 2,
-	cost = 8,
+	cost = 7,
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",
@@ -49,7 +49,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 1,
-	cost = 7,
+	cost = 6,
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",

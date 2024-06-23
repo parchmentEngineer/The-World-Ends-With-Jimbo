@@ -382,7 +382,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Diss',
 		text = {
-			"This joker gains +{C:mult}#1#{} Mult",
+			"This joker gains {C:mult}+#1#{} Mult",
 			"if played hand triggers",
 			"the {C:attention}Boss Blind{} effect",
 			"{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)"

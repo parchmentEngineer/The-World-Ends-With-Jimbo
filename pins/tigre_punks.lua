@@ -8,7 +8,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "thanx",
 	key = "thanx",
-	config = {extra = {}},
+	config = {extra = {showMessage = true}},
 	pos = {x = 1, y = 7},
 	loc_txt = {
 		name = 'Thanx',
@@ -27,8 +27,15 @@ table.insert(stuffToAdd, {
 	end,
 	calculate = function(self, card, context)
 		if context.destroying_card and not context.blueprint and context.destroying_card:is_face() then
-			card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Thanx"})
+			if card.ability.extra.showMessage then
+				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Thanx"})
+				card.ability.extra.showMessage = false
+			end
 			return true
+		end
+		if context.end_of_round and not context.individual and not context.repetition
+		and not context.blueprint then
+			card.ability.extra.showMessage = true
 		end
 	end
 })
