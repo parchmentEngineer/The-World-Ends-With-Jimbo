@@ -71,6 +71,33 @@ table.insert(stuffToAdd, {
 	py = 32
 })
 
+table.insert(G.P_JOKER_RARITY_POOLS, {})
+table.insert(G.C.RARITY, HEX("CC9977"))
+local gatitoRarity = #G.P_JOKER_RARITY_POOLS
+loc_colour("mult", nil)
+G.ARGS.LOC_COLOURS["gatito"] = G.C.RARITY[gatitoRarity]
+G.gatitoRarity = gatitoRarity
+G.gatitoOdds = 0.3
+
+local debugMode = false
+
+local card_h_popupref = G.UIDEF.card_h_popup
+function G.UIDEF.card_h_popup(card)
+    local retval = card_h_popupref(card)
+    if not card.config.center or -- no center
+	(card.config.center.unlocked == false and not card.bypass_lock) or -- locked card
+	card.debuff or -- debuffed card
+	(not card.config.center.discovered and ((card.area ~= G.jokers and card.area ~= G.consumeables and card.area) or not card.area)) -- undiscovered card
+	then return retval end
+
+	if card.config.center.rarity == gatitoRarity then
+		retval.nodes[1].nodes[1].nodes[1].nodes[3].nodes[1].nodes[1].nodes[2].config.object:remove()
+		retval.nodes[1].nodes[1].nodes[1].nodes[3].nodes[1] = create_badge("Gatito", loc_colour("gatito", nil), nil, 1.2)
+	end
+
+	return retval
+end
+
 -- File loading based on Relic-Jokers
 local files = NFS.getDirectoryItems(mod_path.."pins")
 for _, file in ipairs(files) do
@@ -82,6 +109,9 @@ for _, file in ipairs(files) do
           if curr_obj.init then curr_obj:init() end
           for _, item in ipairs(curr_obj.stuffToAdd) do
               if SMODS[item.object_type] then
+				if item.object_type == "Joker" and not debugMode then
+					item.discovered = false
+				end
                 SMODS[item.object_type](item)
               else
                 print("Error loading item "..item.key.." of unknown type "..item.object_type)
@@ -95,8 +125,7 @@ end
 -- == Set up testing deck
 
 for k,v in pairs(stuffToAdd) do
-	local addTestingDeck = false
-	if v.name ~= "blank" and (v.name ~= "testing" or addTestingDeck) then
+	if v.name ~= "blank" and (v.name ~= "testing" or debugMode) then
 		SMODS[v.object_type](v)
 	end
 end
@@ -108,7 +137,7 @@ function Back.apply_to_run(self)
 	if self.effect.config.twetyTesting then 
 		G.E_MANAGER:add_event(Event({
 			func = function()
-				for _,tempName in ipairs({"diss", "izanagi", "excalibur", "mitama"}) do
+				for _,tempName in ipairs({"holyField1", "holyField2", "holyField3", "holyField4", "holyField5"}) do
 					local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_twewy_'..tempName, nil)
 					card:add_to_deck()
 					G.jokers:emplace(card)

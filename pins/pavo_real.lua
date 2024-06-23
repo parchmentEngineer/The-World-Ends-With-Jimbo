@@ -93,7 +93,7 @@ table.insert(stuffToAdd, {
 				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "+1 Joker!"})
 				destroyCard(card)
 				G.E_MANAGER:add_event(Event({func = function()
-					local newCard = create_card('Joker', G.jokers, nil, 2, nil, nil, nil, 'rif')
+					local newCard = create_card('Joker', G.jokers, nil, 2, nil, nil, nil, 'strongHeart')
 					newCard:add_to_deck()
 					G.jokers:emplace(newCard)
 					return true end }))
