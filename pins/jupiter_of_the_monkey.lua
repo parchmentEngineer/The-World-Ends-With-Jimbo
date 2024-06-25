@@ -94,49 +94,39 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "unjo",
 	key = "unjo",
-	config = {extra = {skipsNeeded = 3, skipsLeft = 3}},
+	config = {extra = {usesLeft = 3}},
 	pos = {x = 1, y = 3},
 	loc_txt = {
 		name = 'Unjo',
 		text = {
-			"After skipping {C:attention}#1#{}",
-			"{C:tarot}Arcana Packs{}, gain",
-			"a {C:spectral}Spectral Tag{}",
-			"{C:inactive}(#2# remaining){}"
+			"The next {C:attention}#1#{} time#2#",
+			"you skip an {C:tarot}Arcana Pack{},",
+			"open a {C:spectral}Spectral Pack{}"
 		}
 	},
 	rarity = 1,
-	cost = 2,
+	cost = 3,
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.skipsNeeded, center.ability.extra.skipsLeft}}
+		return {vars = {center.ability.extra.usesLeft, center.ability.extra.usesLeft == 1 and '' or 's'}}
 	end,
 	calculate = function(self, card, context)
 		if context.skipping_booster and G.STATE == G.STATES.TAROT_PACK then
-			card.ability.extra.skipsLeft = card.ability.extra.skipsLeft - 1
-			if card.ability.extra.skipsLeft == 0 then
-				card.ability.extra.skipsLeft = card.ability.extra.skipsNeeded
-				G.E_MANAGER:add_event(Event({
-                    func = (function()
-                        add_tag(Tag('tag_ethereal'))
-                        play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
-                        play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
-						card:juice_up(0.3, 0.4)
-                        return true
-                    end)
-                }))
-			else
-				G.E_MANAGER:add_event(Event({ func = function() 
-					card_eval_status_text(card, 'extra', nil, nil, nil, {
-						message = card.ability.extra.skipsLeft.." left!",
-						colour = G.C.ATTENTION,
-						delay = 0.45, 
-						card = card
-					}) 
+			card.ability.extra.usesLeft = card.ability.extra.usesLeft - 1
+			G.E_MANAGER:add_event(Event({
+				func = (function()
+					add_tag(Tag('tag_ethereal'))
+					play_sound('generic1', 0.9 + math.random()*0.1, 0.8)
+					play_sound('holo1', 1.2 + math.random()*0.1, 0.4)
+					card:juice_up(0.3, 0.4)
 					return true
-				end}))
+				end)
+			}))
+			if card.ability.extra.usesLeft == 0 then
+				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Used up!"})
+				destroyCard(card)
 			end
 		end
 	end
@@ -222,11 +212,11 @@ table.insert(stuffToAdd, {
 		name = 'Masamune',
 		text = {
 			"Gain a {C:tarot}Tarot{} card when",
-			"you score a {C:attention}Lucky Card{}"
+			"you score an {C:attention}Enhanced{} card"
 		}
 	},
-	rarity = 1,
-	cost = 3,
+	rarity = 3,
+	cost = 8,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -235,7 +225,7 @@ table.insert(stuffToAdd, {
 	end,
 	calculate = function(self, card, context)
 		if context.individual
-		and context.other_card.ability.effect == "Lucky Card"
+		and context.other_card.ability.effect ~= "Base"
 		and context.cardarea == G.play
 		and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
 			G.E_MANAGER:add_event(Event({
@@ -252,7 +242,7 @@ table.insert(stuffToAdd, {
 				end)})
 			)
 			card_eval_status_text(card, 'extra', nil, nil, nil, {message = "+1 Tarot!", colour = G.C.SECONDARY_SET.Tarot})
-				
+			G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
 		end
 	end
 })

@@ -13,6 +13,46 @@
 local mod_path = ''..SMODS.current_mod.path
 local stuffToAdd = {}
 
+-- G.localization.descriptions["Other"]["p_twewy_gatitoPack"] = {
+  -- name = "Colour Pack",
+  -- text = {
+      -- "Choose {C:attention}1{} of up to",
+      -- "{C:attention}2{C:colourcard} Colour{} cards to",
+      -- "add to your consumeables"
+  -- }
+-- }
+
+-- table.insert(stuffToAdd, {
+	-- object_type = "Center",
+    -- prefix = 'p',
+    -- key = 'gatitoPack',
+    -- name = "Gatito Pack",
+    -- weight = 3000,
+    -- kind = "Gatito",
+    -- cost = 1,
+    -- discovered = true,
+    -- alerted = true,
+    -- set = "Booster",
+    -- atlas = "jokers",
+    -- config = {extra = 5, choose = 1},
+	-- loc_text = {
+		-- name = "Gatito Pack",
+		-- text = {
+			-- "Choose {C:attention}4{} of up to",
+			-- "{C:attention}1{C:joker} Gatito{} cards"
+		-- }
+	-- }
+-- })
+
+--table.insert(G.P_JOKER_RARITY_POOLS, {})
+--table.insert(G.C.RARITY, HEX("CC9977"))
+--local gatitoRarity = #G.P_JOKER_RARITY_POOLS
+--loc_colour("mult", nil)
+--G.ARGS.LOC_COLOURS["gatito"] = G.C.RARITY[gatitoRarity]
+--G.gatitoRarity = gatitoRarity
+--G.gatitoOdds = 0.3
+
+
 table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "blank",
@@ -26,7 +66,7 @@ table.insert(stuffToAdd, {
 		}
 	},
 	rarity = 1,
-	cost = 5,
+	cost = 4,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -38,12 +78,16 @@ table.insert(stuffToAdd, {
 	end
 })
 
+local debugMode = true
+local testingJokers = {"burningCherry", "stormWarning", "candleService", "shout", "kaleidoscope"}
+local testingConsumables = {'c_lovers', 'c_lovers'}
+
 -- Testing card back
 table.insert(stuffToAdd, {
 	object_type = "Back",
 	name = "testing",
 	key = "testing",
-	config = {twetyTesting = true, consumables = {'c_devil', 'c_magician'}},
+	config = {twetyTesting = true, consumables = testingConsumables},
 	pos = {x = 0, y = 0},
 	loc_txt = {
 		name = "Testing",
@@ -67,19 +111,9 @@ table.insert(stuffToAdd, {
 	object_type = "Atlas",
 	key = "modicon",
 	path = "icon.png",
-	px = 32,
-	py = 32
+	px = 34,
+	py = 34
 })
-
-table.insert(G.P_JOKER_RARITY_POOLS, {})
-table.insert(G.C.RARITY, HEX("CC9977"))
-local gatitoRarity = #G.P_JOKER_RARITY_POOLS
-loc_colour("mult", nil)
-G.ARGS.LOC_COLOURS["gatito"] = G.C.RARITY[gatitoRarity]
-G.gatitoRarity = gatitoRarity
-G.gatitoOdds = 0.3
-
-local debugMode = false
 
 local card_h_popupref = G.UIDEF.card_h_popup
 function G.UIDEF.card_h_popup(card)
@@ -90,7 +124,7 @@ function G.UIDEF.card_h_popup(card)
 	(not card.config.center.discovered and ((card.area ~= G.jokers and card.area ~= G.consumeables and card.area) or not card.area)) -- undiscovered card
 	then return retval end
 
-	if card.config.center.rarity == gatitoRarity then
+	if card.config.center.rarity == gatitoRarity and false then
 		retval.nodes[1].nodes[1].nodes[1].nodes[3].nodes[1].nodes[1].nodes[2].config.object:remove()
 		retval.nodes[1].nodes[1].nodes[1].nodes[3].nodes[1] = create_badge("Gatito", loc_colour("gatito", nil), nil, 1.2)
 	end
@@ -137,7 +171,7 @@ function Back.apply_to_run(self)
 	if self.effect.config.twetyTesting then 
 		G.E_MANAGER:add_event(Event({
 			func = function()
-				for _,tempName in ipairs({"holyField1", "holyField2", "holyField3", "holyField4", "holyField5"}) do
+				for _,tempName in ipairs(testingJokers) do
 					local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_twewy_'..tempName, nil)
 					card:add_to_deck()
 					G.jokers:emplace(card)
@@ -146,6 +180,19 @@ function Back.apply_to_run(self)
 			end
 		}))
 	end
+end
+
+local Card_set_ability = Card.set_ability
+function Card.set_ability(self, center, initial, delay_sprites)
+	Card_set_ability(self, center, initial, delay_sprites)
+	if self.ability.name == 'burningCherry' then
+		local _poker_hands = {}
+		for k, v in pairs(G.GAME.hands) do
+			if v.visible and k ~= self.ability.extra.handReq then _poker_hands[#_poker_hands+1] = k end
+		end
+		self.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('burningCherry'))
+	end
+	
 end
 
 local Original_ease_dollars = ease_dollars

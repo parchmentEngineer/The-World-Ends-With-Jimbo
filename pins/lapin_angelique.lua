@@ -236,4 +236,104 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Lolita Mic
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "lolitaMic",
+	key = "lolitaMic",
+	config = {extra = {xMult = 2, lastDiscard = "None"}},
+	pos = {x = 6, y = 4},
+	loc_txt = {
+		name = 'Lolita Mic',
+		text = {
+			"{X:mult,C:white} X#1# {} Mult if you play your most",
+			"recently discarded hand type",
+			"{C:inactive}(Currently: {C:attention}#2#{C:inactive}){}",
+		}
+	},
+	rarity = 1,
+	cost = 5,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.xMult, center.ability.extra.lastDiscard}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.jokers and context.joker_main and context.scoring_name == card.ability.extra.lastDiscard then
+			return {
+				message = localize{type='variable',key='a_xmult',vars={card.ability.extra.xMult}},
+				Xmult_mod = card.ability.extra.xMult,
+			}
+		end
+		
+		if context.pre_discard then
+			card.ability.extra.lastDiscard = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+		end
+	end
+})
+
+-- Kaleidoscope
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "kaleidoscope",
+	key = "kaleidoscope",
+	config = {extra = {xMult = 1.25, progressList = {Spades = false, Clubs = false, Hearts = false, Diamonds = false}}},
+	pos = {x = 7, y = 4},
+	loc_txt = {
+		name = 'Kaleidoscope',
+		text = {
+			"Cards that are not the same",
+			"suit as any cards in your most",
+			"recently played hand give {X:mult,C:white} X#1# {} Mult",
+			"{C:inactive}(Currently: {C:attention}#2#{C:inactive}){}"
+		}
+	},
+	rarity = 2,
+	cost = 9,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		local lastSuits = ""
+		for k,v in pairs(center.ability.extra.progressList) do
+			if v then
+				lastSuits = lastSuits..k..", "
+			end
+		end
+		if lastSuits == "" then lastSuits = "None" else
+		lastSuits = lastSuits:sub(1, #lastSuits-2) end
+		return {vars = {center.ability.extra.xMult, lastSuits}}
+	end,
+	calculate = function(self, card, context)
+	
+		if context.cardarea == G.jokers and context.after and not context.blueprint then
+			for k,v in pairs(card.ability.extra.progressList) do
+				card.ability.extra.progressList[k] = false
+				for k2, v2 in pairs(G.play.cards) do
+					if v2:is_suit(k.."") then
+						card.ability.extra.progressList[k] = true
+					end
+				end
+			end
+		end
+		
+		if context.individual and context.cardarea == G.play then
+			local giveMult = true
+			for k,v in pairs(card.ability.extra.progressList) do
+				if context.other_card:is_suit(k.."") and v then
+					giveMult = false
+				end
+			end
+			if giveMult then
+				return {
+					x_mult = card.ability.extra.xMult,
+					card = card
+				}
+			end
+		end
+	end
+})
+
+
 return {stuffToAdd = stuffToAdd}

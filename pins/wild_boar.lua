@@ -122,8 +122,8 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "flyLine",
 	key = "flyLine",
-	config = {extra = {mult = 0, multGain = 25, progress = "_ _ _ _", 
-		progressList = {spades = false, clubs = false, hearts = false, diamonds = false}
+	config = {extra = {mult = 0, multGain = 25,
+		progressList = {Spades = false, Clubs = false, Hearts = false, Diamonds = false}
 	}},
 	pos = {x = 4, y = 1},
 	loc_txt = {
@@ -131,13 +131,15 @@ table.insert(stuffToAdd, {
 		text = {
 			--"Gains {C:mult}+#1#{} Mult after playing",
 			--"{C:attention}flushes{} of all four suits",
-			--"{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)",
-			--"{C:inactive}(Progress: {V:1}#3# {V:2}#4# {V:3}#5# {V:4}#6#{C:inactive}){}",
-			"This joker gains {C:mult}+#1#{} Mult",
-			"after 4 {C:attention}Flushes{} of",
-			"different suits are played",
-			"{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)",
-			"{C:inactive}(Progress: {V:1}#3# {V:2}#4# {V:3}#5# {V:4}#6#{C:inactive}){}",
+			
+			-- "This joker gains {C:mult}+#1#{} Mult",
+			-- "after 4 {C:attention}Flushes{} of",
+			-- "different suits are played",
+			
+			"This joker gains {C:mult}+#1#{} Mult after",
+			"playing a {C:spades}Spades Flush{}, a {C:hearts}Hearts Flush{},",
+			"a {C:clubs}Clubs Flush{}, and a {C:diamonds}Diamonds Flush{}",
+			"{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult, Progress: {V:1}#3# {V:2}#4# {V:3}#5# {V:4}#6#{C:inactive}){}",
 		}
 	},
 	rarity = 2,
@@ -149,15 +151,15 @@ table.insert(stuffToAdd, {
 		return {vars = {
 			center.ability.extra.multGain,
 			center.ability.extra.mult,
-			center.ability.extra.progressList.spades and "S" or "_",
-			center.ability.extra.progressList.hearts and "H" or "_",
-			center.ability.extra.progressList.clubs and "C" or "_",
-			center.ability.extra.progressList.diamonds and "D" or "_",
+			center.ability.extra.progressList.Spades and "S" or "_",
+			center.ability.extra.progressList.Hearts and "H" or "_",
+			center.ability.extra.progressList.Clubs and "C" or "_",
+			center.ability.extra.progressList.Diamonds and "D" or "_",
 			colours = {
-				center.ability.extra.progressList.spades and G.C.BLACK or G.C.UI.TEXT_INACTIVE,
-				center.ability.extra.progressList.hearts and G.C.RED or G.C.UI.TEXT_INACTIVE,
-				center.ability.extra.progressList.clubs and G.C.BLACK or G.C.UI.TEXT_INACTIVE,
-				center.ability.extra.progressList.diamonds and G.C.RED or G.C.UI.TEXT_INACTIVE,
+				center.ability.extra.progressList.Spades and G.C.SUITS.Spades or G.C.UI.TEXT_INACTIVE,
+				center.ability.extra.progressList.Hearts and G.C.SUITS.Hearts or G.C.UI.TEXT_INACTIVE,
+				center.ability.extra.progressList.Clubs and G.C.SUITS.Clubs or G.C.UI.TEXT_INACTIVE,
+				center.ability.extra.progressList.Diamonds and G.C.SUITS.Diamonds or G.C.UI.TEXT_INACTIVE,
 			}
 		}}
 	end,
@@ -170,47 +172,83 @@ table.insert(stuffToAdd, {
 		end
 		
 		if context.cardarea == G.jokers and context.before and next(context.poker_hands['Flush']) and not context.blueprint then
-			local suit = ""
-			local changed = false
-			for k, v in ipairs(context.scoring_hand) do
-				if v.ability.effect ~= "Wild Card" then 
-					if v:is_suit('Spades') then 
-						card.ability.extra.progressList.spades = true
-						changed = true
-					end
-					if v:is_suit('Hearts') then 
-						card.ability.extra.progressList.hearts = true
-						changed = true
-					end
-					if v:is_suit('Clubs') then 
-						card.ability.extra.progressList.clubs = true
-						changed = true
-					end
-					if v:is_suit('Diamonds') then 
-						card.ability.extra.progressList.diamonds = true
-						changed = true
+			local counter = {Spades = 0, Clubs = 0, Hearts = 0, Diamonds = 0}
+			local madeProgress = false
+			for k,v in pairs(card.ability.extra.progressList) do
+				for k2, v2 in ipairs(context.scoring_hand) do
+					if v2:is_suit(k.."") then
+						counter[k] = counter[k]+1
+						if (next(find_joker('Four Fingers')) and counter[k] >= 4 or counter[k] >= 5) then
+							if not card.ability.extra.progressList[k] then
+								madeProgress = true
+							end
+							card.ability.extra.progressList[k] = true
+						end
 					end
 				end
 			end
 			local pList = card.ability.extra.progressList
-			if pList.spades and pList.hearts and pList.clubs and pList.diamonds then
-				card.ability.extra.progressList.spades = false
-				card.ability.extra.progressList.clubs = false
-				card.ability.extra.progressList.hearts = false
-				card.ability.extra.progressList.diamonds = false
+			if pList.Spades and pList.Hearts and pList.Clubs and pList.Diamonds then
+				card.ability.extra.progressList.Spades = false
+				card.ability.extra.progressList.Clubs = false
+				card.ability.extra.progressList.Hearts = false
+				card.ability.extra.progressList.Diamonds = false
 				card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.multGain
 				return {
 					message = "Upgrade!",
 					color = G.C.MULT,
 					card = self
 				}
-			elseif changed then 
+			elseif madeProgress then 
 				return {
 					message = "Progress!",
 					card = self
 				}
 			end
 		end
+		
+		-- if context.cardarea == G.jokers and context.before and next(context.poker_hands['Flush']) and not context.blueprint then
+			-- local suit = ""
+			-- local changed = false
+			-- for k, v in ipairs(context.scoring_hand) do
+				-- if v.ability.effect ~= "Wild Card" then 
+					-- if v:is_suit('Spades') then 
+						-- card.ability.extra.progressList.spades = true
+						-- changed = true
+					-- end
+					-- if v:is_suit('Hearts') then 
+						-- card.ability.extra.progressList.hearts = true
+						-- changed = true
+					-- end
+					-- if v:is_suit('Clubs') then 
+						-- card.ability.extra.progressList.clubs = true
+						-- changed = true
+					-- end
+					-- if v:is_suit('Diamonds') then 
+						-- card.ability.extra.progressList.diamonds = true
+						-- changed = true
+					-- end
+				-- end
+			-- end
+			-- local pList = card.ability.extra.progressList
+			-- if pList.spades and pList.hearts and pList.clubs and pList.diamonds then
+				-- card.ability.extra.progressList.spades = false
+				-- card.ability.extra.progressList.clubs = false
+				-- card.ability.extra.progressList.hearts = false
+				-- card.ability.extra.progressList.diamonds = false
+				-- card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.multGain
+				-- return {
+					-- message = "Upgrade!",
+					-- color = G.C.MULT,
+					-- card = self
+				-- }
+			-- elseif changed then 
+				-- return {
+					-- message = "Progress!",
+					-- card = self
+				-- }
+			-- end
+		-- end
 	end
 })
 
@@ -312,7 +350,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "lazyBomber",
 	key = "lazyBomber",
-	config = {extra = {mult = 30, timerMax = 3, timer = 0}},
+	config = {extra = {mult = 40, timerMax = 3, timer = 0}},
 	pos = {x = 8, y = 1},
 	loc_txt = {
 		name = 'Lazy Bomber',
@@ -405,6 +443,54 @@ table.insert(stuffToAdd, {
 			return {
 				message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
 				mult_mod = card.ability.extra.mult,
+			}
+		end
+	end
+})
+
+-- Flower of Fire
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "flowerOfFire",
+	key = "flowerOfFire",
+	config = {extra = {mult = 15, multMax = 15}},
+	pos = {x = 9, y = 1},
+	loc_txt = {
+		name = 'Flower of Fire',
+		text = {
+			"{C:mult}+#1#{} Mult",
+			"{C:green}1 in 4{} chance to set",
+			"this joker's Mult to {C:mult}0{}",
+			"until you play {C:attention}Full House{}"
+		}
+	},
+	rarity = 1,
+	cost = 3,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.mult}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.jokers and context.before and  next(context.poker_hands['Full House'])
+		and card.ability.extra.mult == 0 then
+			card.ability.extra.mult = card.ability.extra.multMax
+			return {
+				message = "Ignited!"
+			}
+		end
+		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult > 0 then
+			return {
+				message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
+				mult_mod = card.ability.extra.mult,
+			}
+		end
+		if context.cardarea == G.jokers and context.after and not next(context.poker_hands['Full House']) 
+		and pseudorandom('flowerOfFire') < G.GAME.probabilities.normal/4 and card.ability.extra.mult > 0 then
+			card.ability.extra.mult = 0
+			return {
+				message = "Extinguished!"
 			}
 		end
 	end

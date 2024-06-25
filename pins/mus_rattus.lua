@@ -8,7 +8,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "stormWarning",
 	key = "stormWarning",
-	config = {extra = {chips = 0, chipGain = 30}},
+	config = {extra = {chips = 0, chipGain = 40}},
 	pos = {x = 5, y = 0},
 	loc_txt = {
 		name = 'Storm Warning',
@@ -19,8 +19,8 @@ table.insert(stuffToAdd, {
 			"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)"
 		}
 	},
-	rarity = 1,
-	cost = 4,
+	rarity = 2,
+	cost = 8,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -48,12 +48,12 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "candleService",
 	key = "candleService",
-	config = {extra = {chips = 250, played = 0, req = 8}},
+	config = {extra = {chips = 125, played = 0, req = 4}},
 	pos = {x = 1, y = 0},
 	loc_txt = {
 		name = 'Candle Service',
 		text = {
-			"Every eighth scoring",
+			"Every fourth scoring",
 			"{C:attention}2{}, {C:attention}3{}, {C:attention}4{}, or {C:attention}5{} gives",
 			"you {C:chips}+#1#{} Chips",
 			"{C:inactive}(Currently #2#/#3#){}"
@@ -289,7 +289,7 @@ table.insert(stuffToAdd, {
 		return {vars = {center.ability.extra.chips, center.ability.extra.chipsGain, center.ability.extra.handReq}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.before and context.scoring_name ~= card.ability.extra.handReq and not context.blueprint then
+		if context.cardarea == G.jokers and context.after and context.scoring_name ~= card.ability.extra.handReq and not context.blueprint then
 			card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chipsGain
 			if card.ability.extra.chips <= 0 then 
 				G.E_MANAGER:add_event(Event({
@@ -332,16 +332,16 @@ table.insert(stuffToAdd, {
 			for k, v in pairs(G.GAME.hands) do
 				if v.visible and k ~= card.ability.extra.handReq then _poker_hands[#_poker_hands+1] = k end
 			end
-			card.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('to_do'))
+			card.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('burningCherry'))
 		end
 	end,
-	add_to_deck = function(self, card, from_debuff)
-		local _poker_hands = {}
-		for k, v in pairs(G.GAME.hands) do
-			if v.visible and k ~= card.ability.extra.handReq then _poker_hands[#_poker_hands+1] = k end
-		end
-		card.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('to_do'))
-	end
+	--add_to_deck = function(self, card, from_debuff)
+	--	local _poker_hands = {}
+	--	for k, v in pairs(G.GAME.hands) do
+	--		if v.visible and k ~= card.ability.extra.handReq then _poker_hands[#_poker_hands+1] = k end
+	--	end
+	--	card.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('burningCherry'))
+	--end
 })
 
 -- Impact Warning
@@ -389,6 +389,55 @@ table.insert(stuffToAdd, {
 					chip_mod = card.ability.extra.chips,
 				})
 			end
+		end
+	end
+})
+
+-- Shout!
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "shout",
+	key = "shout",
+	config = {extra = {chips = 100, currentStreak = 0}},
+	pos = {x = 9, y = 0},
+	loc_txt = {
+		name = 'Shout!',
+		text = {
+			"{C:chips}+#1#{} chips if your last {C:attention}3{} hands",
+			"contained a scoring face card",
+			"{C:inactive}(Current streak: {C:attention}#2#{C:inactive}){}"
+		}
+	},
+	rarity = 1,
+	cost = 4,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.chips, center.ability.extra.currentStreak}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.jokers and context.joker_main then
+			local hasFace = false
+			for k, v in ipairs(context.scoring_hand) do
+				if v:is_face() then
+					hasFace = true
+				end
+			end
+			if hasFace then
+				card.ability.extra.currentStreak = card.ability.extra.currentStreak + 1
+				if card.ability.extra.currentStreak >= 3 then
+					return {
+						message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+						chip_mod = card.ability.extra.chips,
+					}
+				end
+			elseif card.ability.extra.currentStreak ~= 0 then
+				card.ability.extra.currentStreak = 0
+				return {
+					message = "Reset!"
+				}
+			end			
 		end
 	end
 })
