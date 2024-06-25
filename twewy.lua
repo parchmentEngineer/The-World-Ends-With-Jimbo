@@ -78,7 +78,7 @@ table.insert(stuffToAdd, {
 	end
 })
 
-local debugMode = true
+local debugMode = false
 local testingJokers = {"burningCherry", "stormWarning", "candleService", "shout", "kaleidoscope"}
 local testingConsumables = {'c_lovers', 'c_lovers'}
 
