@@ -52,6 +52,7 @@ table.insert(stuffToAdd, {
 	cost = 6,
 	discovered = true,
 	blueprint_compat = false,
+	eternal_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.name}}
@@ -80,6 +81,7 @@ table.insert(stuffToAdd, {
 	cost = 3,
 	discovered = true,
 	blueprint_compat = true,
+	eternal_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.heartsLeft}}
@@ -87,7 +89,8 @@ table.insert(stuffToAdd, {
 	calculate = function(self, card, context)
 		if context.individual
 		and context.other_card:is_suit("Hearts")
-		and context.cardarea == G.play then
+		and context.cardarea == G.play 
+		and not context.blueprint then
 			card.ability.extra.heartsLeft = card.ability.extra.heartsLeft - 1
 			if card.ability.extra.heartsLeft == 0 then
 				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "+1 Joker!"})

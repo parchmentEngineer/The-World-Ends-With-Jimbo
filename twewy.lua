@@ -78,9 +78,10 @@ table.insert(stuffToAdd, {
 	end
 })
 
-local debugMode = false
-local testingJokers = {"burningCherry", "stormWarning", "candleService", "shout", "kaleidoscope"}
-local testingConsumables = {'c_lovers', 'c_lovers'}
+local debugMode = true
+local testingJokers = {"vacuSqueeze", "whirlygigJuggle", "innocenceBeam"}
+local vanillaJokers = {}
+local testingConsumables = {}
 
 -- Testing card back
 table.insert(stuffToAdd, {
@@ -179,6 +180,16 @@ function Back.apply_to_run(self)
 				return true
 			end
 		}))
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				for _,tempName in ipairs(vanillaJokers) do
+					local card = create_card('Joker', G.jokers, nil, nil, nil, nil, 'j_'..tempName, nil)
+					card:add_to_deck()
+					G.jokers:emplace(card)
+				end
+				return true
+			end
+		}))
 	end
 end
 
@@ -269,6 +280,23 @@ function Card.remove_from_deck(self, from_debuff)
 	end
 	Card_remove_from_deck_ref(self, from_debuff)
 end
+
+local update_round_evalref = Game.update_round_eval
+function Game:update_round_eval(dt)
+	update_round_evalref(self, dt)
+	if G.deck.config.wonderMagnum then
+    local _first_dissolve = false
+    for _, wax_id in ipairs(G.deck.config.wonderMagnum) do
+      for k, card in ipairs(G.playing_cards) do
+        if card.unique_val == wax_id then
+          card:start_dissolve(nil, _first_dissolve)
+          _first_dissolve = true
+        end
+      end
+    end
+    G.deck.config.wonderMagnum = {}
+  end
+ end
 
 local G_FUNCS_reroll_shop = G.FUNCS.reroll_shop
 function G.FUNCS.reroll_shop(e)
@@ -597,3 +625,45 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Vacu Squeeze
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "vacuSqueezeScrapped",
+	key = "vacuSqueezeScrapped",
+	config = {extra = {retriggers = 4}},
+	pos = {x = 2, y = 10},
+	loc_txt = {
+		name = 'Vacu Squeeze',
+		text = {
+			"If your scoring hand has only",
+			"one {C:attention}face card{}, retrigger it {C:attention}#1#{} times"
+		}
+	},
+	rarity = 1,
+	cost = 4,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.retriggers}}
+	end,
+	calculate = function(self, card, context)
+		if context.repetition
+		and context.other_card:is_face()
+		and context.cardarea == G.play then
+			local faces = {}
+			for k, v in ipairs(context.scoring_hand) do
+				if v:is_face() then 
+					faces[#faces+1] = v
+				end
+			end
+			if #faces == 1 then
+				return {
+					message = localize('k_again_ex'),
+					repetitions = card.ability.extra.retriggers,
+					card = card
+				}
+			end
+		end
+	end
+})

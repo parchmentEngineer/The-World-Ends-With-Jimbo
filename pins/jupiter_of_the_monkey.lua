@@ -108,6 +108,7 @@ table.insert(stuffToAdd, {
 	cost = 3,
 	discovered = true,
 	blueprint_compat = false,
+	eternal_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.usesLeft, center.ability.extra.usesLeft == 1 and '' or 's'}}
@@ -137,7 +138,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "mitama",
 	key = "mitama",
-	config = {extra = {upgrades = 3}},
+	config = {extra = {upgrades = 2}},
 	pos = {x = 3, y = 3},
 	loc_txt = {
 		name = 'Mitama',
@@ -147,10 +148,11 @@ table.insert(stuffToAdd, {
 			"game upgrades it {C:attention}#1#{} times"
 		}
 	},
-	rarity = 2,
-	cost = 7,
+	rarity = 1,
+	cost = 5,
 	discovered = true,
 	blueprint_compat = true,
+	eternal_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.upgrades}}

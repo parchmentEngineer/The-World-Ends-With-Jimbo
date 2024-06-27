@@ -23,6 +23,7 @@ table.insert(stuffToAdd, {
 	cost = 8,
 	discovered = true,
 	blueprint_compat = true,
+	perishable_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.chipGain, center.ability.extra.chips}}
@@ -284,6 +285,7 @@ table.insert(stuffToAdd, {
 	cost = 3,
 	discovered = true,
 	blueprint_compat = true,
+	eternal_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.chips, center.ability.extra.chipsGain, center.ability.extra.handReq}}
@@ -364,6 +366,7 @@ table.insert(stuffToAdd, {
 	cost = 6,
 	discovered = true,
 	blueprint_compat = true,
+	perishable_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.chipsGain, center.ability.extra.chips}}
@@ -403,7 +406,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Shout!',
 		text = {
-			"{C:chips}+#1#{} chips if your last {C:attention}3{} hands",
+			"{C:chips}+#1#{} Chips if your last {C:attention}3{} hands",
 			"contained a scoring face card",
 			"{C:inactive}(Current streak: {C:attention}#2#{C:inactive}){}"
 		}

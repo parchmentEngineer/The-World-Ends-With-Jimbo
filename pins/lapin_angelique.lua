@@ -130,6 +130,7 @@ table.insert(stuffToAdd, {
 	cost = 9,
 	discovered = true,
 	blueprint_compat = true,
+	perishable_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.xMultGain, center.ability.extra.xMult}}
@@ -158,7 +159,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "webSpider",
 	key = "webSpider",
-	config = {extra = {xMult = 2}},
+	config = {extra = {xMult = 2.5}},
 	pos = {x = 4, y = 4},
 	loc_txt = {
 		name = 'Web Spider',

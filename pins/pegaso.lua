@@ -49,6 +49,7 @@ table.insert(stuffToAdd, {
 	cost = 6,
 	discovered = true,
 	blueprint_compat = false,
+	eternal_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
 		return {vars = {center.ability.extra.sellGain}}
