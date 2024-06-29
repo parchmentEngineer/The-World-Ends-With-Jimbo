@@ -10,23 +10,23 @@ let jokers = [
 	{
 		name: 'Storm Warning',
 		text: [
-			"This joker gains {C:chips}+30{} Chips",
+			"This joker gains {C:chips}+40{} Chips",
 			"when any card is sold.",
 			"{C:attention}Resets{} when any card",
 			"is bought",
 			"{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)"
 		],
 		image_url: "site/img/tile005.png",
-		rarity: "Common",
+		rarity: "Uncommon",
 		brand: "Mus Rattus"
 	},
 	{
 		name: 'Candle Service',
 		text: [
-			"Every eighth scoring",
+			"Every fourth scoring",
 			"{C:attention}2{}, {C:attention}3{}, {C:attention}4{}, or {C:attention}5{} gives",
-			"you {C:chips}+250{} Chips",
-			"{C:inactive}(Currently 0/8){}"
+			"you {C:chips}+125{} Chips",
+			"{C:inactive}(Currently 0/4){}"
 		],
 		image_url: "site/img/tile001.png",
 		rarity: "Common",
@@ -91,13 +91,38 @@ let jokers = [
 	{
 		name: 'Impact Warning',
 		text: [
-			"This joker gains {C:chips}+50{} Chips",
+			"This joker gains {C:chips}+25{} Chips",
 			"when a {C:planet}Planet{} card is",
-			"used. {C:attention}Resets{} on playing a {C:attention}Level 1{} hand",
-			"{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)"
+			"used. {C:attention}Resets{} on using the",
+			"same {C:planet}Planet{} twice in a row",
+			"{C:inactive}(Currently {C:chips}+0{C:inactive} Chips)",
+			"{C:inactive}(Last used: {C:planet}None{C:inactive}){}"
 		],
 		image_url: "site/img/tile008.png",
 		rarity: "Uncommon",
+		brand: "Mus Rattus"
+	},
+	{
+		name: 'Shout!',
+		text: [
+			"{C:chips}+100{} Chips if your last {C:attention}3{}",
+			"hands contained a scoring face card",
+			"{C:inactive}(Current streak: {C:attention}0{C:inactive}){}"
+		],
+		image_url: "site/img/tile009.png",
+		rarity: "Common",
+		brand: "Mus Rattus"
+	},
+	{
+		name: 'Burning Melon',
+		text: [
+			"{C:chips}+80{} Chips, {C:chips}-10{} per round",
+			"On the final hand of the",
+			"round, gives {C:chips}+200{} extra",
+			"chips and destroy this joker"
+		],
+		image_url: "site/img/tile010.png",
+		rarity: "Common",
 		brand: "Mus Rattus"
 	},
 	{
@@ -134,9 +159,7 @@ let jokers = [
 	{
 		name: 'Fly Line',
 		text: [
-			"This joker gains {C:mult}+25{} Mult",
-			"after 4 {C:attention}Flushes{} of",
-			"different suits are played",
+			"This joker gains {C:mult}+25{} Mult after playing a {C:spades}Spades Flush{}, a {C:hearts}Hearts Flush{}, a {C:clubs}Clubs Flush{}, and a {C:diamonds}Diamonds Flush{}",
 			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)",
 			"{C:inactive}(Progress: _ _ _ _){}",
 		],
@@ -174,10 +197,10 @@ let jokers = [
 		text: [
 			"When you use a {C:tarot}Tarot{}",
 			"card, starts a countdown",
-			"for {C:attention}3{} hands. {C:mult}+30{} Mult on the hand it ends",
+			"for {C:attention}3{} hands. {C:mult}+40{} Mult on the hand it ends",
 			"{C:inactive}(Inactive!){}"
 		],
-		image_url: "site/img/tile024.png",
+		image_url: "site/img/tile025.png",
 		rarity: "Common",
 		brand: "Wild Boar"
 	},
@@ -189,8 +212,32 @@ let jokers = [
 			"the {C:attention}Boss Blind{} effect",
 			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
 		],
-		image_url: "site/img/tile025.png",
+		image_url: "site/img/tile024.png",
 		rarity: "Rare",
+		brand: "Wild Boar"
+	},
+	{
+		name: 'Flower of Fire',
+		text: [
+			"{C:mult}+15{} Mult",
+			"{C:green}1 in 4{} chance to set",
+			"this joker's Mult to {C:mult}0{}",
+			"until you play {C:attention}Full House{}"
+		],
+		image_url: "site/img/tile026.png",
+		rarity: "Common",
+		brand: "Wild Boar"
+	},
+	{
+		name: 'Cosmic Pull',
+		text: [
+			"This joker gains {C:mult}+1{} Mult",
+			"for each {C:attention}face card{}",
+			"held in hand",
+			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
+		],
+		image_url: "site/img/tile027.png",
+		rarity: "Common",
 		brand: "Wild Boar"
 	},
 	{
@@ -247,6 +294,16 @@ let jokers = [
 		brand: "Dragon Couture"
 	},
 	{
+		name: 'Black Sky, White Bolt',
+		text: [
+			"{C:attention}+3{} hand size",
+			"Debuff all {C:attention}Spades{} and {C:attention}Clubs{}"
+		],
+		image_url: "site/img/tile040.png",
+		rarity: "Uncommon",
+		brand: "Dragon Couture"
+	},
+	{
 		name: 'Spider\'s Silk',
 		text: [
 			"Played {C:attention}Steel{} cards become {C:attention}Glass{}, and held {C:attention}Glass{}",
@@ -283,7 +340,7 @@ let jokers = [
 	{
 		name: 'Web Spider',
 		text: [
-			"{X:mult,C:white}X2{} Mult if the played",
+			"{X:mult,C:white}X2.5{} Mult if the played",
 			"hand is exactly {C:attention}Level 2{}"
 		],
 		image_url: "site/img/tile072.png",
@@ -299,6 +356,30 @@ let jokers = [
 		],
 		image_url: "site/img/tile073.png",
 		rarity: "Rare",
+		brand: "Lapin Angelique"
+	},
+	{
+		name: 'Lolita Mic',
+		text: [
+			"{X:mult,C:white}X2{} Mult if you play",
+			"your recently discarded",
+			"hand type",
+			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}",
+		],
+		image_url: "site/img/tile074.png",
+		rarity: "Common",
+		brand: "Lapin Angelique"
+	},
+	{
+		name: 'Kaleidoscope',
+		text: [
+			"Cards that are not the ",
+			"same suit as any cards in",
+			"your most recently played hand give {X:mult,C:white}X1.5{} Mult",
+			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}"
+		],
+		image_url: "site/img/tile075.png",
+		rarity: "Uncommon",
 		brand: "Lapin Angelique"
 	},
 	{
@@ -359,10 +440,9 @@ let jokers = [
 	{
 		name: 'Unjo',
 		text: [
-			"After skipping {C:attention}3{}",
-			"{C:tarot}Arcana Packs{}, gain",
-			"a {C:spectral}Spectral Tag{}",
-			"{C:inactive}(3 remaining){}"
+			"The next {C:attention}3{} times",
+			"you skip an {C:tarot}Arcana Pack{},",
+			"open a {C:spectral}Spectral Pack{}"
 		],
 		image_url: "site/img/tile052.png",
 		rarity: "Common",
@@ -373,10 +453,10 @@ let jokers = [
 		text: [
 			"Playing a {C:attention}poker hand{}",
 			"you have not played this",
-			"game upgrades it {C:attention}3{} times"
+			"game upgrades it {C:attention}2{} times"
 		],
 		image_url: "site/img/tile054.png",
-		rarity: "Uncommon",
+		rarity: "Common",
 		brand: "Jupiter of the Monkey"
 	},
 	{
@@ -394,10 +474,10 @@ let jokers = [
 		name: 'Masamune',
 		text: [
 			"Gain a {C:tarot}Tarot{} card when",
-			"you score a {C:attention}Lucky Card{}"
+			"you score an {C:attention}Enhanced Card{}"
 		],
 		image_url: "site/img/tile056.png",
-		rarity: "Common",
+		rarity: "Rare",
 		brand: "Jupiter of the Monkey"
 	},
 	{
@@ -410,6 +490,16 @@ let jokers = [
 		brand: "Jupiter of the Monkey"
 	},
 	{
+		name: 'Rakuyo',
+		text: [
+			"All booster packs have",
+			"{C:attention}3{} extra options"
+		],
+		image_url: "site/img/tile058.png",
+		rarity: "Uncommon",
+		brand: "Jupiter of the Monkey"
+	},
+	/*{
 		name: 'Long Live<br>The Ice',
 		text: [
 			"When you play a hand,",
@@ -444,7 +534,7 @@ let jokers = [
 		image_url: "site/img/tile105.png",
 		rarity: "Uncommon",
 		brand: "Hip Snake"
-	},
+	},*/
 	{
 		name: 'Thanx',
 		text: [
@@ -471,12 +561,23 @@ let jokers = [
 	{
 		name: 'LIVE!',
 		text: [
-			"After destroying {C:attention}4{} more",
+			"After destroying {C:attention}3{} playing",
 			"cards, all scoring cards in",
 			"your next played hand become {C:dark_edition}Holographic{}"
 		],
 		image_url: "site/img/tile122.png",
 		rarity: "Rare",
+		brand: "Tigre Punks"
+	},
+	{
+		name: 'Distortion',
+		text: [
+			"At the end of the round,",
+			"destroy all {C:blue}Common{} {C:attention}Jokers{}",
+			"and gain {C:money}$15{} for each{}"
+		],
+		image_url: "site/img/tile123.png",
+		rarity: "Uncommon",
 		brand: "Tigre Punks"
 	},
 	{
@@ -510,6 +611,98 @@ let jokers = [
 		image_url: "site/img/tile139.png",
 		rarity: "Common",
 		brand: "Pavo Real"
+	},
+	{
+		name: 'Chaos',
+		text: [
+			"If you exit the shop with",
+			"{C:money}$50{} or more, lose all {C:money}${} and turn a random joker {C:dark_edition}Negative{}"
+		],
+		image_url: "site/img/tile140.png",
+		rarity: "Uncommon",
+		brand: "Pavo Real"
+	},
+	{
+		name: 'Gimme Dat Hippo',
+		text: [
+			"{C:diamonds}Diamonds{} give {C:money}-1${} when scored. Retrigger all {C:diamonds}Diamonds{} twice"
+		],
+		image_url: "site/img/tile171.png",
+		rarity: "Uncommon",
+		brand: "Sheep Heavenly"
+	},
+	{
+		name: 'Vacu Squeeze',
+		text: [
+			"Cards with the same rank",
+			"as your last played {C:attention}High{}",
+			"{C:attention}Card{} are retriggered twice",
+			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}"
+		],
+		image_url: "site/img/tile172.png",
+		rarity: "Common",
+		brand: "Sheep Heavenly"
+	},
+	{
+		name: 'Whirlygig Juggle',
+		text: [
+			"When you play a {C:attention}Straight{},",
+			"retrigger the lowest value card {C:attention}1{} time and increase the number of retriggers by {C:attention}1{}"
+		],
+		image_url: "site/img/tile173.png",
+		rarity: "Uncommon",
+		brand: "Sheep Heavenly"
+	},
+	{
+		name: 'Cutie Beam',
+		text: [
+			"Played {C:attention}Wild Cards{} become {C:dark_edition}Polychrome{}. When you gain this joker, gain two {C:dark_edition}Negative{} {C:attention}Lovers{} cards"
+		],
+		image_url: "site/img/tile154.png",
+		rarity: "Uncommon",
+		brand: "Natural Puppy"
+	},
+	{
+		name: 'Playmate Beam',
+		text: [
+			"Cards in {C:attention}Standard Packs{}",
+			"are the same rank as",
+			"your last played {C:attention}High Card{}",
+			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}"
+		],
+		image_url: "site/img/tile155.png",
+		rarity: "Common",
+		brand: "Natural Puppy"
+	},
+	{
+		name: 'Wonder Magnum',
+		text: [
+			"The first time you score",
+			"a {C:attention}3{} each round, create",
+			"{C:attention}3{} temporary copies of it"
+		],
+		image_url: "site/img/tile156.png",
+		rarity: "Common",
+		brand: "Natural Puppy"
+	},
+	{
+		name: 'Innocence Beam',
+		text: [
+			"When you score an {C:attention}unenhanced{} card, create a temporary copy of it with a random {C:attention}enhancement{}"
+		],
+		image_url: "site/img/tile158.png",
+		rarity: "Uncommon",
+		brand: "Natural Puppy"
+	},
+	{
+		name: 'Natural Magnum',
+		text: [
+			"The next {C:attention}4{} times you",
+			"score a {C:attention}face card{}, make a permanent copy of that card"
+		],
+		image_url: "site/img/tile157.png",
+		rarity: "Uncommon",
+		brand: "Natural Puppy"
 	},
 ]
 
