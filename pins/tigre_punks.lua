@@ -104,12 +104,12 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "live",
 	key = "live",
-	config = {extra = {countdown = 4, countdownMax = 4}},
+	config = {extra = {countdown = 3, countdownMax = 3}},
 	pos = {x = 3, y = 7},
 	loc_txt = {
 		name = "LIVE!",
 		text = {
-			"After destroying {C:attention}#1#{} more",
+			"After destroying {C:attention}#1#{} more playing",
 			"cards, all scoring cards in your",
 			"next hand become {C:dark_edition}Holographic{}"
 		}
@@ -126,6 +126,9 @@ table.insert(stuffToAdd, {
 		if context.cards_destroyed and not context.blueprint then
 			local removed = 0
 			for k, v in ipairs(context.glass_shattered) do
+				removed = removed + 1
+			end
+			for k, v in ipairs(context.removed) do
 				removed = removed + 1
 			end
 			if removed > 0 then

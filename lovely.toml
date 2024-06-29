@@ -3,6 +3,7 @@ version = "1.0.0"
 dump_lua = true
 priority = 0
 
+# Cards held in hand can provide chips
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
@@ -18,6 +19,7 @@ end
 '''
 match_indent = false
 
+# Top Gear - Common jokers in shop are polychrome
 [[patches]]
 [patches.pattern]
 target = "functions/UI_definitions.lua"
@@ -32,6 +34,7 @@ end
 '''
 match_indent = false
 
+# Playmate Beam - Cards in standard packs match your last played high card
 [[patches]]
 [patches.pattern]
 target = "card.lua"
@@ -52,6 +55,45 @@ if G.GAME.twewy_playmate_beam and G.GAME.twewy_playmate_beam ~= 0 then
 	card:set_base(new_card)
 else
 	card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
+end
+'''
+match_indent = false
+
+# Rakuyo - Booster packs have X extra options
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''G.GAME.pack_choices = self.config.center.config.choose or 1'''
+position = "after"
+payload = '''
+if G.GAME.rakuyo_booster_bonus then
+	G.GAME.pack_size = G.GAME.pack_size + G.GAME.rakuyo_booster_bonus
+end
+'''
+match_indent = false
+
+# Rakuyo - Booster packs have X extra options
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''local _size = self.ability.extra'''
+position = "after"
+payload = '''
+if G.GAME.rakuyo_booster_bonus then
+	_size = _size + G.GAME.rakuyo_booster_bonus
+end
+'''
+match_indent = false
+
+# Rakuyo - Update booster pack description
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''if not full_UI_table.name then full_UI_table.name = localize{type = 'name', set = 'Other', key = name_override, nodes = full_UI_table.name} end'''
+position = "before"
+payload = '''
+if G.GAME.rakuyo_booster_bonus then
+    loc_vars[2] = loc_vars[2] + G.GAME.rakuyo_booster_bonus
 end
 '''
 match_indent = false

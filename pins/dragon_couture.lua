@@ -199,4 +199,47 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Black Sky, White Bolt
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "blackSky",
+	key = "blackSky",
+	config = {extra = {handSize = 3}},
+	pos = {x = 6, y = 2},
+	loc_txt = {
+		name = 'Black Sky, White Bolt',
+		text = {
+			"{C:attention}+#1#{} hand size",
+			"Debuff all {C:spades}Spades{} and {C:clubs}Clubs{}"
+		}
+	},
+	rarity = 2,
+	cost = 7,
+	discovered = true,
+	blueprint_compat = false,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.handSize}}
+	end,
+	calculate = function(self, card, context)
+		if not context.blueprint then
+			if context.first_hand_drawn and not self.getting_sliced then
+				print("Starting effect")
+				for _, v in ipairs(G.deck.cards) do
+					if v:is_suit('Spades') or v:is_suit('Clubs') then
+						v.debuff = true
+						v.ability.blackSkyDebuff = true
+					end
+				end
+			end
+		end
+		
+		if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
+			for _, v in ipairs(G.playing_cards) do
+				v.ability.blackSkyDebuff = nil
+			end
+		end
+	end
+})
+
 return{stuffToAdd = stuffToAdd}

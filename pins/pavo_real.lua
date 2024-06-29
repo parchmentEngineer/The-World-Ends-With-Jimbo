@@ -114,4 +114,49 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Chaos
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "chaos",
+	key = "chaos",
+	config = {extra = {}},
+	pos = {x = 4, y = 8},
+	loc_txt = {
+		name = 'Chaos',
+		text = {
+			"If you exit the shop with",
+			"{C:money}$50{} or more, lose all {C:money}${} and",
+			"turn a random joker {C:dark_edition}Negative{}"
+		}
+	},
+	rarity = 2,
+	cost = 8,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
+	calculate = function(self, card, context)
+		if context.ending_shop and not context.blueprint and G.GAME.dollars >= 50 then
+			card.eligible_strength_jokers = {}
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not v.edition) then
+                    table.insert(card.eligible_strength_jokers, v)
+                end
+            end
+			if #card.eligible_strength_jokers > 0 then
+				local eligible_card = pseudorandom_element(card.eligible_strength_jokers, pseudoseed('chaos'))
+				eligible_card:set_edition({negative = true}, true)
+				local moneyDrain = (G.GAME.dollars) * -1
+				ease_dollars(moneyDrain)
+				G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + moneyDrain
+				G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Chaos!"})
+			end
+		end
+	end
+})
+
+
 return {stuffToAdd = stuffToAdd}
