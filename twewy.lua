@@ -327,7 +327,7 @@ function Card.remove_from_deck(self, from_debuff)
 end
 
 function SMODS.current_mod.set_debuff(card)
-	if next(SMODS.find_card('j_twewy_blackSky')) and (card:is_suit('Spades') or card:is_suit('Clubs')) then
+	if next(SMODS.find_card('j_twewy_blackSky')) and (card:is_suit('Spades', true) or card:is_suit('Clubs', true)) then
 		return true
 	end
 end
