@@ -263,22 +263,23 @@ table.insert(stuffToAdd, {
 		if context.individual
 		and context.other_card.ability.effect ~= "Base"
 		and context.cardarea == G.play
-		and #G.consumeables.cards < G.consumeables.config.card_limit then
-			G.E_MANAGER:add_event(Event({
-				trigger = 'before',
-				delay = 0.0,
-				func = (function()
-					if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-						local card = create_card('Tarot', G.consumeables)
-						card:add_to_deck()
-						G.consumeables:emplace(card)
-						G.GAME.consumeable_buffer = 0
-						end
-					return true
-				end)})
-			)
-			card_eval_status_text(card, 'extra', nil, nil, nil, {message = "+1 Tarot!", colour = G.C.SECONDARY_SET.Tarot})
+		and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
 			G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+			return {
+				extra = {focus = card, message = localize('k_plus_tarot'), colour = G.C.SECONDARY_SET.Tarot, func = function()
+					G.E_MANAGER:add_event(Event({
+						trigger = 'before',
+						delay = 0.0,
+						func = (function()
+							local card = create_card('Tarot',G.consumeables, nil, nil, nil, nil, nil, 'twewy_masamune')
+							card:add_to_deck()
+							G.consumeables:emplace(card)
+							G.GAME.consumeable_buffer = 0
+							return true
+						end)}))
+				end},
+				card = card
+			}
 		end
 	end
 })
