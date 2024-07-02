@@ -242,4 +242,47 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Fiery Spirit, Spirited Fire
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "fierySpirit",
+	key = "fierySpirit",
+	config = {extra = {handSize = 0}},
+	pos = {x = 7, y = 2},
+	loc_txt = {
+		name = 'Fiery Spirit, Spirited Fire',
+		text = {
+			"{C:attention}+2{} hand size if you",
+			"have no {C:green}Uncommon{C:attention} Jokers{}"
+		}
+	},
+	rarity = 1,
+	cost = 4,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.handSize}}
+	end,
+	calculate = function(self, card, context)
+		if context.buying_card or context.selling_card or context.setting_blind or context.using_consumeable or context.pre_discard or (context. cardarea == G.play and context.individual) then
+			local oldHandSize = card.ability.extra.handSize
+			local uncommon = false
+			for k,v in pairs(G.jokers.cards) do
+				if v.ability.set == 'Joker' and v.config.center.rarity == 2 then
+					uncommon = true
+				end
+			end
+			if uncommon then
+				card.ability.extra.handSize = 0
+			else
+				card.ability.extra.handSize = 2
+			end
+			if oldHandSize ~= card.ability.extra.handSize then
+				G.hand:change_size(card.ability.extra.handSize-oldHandSize)
+			end
+		end
+	end
+})
+
 return{stuffToAdd = stuffToAdd}

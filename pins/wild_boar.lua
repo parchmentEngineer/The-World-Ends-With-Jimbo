@@ -439,7 +439,7 @@ table.insert(stuffToAdd, {
 	end,
 	calculate = function(self, card, context)
 		if context.cardarea == G.jokers and context.joker_main and (card.ability.extra.mult > 0 or G.GAME.blind.triggered) then
-			if G.GAME.blind.triggered then
+			if G.GAME.blind.triggered and not context.blueprint then
 				card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.multGain
 				card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Upgrade!"})
 			end
@@ -449,7 +449,7 @@ table.insert(stuffToAdd, {
 			}
 		end
 		
-		if G.GAME.blind.triggered and context.debuffed_hand then 
+		if G.GAME.blind.triggered and context.debuffed_hand and not context.blueprint then 
 			card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.multGain
 			card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Upgrade!"})
 		end
@@ -536,16 +536,39 @@ table.insert(stuffToAdd, {
 			}
 		end
 		
-		if context.cardarea == G.hand and context.individual and not context.end_of_round and
-		context.other_card:is_face() then
-			if context.other_card.debuff then
-				return {
-					message = localize('k_debuffed'),
-					colour = G.C.RED,
-					card = card,
-				}
-			else
-				card.ability.extra.mult = card.ability.extra.mult + 1
+		-- if context.cardarea == G.hand and context.individual and not context.end_of_round and
+		-- context.other_card:is_face() then
+			-- if context.other_card.debuff then
+				-- return {
+					-- message = localize('k_debuffed'),
+					-- colour = G.C.RED,
+					-- card = card,
+				-- }
+			-- else
+				-- card.ability.extra.mult = card.ability.extra.mult + 1
+				-- return {
+					-- message = "Upgrade!",
+					-- colour = G.C.RED,
+					-- card = card
+				-- }
+			-- end
+		-- end
+		
+		if context.cardarea == G.jokers and context.before and not context.blueprint then
+			local faces = 0
+			for _, v in ipairs(G.hand.cards) do
+				if v:is_face() and not v.debuff then
+					faces = faces + 1
+					G.E_MANAGER:add_event(Event({
+						func = function()
+							v:juice_up()
+							return true
+						end
+					})) 
+				end
+			end
+			if faces > 0 then
+				card.ability.extra.mult = card.ability.extra.mult + faces
 				return {
 					message = "Upgrade!",
 					colour = G.C.RED,

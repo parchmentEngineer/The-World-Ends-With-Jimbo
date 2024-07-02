@@ -691,7 +691,7 @@ let jokers = [
 			"When you score an {C:attention}unenhanced{} card, create a temporary copy of it with a random {C:attention}enhancement{}"
 		],
 		image_url: "site/img/tile158.png",
-		rarity: "Uncommon",
+		rarity: "Rare",
 		brand: "Natural Puppy"
 	},
 	{

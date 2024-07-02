@@ -147,4 +147,47 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Aqua Pawn
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "aquaPawn",
+	key = "aquaPawn",
+	config = {extra = {readyToUse = true}},
+	pos = {x = 5, y = 5},
+	loc_txt = {
+		name = 'Aqua Pawn',
+		text = {
+			"Gain {C:money}${} equal to twice",
+			"the level of the first",
+			"hand played each round"
+		}
+	},
+	rarity = 1,
+	cost = 4,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
+	calculate = function(self, card, context)
+		if context.first_hand_drawn then
+			card.ability.extra.readyToUse = true
+		end
+		
+		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.readyToUse then
+			card.ability.extra.readyToUse = false
+			local moneyToAdd = G.GAME.hands[context.scoring_name].level * 2
+			ease_dollars(moneyToAdd)
+				G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + moneyToAdd
+				G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+				return {
+					message = localize('$')..moneyToAdd,
+					dollars = moneyToAdd,
+					colour = G.C.MONEY
+				}
+		end
+	end
+})
+
 return{stuffToAdd = stuffToAdd}

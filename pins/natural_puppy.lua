@@ -242,4 +242,100 @@ table.insert(stuffToAdd, {
 		end
 	end
 })
+
+-- Superfine Beam
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "superfineBeam",
+	key = "superfineBeam",
+	config = {extra = {}},
+	pos = {x = 6, y = 9},
+	loc_txt = {
+		name = 'Superfine Beam',
+		text = {
+			"When you discard an {C:attention}enhanced{}",
+			"card, create a temporary {C:attention}Ace{}",
+			"with the same {C:attention}enhancement{}"
+		}
+	},
+	rarity = 2,
+	cost = 6,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
+	calculate = function(self, card, context)
+		if context.discard then
+			G.deck.config.wonderMagnum = G.deck.config.wonderMagnum or {}
+			if context.other_card.ability.effect ~= "Base" then
+				G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function()
+					new_suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('superfine'))
+					local _card = create_card("Base", G.pack_cards, nil, nil, nil, true, nil, 'superfine')
+					local new_card = G.P_CARDS[new_suit.."_A"]
+					_card:set_base(new_card)
+					_card:set_ability(G.P_CENTERS[context.other_card.config.center.key])
+					_card:add_to_deck()
+					G.deck.config.card_limit = G.deck.config.card_limit + 1
+					table.insert(G.playing_cards, _card)
+					G.hand:emplace(_card)
+					_card:start_materialize(nil, _first_dissolve)
+					table.insert(G.deck.config.wonderMagnum, _card.unique_val)
+					playing_card_joker_effects(new_cards)
+				return true end }))
+			end
+		end
+	end
+})
+
+-- Love Me Tether
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "loveMeTether",
+	key = "loveMeTether",
+	config = {extra = {usedThisHand = false}},
+	pos = {x = 7, y = 9},
+	loc_txt = {
+		name = 'Love Me Tether',
+		text = {
+			"All {C:hearts}Hearts{} held in hand",
+			"gain the {C:attention}Enhancement{} of",
+			"your leftmost scored {C:hearts}Heart{}"
+		}
+	},
+	rarity = 1,
+	cost = 5,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
+	calculate = function(self, card, context)
+		if context.individual
+		and context.other_card:is_suit("Hearts")
+		and not card.ability.extra.usedThisHand
+		and context.cardarea == G.play then
+			card.ability.extra.usedThisHand = true
+			if context.other_card.ability.effect ~= "Base" then
+				for _, v in ipairs(G.hand.cards) do
+					if v:is_suit("Hearts") then
+						G.E_MANAGER:add_event(Event({
+						func = function()
+							v:set_ability(G.P_CENTERS[context.other_card.config.center.key])
+							v:juice_up()
+							return true
+						end
+					}))
+					end
+				end
+			end
+		end
+		if context.cardarea == G.jokers and context.joker_main then
+			card.ability.extra.usedThisHand = false
+		end
+	end
+})
+
 return {stuffToAdd = stuffToAdd}

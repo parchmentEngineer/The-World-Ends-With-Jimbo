@@ -336,5 +336,62 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Lolita Chopper
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "lolitaChopper",
+	key = "lolitaChopper",
+	config = {extra = {xMult = 1, xMultGain = 0.5}},
+	pos = {x = 8, y = 4},
+	loc_txt = {
+		name = 'Lolita Chopper',
+		text = {
+			"When you play your most played",
+			"hand, set its level to {C:attention}1{} and",
+			"this joker gains {X:mult,C:white} X#1# {} Mult",
+			"for each level lost this way",
+			"{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult){}"
+		}
+	},
+	rarity = 2,
+	cost = 7,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.xMultGain, center.ability.extra.xMult}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.jokers and context.before and not context.blueprint then
+			local value = G.GAME.hands[context.scoring_name].level - 1
+			local mostPlayed = true
+			local play_more_than = (G.GAME.hands[context.scoring_name].played or 0)
+			for k, v in pairs(G.GAME.hands) do
+				print("Checking if "..k.." is not a "..context.scoring_name)
+				print("Checking if "..v.played.." >= "..play_more_than)
+				if k ~= context.scoring_name and v.played >= play_more_than and v.visible then
+					print("It is! Setting most played to false")
+					mostPlayed = false
+				end
+			end
+			if value > 0 and mostPlayed then
+				level_up_hand(card, context.scoring_name, false, -value)
+				card.ability.extra.xMult = card.ability.extra.xMult + (card.ability.extra.xMultGain * value)
+				return {
+					message = "Upgrade!",
+					color = G.C.RED
+				}
+			end
+		end
+		
+		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.xMult > 1 then
+			return {
+				message = localize{type='variable',key='a_xmult',vars={card.ability.extra.xMult}},
+				Xmult_mod = card.ability.extra.xMult,
+			}
+		end
+	end
+})
+
 
 return {stuffToAdd = stuffToAdd}

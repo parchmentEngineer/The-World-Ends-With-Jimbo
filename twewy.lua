@@ -80,9 +80,32 @@ table.insert(stuffToAdd, {
 })
 
 local debugMode = false
-local testingJokers = {"cosmicPull", 'chaos', 'rakuyo'}
-local vanillaJokers = {'mime'}
-local testingConsumables = {}
+local testingJokers = {'lolitaChopper', 'ohabari', 'longLiveTheIce', 'iceBlow', 'loveMeTether'}
+local vanillaJokers = {}
+local testingConsumables = {'c_empress', 'c_pluto'}
+
+-- here's an example booster pack
+-- SMODS.Booster {
+    -- key = 'test_booster_pack_2',
+    -- weight = 100,
+    -- loc_txt = {
+        -- name = "Arst",
+        -- text = {
+            -- "This is a test Booster Pack"
+        -- },
+        -- group_name = "Test Pack",
+    -- },
+    -- create_card = function(self, card)
+        -- return create_card("Tarot", G.pack_cards, nil, nil, true, true, nil, 'buf')
+    -- end,
+    -- config = {extra = 5, choose = 5},
+    -- draw_hand = true,
+    -- sparkles = {
+        -- colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
+        -- lifespan = 1
+    -- }
+-- }
+
 
 -- Testing card back
 table.insert(stuffToAdd, {
@@ -252,7 +275,7 @@ local Card_add_to_deck_ref = Card.add_to_deck
 function Card.add_to_deck(self, from_debuff)
 	if not self.added_to_deck then
 		if self.ability.name == 'kewlLine' or self.ability.name == 'selfFound' or self.ability.name == 'swiftStorm'
-		or self.ability.name == 'blackSky' then
+		or self.ability.name == 'blackSky' or self.ability.name == 'fierySpirit' then
 			G.hand:change_size(self.ability.extra.handSize)
 		end
 		
@@ -307,7 +330,7 @@ function Card.remove_from_deck(self, from_debuff)
 	end
 	if self.added_to_deck then
 		if self.ability.name == 'kewlLine' or self.ability.name == 'selfFound' or self.ability.name == 'blackSky'
-		or self.ability.name == 'oneStroke' or self.ability.name == 'swiftStorm' then
+		or self.ability.name == 'oneStroke' or self.ability.name == 'swiftStorm' or self.ability.name == 'fierySpirit' then
 			G.hand:change_size(-self.ability.extra.handSize)
 		end
 		
@@ -765,6 +788,185 @@ table.insert(stuffToAdd, {
 					message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
 					chip_mod = card.ability.extra.chips,
 				})
+			end
+		end
+	end
+})
+
+-- Long Live The Ice
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "longLiveTheIceScrapped",
+	key = "longLiveTheIceScrapped",
+	config = {extra = {chips = 50, dollars = 2, flipside = false}},
+	pos = {x = 1, y = 6},
+	loc_txt = {
+		name = 'Long Live The Ice',
+		text = {
+			"When you play a hand,",
+			"{V:1}#3#: {C:chips}+#1#{V:1} chips{}",
+			"{V:2}#4#: Gain {C:money}$#2#{}",
+			"Swap effects on blind skip"
+		}
+	},
+	rarity = 1,
+	cost = 3,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+				return {vars = {
+			center.ability.extra.chips,
+			center.ability.extra.dollars,
+			center.ability.extra.flipside and "Inactive" or "Active",
+			center.ability.extra.flipside and "Active" or "Inactive",
+			colours = {
+				center.ability.extra.flipside and G.C.UI.TEXT_INACTIVE or G.C.UI.TEXT_DARK,
+				center.ability.extra.flipside and G.C.UI.TEXT_DARK or G.C.UI.TEXT_INACTIVE
+			}
+		}}
+	end,
+	calculate = function(self, card, context)
+		if context.skip_blind and not context.blueprint then
+			card.ability.extra.flipside = not card.ability.extra.flipside
+			card_eval_status_text(card, 'extra', nil, nil, nil, {
+				message = "Flip!",
+				card = card
+			}) 
+		end
+		
+		if context.cardarea == G.jokers and context.joker_main then
+			if not card.ability.extra.flipside then
+				return {
+					message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
+					chip_mod = card.ability.extra.chips,
+				}
+			else
+				ease_dollars(card.ability.extra.dollars)
+				G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + card.ability.extra.dollars
+				G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+				return {
+					message = localize('$')..card.ability.extra.dollars,
+					dollars = card.ability.extra.dollars,
+					colour = G.C.MONEY
+				}
+			end
+		end
+	end
+})
+
+-- Love Me Tether
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "loveMeTetherScrapped",
+	key = "loveMeTetherScrapped",
+	config = {extra = {}},
+	pos = {x = 7,  y = 9},
+	loc_txt = {
+		name = 'Love Me Tether',
+		text = {
+			"After scoring, if your scored",
+			"hand had exactly {C:attention}1{} {C:hearts}Heart{}, set",
+			"the rank of all scored cards",
+			"equal to that {C:hearts}Heart's{} rank"
+		}
+	},
+	rarity = 1,
+	cost = 4,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.name}}
+	end,
+	calculate = function(self, card, context)
+		local heartsVal = -1
+		if context.cardarea == G.jokers and context.after then
+			for k,v in pairs(context.scoring_hand) do
+				if v:is_suit("Hearts") then
+					if heartsVal == -1 then
+						heartsVal = v.base.id
+					else
+						heartsVal = -2
+					end
+				end
+			end
+			if heartsVal > 0 then
+				for k,v in pairs(context.scoring_hand) do
+					G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+						local _card = v
+						local suit_prefix = string.sub(_card.base.suit, 1, 1)..'_'
+						local rank_suffix = heartsVal
+						if rank_suffix < 10 then rank_suffix = tostring(rank_suffix)
+						elseif rank_suffix == 10 then rank_suffix = 'T'
+						elseif rank_suffix == 11 then rank_suffix = 'J'
+						elseif rank_suffix == 12 then rank_suffix = 'Q'
+						elseif rank_suffix == 13 then rank_suffix = 'K'
+						elseif rank_suffix == 14 then rank_suffix = 'A'
+						end
+						_card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
+						_card:juice_up()
+					return true end }))
+				end
+				G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.3,func = function()
+					card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Tethered!"})
+				return true end }))
+				for k,v in pairs(context.scoring_hand) do
+					G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+						v:juice_up()
+					return true end }))
+				end
+			end
+		end	
+	end
+})
+
+-- Whirlygig Juggle
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "whirlygigJuggle",
+	key = "whirlygigJuggle",
+	config = {extra = {retriggers = 1}},
+	pos = {x = 3, y = 10},
+	loc_txt = {
+		name = 'Whirlygig Juggle',
+		text = {
+			"When you play a {C:attention}Straight{},",
+			"retrigger the lowest value",
+			"card {C:attention}#1#{} time#2# and increase the",
+			"number of retriggers by {C:attention}1{}"
+		}
+	},
+	rarity = 1,
+	cost = 5,
+	discovered = true,
+	blueprint_compat = true,
+	perishable_compat = false,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.retriggers, center.ability.extra.retriggers == 1 and '' or 's'}}
+	end,
+	calculate = function(self, card, context)
+		if context.repetition
+		and context.cardarea == G.play
+		and next(context.poker_hands['Straight']) then
+			print("Test")
+			local lowestVal = 99
+			local lowestId = -1
+			for k, v in ipairs(context.scoring_hand) do
+				if v:get_id() <= lowestVal then
+					lowestVal = v:get_id()
+					lowestId = v.unique_val
+					print(lowestVal.." has ID "..lowestId)
+				end
+			end
+			if context.other_card.unique_val == lowestId then
+				card.ability.extra.retriggers = card.ability.extra.retriggers + 1
+				return {
+					message = localize('k_again_ex'),
+					repetitions = card.ability.extra.retriggers-1,
+					card = card
+				}
 			end
 		end
 	end

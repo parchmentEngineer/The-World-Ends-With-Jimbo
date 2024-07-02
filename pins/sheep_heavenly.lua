@@ -54,14 +54,14 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "vacuSqueeze",
 	key = "vacuSqueeze",
-	config = {extra = {retriggers = 2, lastPlayed = 0, lastPlayedValue = 0}},
+	config = {extra = {retriggers = 1, lastPlayed = 0, lastPlayedValue = 0}},
 	pos = {x = 2, y = 10},
 	loc_txt = {
 		name = 'Vacu Squeeze',
 		text = {
 			"Cards with the same rank",
 			"as your last played {C:attention}High{}",
-			"{C:attention}Card{} are retriggered twice",
+			"{C:attention}Card{} are retriggered once",
 			"{C:inactive}(Currently: {C:attention}#1#{C:inactive}){}"
 		}
 	},
@@ -99,15 +99,14 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "whirlygigJuggle",
 	key = "whirlygigJuggle",
-	config = {extra = {retriggers = 1}},
+	config = {extra = {retriggers = 5}},
 	pos = {x = 3, y = 10},
 	loc_txt = {
 		name = 'Whirlygig Juggle',
 		text = {
 			"When you play a {C:attention}Straight{},",
 			"retrigger the lowest value",
-			"card {C:attention}#1#{} time#2# and increase the",
-			"number of retriggers by {C:attention}1{}"
+			"card {C:attention}#1#{} times"
 		}
 	},
 	rarity = 1,
@@ -134,7 +133,6 @@ table.insert(stuffToAdd, {
 				end
 			end
 			if context.other_card.unique_val == lowestId then
-				card.ability.extra.retriggers = card.ability.extra.retriggers + 1
 				return {
 					message = localize('k_again_ex'),
 					repetitions = card.ability.extra.retriggers-1,

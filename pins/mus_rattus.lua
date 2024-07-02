@@ -254,11 +254,12 @@ table.insert(stuffToAdd, {
 				return {
 					message = localize('k_debuffed'),
 					colour = G.C.RED,
-					card = self,
+					card = card,
 				}
 			else
 				return {
-					h_chips = card.ability.extra.chips
+					h_chips = card.ability.extra.chips,
+					card = card
 				}
 			end
 		end
@@ -408,7 +409,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "shout",
 	key = "shout",
-	config = {extra = {chips = 100, currentStreak = 0}},
+	config = {extra = {chips = 150, currentStreak = 0}},
 	pos = {x = 9, y = 0},
 	loc_txt = {
 		name = 'Shout!',
@@ -504,6 +505,90 @@ table.insert(stuffToAdd, {
 				message = card.ability.extra.chips.." Chips!",
 				colour = G.C.CHIPS
 			}
+		end
+	end
+})
+
+-- Lightning Storm
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "lightningStorm",
+	key = "lightningStorm",
+	config = {extra = {chips = 50}},
+	pos = {x = 11, y = 0},
+	loc_txt = {
+		name = 'Lightning Storm',
+		text = {
+			"Scored cards that share",
+			"a suit with {C:attention}Jacks{} held",
+			"in hand give {C:chips}+#1#{} Chips"
+		}
+	},
+	rarity = 1,
+	cost = 4,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.chips}}
+	end,
+	calculate = function(self, card, context)
+		if context.individual and context.cardarea == G.play then
+			local matchSuit = false
+			for _, v in ipairs(G.hand.cards) do
+				for _, suit in ipairs({"Spades", "Hearts", "Clubs", "Diamonds"}) do
+					if v:is_suit(suit) and context.other_card:is_suit(suit) and v:get_id() == 11 then
+						matchSuit = true
+					end
+				end
+			end
+			if matchSuit then
+				return {
+					chips = card.ability.extra.chips,
+					card = card
+				}
+			end
+		end
+	end
+})
+
+-- Stopper Spark
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "stopperSpark",
+	key = "stopperSpark",
+	config = {extra = {chips = 500}},
+	pos = {x = 12, y = 0},
+	loc_txt = {
+		name = 'Stopper Spark',
+		text = {
+			"{C:attention}Stone Cards{} held in",
+			"hand give {C:chips}+#1#{} Chips"
+		}
+	},
+	rarity = 3,
+	cost = 9,
+	discovered = true,
+	blueprint_compat = true,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.chips}}
+	end,
+	calculate = function(self, card, context)
+		if context.cardarea == G.hand and context.individual and not context.end_of_round
+		and context.other_card.ability.effect == "Stone Card" then
+			if context.other_card.debuff then
+				return {
+					message = localize('k_debuffed'),
+					colour = G.C.RED,
+					card = card,
+				}
+			else
+				return {
+					h_chips = card.ability.extra.chips,
+					card = card,
+				}
+			end
 		end
 	end
 })

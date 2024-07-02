@@ -8,59 +8,39 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "longLiveTheIce",
 	key = "longLiveTheIce",
-	config = {extra = {chips = 50, dollars = 2, flipside = false}},
+	config = {extra = {skipsThisAnte = 0}},
 	pos = {x = 1, y = 6},
 	loc_txt = {
 		name = 'Long Live The Ice',
 		text = {
-			"When you play a hand,",
-			"{V:1}#3#: {C:chips}+#1#{V:1} chips{}",
-			"{V:2}#4#: Gain {C:money}$#2#{}",
-			"Swap effects on blind skip"
+			"When you skip both blinds",
+			"in a single ante, disable",
+			"that ante's {C:attention}Boss Blind{}"
 		}
 	},
 	rarity = 1,
-	cost = 3,
+	cost = 4,
 	discovered = true,
-	blueprint_compat = true,
+	blueprint_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
-				return {vars = {
-			center.ability.extra.chips,
-			center.ability.extra.dollars,
-			center.ability.extra.flipside and "Inactive" or "Active",
-			center.ability.extra.flipside and "Active" or "Inactive",
-			colours = {
-				center.ability.extra.flipside and G.C.UI.TEXT_INACTIVE or G.C.UI.TEXT_DARK,
-				center.ability.extra.flipside and G.C.UI.TEXT_DARK or G.C.UI.TEXT_INACTIVE
-			}
-		}}
+		return {}
 	end,
 	calculate = function(self, card, context)
 		if context.skip_blind and not context.blueprint then
-			card.ability.extra.flipside = not card.ability.extra.flipside
+			card.ability.extra.skipsThisAnte = card.ability.extra.skipsThisAnte + 1
 			card_eval_status_text(card, 'extra', nil, nil, nil, {
-				message = "Flip!",
+				message = card.ability.extra.skipsThisAnte.."/2",
 				card = card
 			}) 
 		end
 		
-		if context.cardarea == G.jokers and context.joker_main then
-			if not card.ability.extra.flipside then
-				return {
-					message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
-					chip_mod = card.ability.extra.chips,
-				}
-			else
-				ease_dollars(card.ability.extra.dollars)
-				G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + card.ability.extra.dollars
-				G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
-				return {
-					message = localize('$')..card.ability.extra.dollars,
-					dollars = card.ability.extra.dollars,
-					colour = G.C.MONEY
-				}
+		if context.first_hand_drawn and G.GAME.blind and ((not G.GAME.blind.disabled) and (G.GAME.blind:get_type() == 'Boss')) then
+			if card.ability.extra.skipsThisAnte >= 2 then
+				card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('ph_boss_disabled')})
+				G.GAME.blind:disable()
 			end
+			card.ability.extra.skipsThisAnte = 0
 		end
 	end
 })
@@ -68,8 +48,8 @@ table.insert(stuffToAdd, {
 -- Sizzling Gaze
 table.insert(stuffToAdd, {
 	object_type = "Joker",
-	name = "sizzlingGaze",
-	key = "sizzlingGaze",
+	name = "sizzlingGazeScrapped",
+	key = "sizzlingGazeScrapped",
 	config = {extra = {tagsToMake = 5, triggeredThisHand = false}},
 	pos = {x = 2, y = 6},
 	loc_txt = {
@@ -182,5 +162,5 @@ table.insert(stuffToAdd, {
 	end
 })
 
-return {stuffToAdd = {}}
---return {stuffToAdd = stuffToAdd}
+--return {stuffToAdd = {}}
+return {stuffToAdd = stuffToAdd}
