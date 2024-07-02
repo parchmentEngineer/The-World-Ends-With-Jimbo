@@ -349,10 +349,9 @@ function Card.remove_from_deck(self, from_debuff)
 	Card_remove_from_deck_ref(self, from_debuff)
 end
 
-function SMODS.current_mod.set_debuff(card, should_debuff)
-	if card.ability.blackSkyDebuff then
-		card.debuff = true
-		--return true
+function SMODS.current_mod.set_debuff(card)
+	if next(SMODS.find_card('j_twewy_blackSky')) and (card:is_suit('Spades', true) or card:is_suit('Clubs', true)) then
+		return true
 	end
 end
 
