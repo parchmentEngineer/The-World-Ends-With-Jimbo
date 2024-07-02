@@ -222,23 +222,6 @@ table.insert(stuffToAdd, {
 		return {vars = {center.ability.extra.handSize}}
 	end,
 	calculate = function(self, card, context)
-		if not context.blueprint then
-			if context.first_hand_drawn and not self.getting_sliced then
-				print("Starting effect")
-				for _, v in ipairs(G.deck.cards) do
-					if v:is_suit('Spades') or v:is_suit('Clubs') then
-						v.debuff = true
-						v.ability.blackSkyDebuff = true
-					end
-				end
-			end
-		end
-		
-		if context.end_of_round and not context.blueprint and not context.repetition and not context.individual then
-			for _, v in ipairs(G.playing_cards) do
-				v.ability.blackSkyDebuff = nil
-			end
-		end
 	end
 })
 
