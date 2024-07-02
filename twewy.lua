@@ -80,7 +80,7 @@ table.insert(stuffToAdd, {
 })
 
 local debugMode = false
-local testingJokers = {'lolitaChopper', 'ohabari', 'longLiveTheIce', 'iceBlow', 'loveMeTether'}
+local testingJokers = {'lolitaChopper', 'ohabari', 'masamune', 'blackSky', 'loveMeTether'}
 local vanillaJokers = {}
 local testingConsumables = {'c_empress', 'c_pluto'}
 
