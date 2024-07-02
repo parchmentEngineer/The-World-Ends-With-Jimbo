@@ -326,10 +326,9 @@ function Card.remove_from_deck(self, from_debuff)
 	Card_remove_from_deck_ref(self, from_debuff)
 end
 
-function SMODS.current_mod.set_debuff(card, should_debuff)
+function SMODS.current_mod.set_debuff(card)
 	if card.ability.blackSkyDebuff then
-		card.debuff = true
-		--return true
+		return true
 	end
 end
 
