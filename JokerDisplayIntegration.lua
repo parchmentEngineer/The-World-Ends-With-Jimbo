@@ -89,6 +89,15 @@ jd_def["j_twewy_straitjacket"] = {
 
 -- Dragon Couture Section --------------------------------------------------
 
+--Self Found
+jd_def["j_twewy_selfFound"] = {
+    line_2 = {
+        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35},
+    }
+}
+
 -- One Stroke
 jd_def["j_twewy_oneStroke"] = {
     line_2 = {
@@ -110,9 +119,9 @@ jd_def["j_twewy_swiftStorm"] = {
 -- Flames Apart
 jd_def["j_twewy_flamesApart"] = {
     line_2 = {
-        { text = "(",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-        { ref_table = "card.joker_display_values", ref_value = "active_text",     scale = 0.3 },
-        { text = ")",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+        { text = "(",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.joker_display_values", ref_value = "active_text",     scale = 0.35 },
+        { text = ")",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     },
 
     calc_function = function(card)
