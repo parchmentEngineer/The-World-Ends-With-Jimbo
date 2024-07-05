@@ -6,23 +6,11 @@ jd_def = JokerDisplay.Definitions
 -- Ice Blow
 jd_def["j_twewy_iceBlow"] = {
     line_1 = {
-        {
-            text = "+",
-            colour = lighten(G.C.RED, 0.1)
-        },
-        {
-            ref_table = "card.joker_display_values",
-            ref_value = "aDiscards",
-            colour = lighten(G.C.RED, 0.1)
-        },
+        { text = "+",                              colour = lighten(G.C.RED, 0.1) },
+        { ref_table = "card.joker_display_values", ref_value = "aDiscards", colour = lighten(G.C.RED, 0.1) },
     },
     line_2 = {
-
-        {
-            text = "(Discards)",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        }
+        { text = "(Discards)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
     },
 
     calc_function = function(card)
@@ -51,22 +39,11 @@ jd_def["j_twewy_iceBlow"] = {
 -- Ice Risers
 jd_def["j_twewy_iceRisers"] = {
     line_1 = {
-        {
-            text = "+",
-            colour = lighten(G.C.CHIPS, 0.1)
-        },
-        {
-            ref_table = "card.joker_display_values",
-            ref_value = "aHands",
-            colour = lighten(G.C.CHIPS, 0.1)
-        }
+        { text = "+",                              colour = lighten(G.C.CHIPS, 0.1) },
+        { ref_table = "card.joker_display_values", ref_value = "aHands", colour = lighten(G.C.CHIPS, 0.1) }
     },
     line_2 = {
-        {
-            text = "(Hands)",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        }
+        { text = "(Hands)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
     },
 
     calc_function = function(card)
@@ -89,38 +66,14 @@ jd_def["j_twewy_iceRisers"] = {
 -- Straitjacket
 jd_def["j_twewy_straitjacket"] = {
     line_1 = {
-        {
-            text = "+",
-            colour = lighten(G.C.BLUE, 0.2)
-        },
-        {
-            ref_table = "card.joker_display_values",
-            ref_value = "aHands",
-            colour = lighten(G.C.BLUE, 0.2)
-        }
+        { text = "+",                              colour = lighten(G.C.BLUE, 0.2) },
+        { ref_table = "card.joker_display_values", ref_value = "aHands", colour = lighten(G.C.BLUE, 0.2) }
     },
     line_2 = {
-        {
-            text = "(Hands)",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        },
-        {
-            text = " (",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        },
-        {
-            ref_table = "card.ability.extra",
-            ref_value = "usesLeft",
-            colour = G.C.ORANGE,
-            scale = 0.3
-        },
-        {
-            text = "/6)",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        },
+        { text = "(Hands) ",                colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { text = "(",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.ability.extra", ref_value = "usesLeft",        colour = G.C.ORANGE, scale = 0.3 },
+        { text = "/6)",                     colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
     },
 
     calc_function = function(card)
@@ -139,65 +92,27 @@ jd_def["j_twewy_straitjacket"] = {
 -- One Stroke
 jd_def["j_twewy_oneStroke"] = {
     line_2 = {
-        {
-            text = "(+",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.35
-        },
-        {
-            ref_table = "card.ability.extra",
-            ref_value = "handSize",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.35
-        },
-        {
-            text = ")",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.35
-        }
+        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
 -- Swift Storm
 jd_def["j_twewy_swiftStorm"] = {
     line_2 = {
-        {
-            text = "(+",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.35
-        },
-        {
-            ref_table = "card.ability.extra",
-            ref_value = "handSize",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.35
-        },
-        {
-            text = ")",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.35
-        }
+        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
 -- Flames Apart
 jd_def["j_twewy_flamesApart"] = {
     line_2 = {
-        {
-            text = "(",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        },
-        {
-            ref_table = "card.joker_display_values",
-            ref_value = "active_text",
-            scale = 0.3
-        },
-        {
-            text = ")",
-            colour = G.C.UI.TEXT_INACTIVE,
-            scale = 0.3
-        }
+        { text = "(",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.joker_display_values", ref_value = "active_text",     scale = 0.3 },
+        { text = ")",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
     },
 
     calc_function = function(card)
