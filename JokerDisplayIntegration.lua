@@ -144,7 +144,16 @@ jd_def["j_twewy_blackSky"] = {
     line_2 = {
         { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
         { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35}
+        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+    }
+}
+
+-- Fiery Spirit
+jd_def["j_twewy_fierySpirit"] = {
+    line_2 = {
+        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
