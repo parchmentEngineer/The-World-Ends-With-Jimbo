@@ -180,4 +180,39 @@ jd_def["j_twewy_swiftStorm"] = {
     }
 }
 
+-- Flames Apart
+jd_def["j_twewy_flamesApart"] = {
+    line_2 = {
+        {
+            text = "(",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.3
+        },
+        {
+            ref_table = "card.joker_display_values",
+            ref_value = "active_text",
+            scale = 0.3
+        },
+        {
+            text = ")",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.3
+        }
+    },
+
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+        card.joker_display_values.active = text == ("Straight Flush" or "Flush House" or "Flush Five" or "Five of a Kind") and true or false
+        card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
+    end,
+    style_function = function(card, line_1, line_2)
+        if line_2 then
+            line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+        end
+        return false
+    end
+}
+
 -- End Dragon Couture Section ----------------------------------------------
