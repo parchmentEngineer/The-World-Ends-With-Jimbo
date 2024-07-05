@@ -52,6 +52,7 @@ jd_def["j_twewy_iceBlow"] = {
     end
 }
 
+-- Ice Risers
 jd_def["j_twewy_iceRisers"] = {
     line_2 = {
         {
@@ -93,6 +94,25 @@ jd_def["j_twewy_iceRisers"] = {
             line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
         end
     end
+}
+
+-- Straitjacket
+jd_def["j_twewy_straitjacket"] = {
+    line_2 = {
+        {
+            text = "(",
+            colour = G.C.UI.TEXT_INACTIVE
+        },
+        {
+            ref_table = "card.ability.extra",
+            ref_value = "usesLeft",
+            colour = G.C.ORANGE
+        },
+        {
+            text = " Uses Left)",
+            colour = G.C.UI.TEXT_INACTIVE
+        }  
+    },
 }
 
 ------------------------------------------------------------------------
