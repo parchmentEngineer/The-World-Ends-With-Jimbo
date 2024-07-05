@@ -1,7 +1,7 @@
 jd_def = JokerDisplay.Definitions
 
 
--- D+B Section --------------------------------------------------------
+-- D+B --------------------------------------------------------
 
 -- Ice Blow
 jd_def["j_twewy_iceBlow"] = {
@@ -84,10 +84,10 @@ jd_def["j_twewy_straitjacket"] = {
     end
 }
 
--- End D+B Section----------------------------------------------------------
+-- End D+B----------------------------------------------------------
 
 
--- Dragon Couture Section --------------------------------------------------
+-- Dragon Couture --------------------------------------------------
 
 --Self Found
 jd_def["j_twewy_selfFound"] = {
@@ -142,19 +142,65 @@ jd_def["j_twewy_flamesApart"] = {
 -- Black Sky
 jd_def["j_twewy_blackSky"] = {
     line_2 = {
-        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = "(+",                                                     colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
         { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = ")",                                                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
 -- Fiery Spirit
 jd_def["j_twewy_fierySpirit"] = {
     line_2 = {
-        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = "(+",                                                     colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
         { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = ")",                                                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
--- End Dragon Couture Section ----------------------------------------------
+-- End Dragon Couture ----------------------------------------------
+
+
+-- Hip Snake -------------------------------------------------------
+
+-- TODO: Add hip_snake Jokers
+
+-- End Hip Snake ---------------------------------------------------
+
+
+-- Jupiter of the Monkey -------------------------------------------
+
+-- TODO: Add jupiter_of_the_monkey Jokers
+
+-- End Jupiter of the Monkey ---------------------------------------
+
+
+-- Lapin Angelique -------------------------------------------------
+
+jd_def["j_twewy_lolitaBat"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "xMult" }
+            }
+        }
+    },
+    line_2 = {
+        { text = "(",                                                                  colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.joker_display_values", ref_value = "inactive_text",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.joker_display_values", ref_value = "timer_text",           colour = G.C.IMPORTANT,        scale = 0.3 },
+        { ref_table = "card.joker_display_values", ref_value = "hands_remaining_text", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { text = ")",                                                                  colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+    },
+
+    calc_function = function(card)
+        card.joker_display_values.inactive = (card.ability.extra.timer == 0) and true or false
+
+        card.joker_display_values.xMult = card.joker_display_values.inactive and 1 or card.ability.extra.xMult
+        card.joker_display_values.inactive_text = card.joker_display_values.inactive and "Inactive!" or ""
+        card.joker_display_values.timer_text = card.joker_display_values.inactive and "" or card.ability.extra.timer
+        card.joker_display_values.hands_remaining_text = card.joker_display_values.inactive and "" or "/8"
+    end,
+}
+
+-- End Lapin Angelique ---------------------------------------------
