@@ -221,4 +221,25 @@ jd_def["j_twewy_skullRabbit"] = {
     }
 }
 
+-- Web Spider
+jd_def["j_twewy_webSpider"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "xMult" }
+            }
+        }
+    },
+    line_2 = {
+        { text = "(Level 2)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+    },
+
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local text, _, _ = JokerDisplay.evaluate_hand(hand)
+
+        card.joker_display_values.xMult = text and G.GAME.hands[text] and (G.GAME.hands[text].level == 2) and card.ability.extra.xMult or 1
+    end
+}
 -- End Lapin Angelique ---------------------------------------------
