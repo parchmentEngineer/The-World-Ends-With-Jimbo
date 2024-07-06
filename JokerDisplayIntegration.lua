@@ -242,4 +242,30 @@ jd_def["j_twewy_webSpider"] = {
         card.joker_display_values.xMult = text and G.GAME.hands[text] and (G.GAME.hands[text].level == 2) and card.ability.extra.xMult or 1
     end
 }
+
+-- Lolita Skull
+jd_def["j_twewy_lolitaSkull"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "xMult" }
+            }
+        }
+    },
+
+    calc_function = function(card)
+        local playing_hand = next(G.play.cards)
+        local count = 0
+        for k, v in ipairs(G.hand.cards) do
+            if playing_hand or not v.highlighted then
+                if not (v.facing == 'back') and not v.debuff and v:is_suit("Hearts") then
+                    count = count + 1
+                end
+            end
+        end
+
+        card.joker_display_values.xMult = (count >= 4) and card.ability.extra.xMult or 1
+    end
+}
 -- End Lapin Angelique ---------------------------------------------
