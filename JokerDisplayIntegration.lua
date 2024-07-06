@@ -88,21 +88,47 @@ jd_def["j_twewy_iceRisers"] = {
 
 -- Straitjacket
 jd_def["j_twewy_straitjacket"] = {
+    line_1 = {
+        {
+            text = "+",
+            colour = lighten(G.C.BLUE, 0.2)
+        },
+        {
+            ref_table = "card.joker_display_values",
+            ref_value = "aHands",
+            colour = lighten(G.C.BLUE, 0.2)
+        }
+    },
     line_2 = {
         {
-            text = "(",
-            colour = G.C.UI.TEXT_INACTIVE
+            text = "(Hands)",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.3
+        },
+        {
+            text = " (",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.3
         },
         {
             ref_table = "card.ability.extra",
             ref_value = "usesLeft",
-            colour = G.C.ORANGE
+            colour = G.C.ORANGE,
+            scale = 0.3
         },
         {
-            text = " Uses Left)",
-            colour = G.C.UI.TEXT_INACTIVE
+            text = ")",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.3
         }  
     },
+
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+        card.joker_display_values.aHands = text == "Straight" and 1 or 0
+    end
 }
 
 -- End D+B Section----------------------------------------------------------
