@@ -158,4 +158,26 @@ jd_def["j_twewy_oneStroke"] = {
     }
 }
 
+-- Swift Storm
+jd_def["j_twewy_swiftStorm"] = {
+    line_2 = {
+        {
+            text = "(+",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.35
+        },
+        {
+            ref_table = "card.ability.extra",
+            ref_value = "handSize",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.35
+        },
+        {
+            text = ")",
+            colour = G.C.UI.TEXT_INACTIVE,
+            scale = 0.35
+        }
+    }
+}
+
 -- End Dragon Couture Section ----------------------------------------------
