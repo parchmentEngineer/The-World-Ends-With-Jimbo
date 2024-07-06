@@ -117,10 +117,10 @@ jd_def["j_twewy_straitjacket"] = {
             scale = 0.3
         },
         {
-            text = ")",
+            text = "/6)",
             colour = G.C.UI.TEXT_INACTIVE,
             scale = 0.3
-        }  
+        },
     },
 
     calc_function = function(card)
