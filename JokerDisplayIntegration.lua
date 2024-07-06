@@ -176,6 +176,7 @@ jd_def["j_twewy_fierySpirit"] = {
 
 -- Lapin Angelique -------------------------------------------------
 
+-- Lolita Bat
 jd_def["j_twewy_lolitaBat"] = {
     line_1 = {
         {
@@ -201,6 +202,23 @@ jd_def["j_twewy_lolitaBat"] = {
         card.joker_display_values.timer_text = card.joker_display_values.inactive and "" or card.ability.extra.timer
         card.joker_display_values.hands_remaining_text = card.joker_display_values.inactive and "" or "/8"
     end,
+}
+
+-- Skull Rabbit
+jd_def["j_twewy_skullRabbit"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "xMult"}
+            }
+        }
+    },
+    line_2 = {
+        { text = "(<", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { text = "$4", colour = G.C.MONEY,            scale = 0.3 },
+        { text = ")",  colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+    }
 }
 
 -- End Lapin Angelique ---------------------------------------------
