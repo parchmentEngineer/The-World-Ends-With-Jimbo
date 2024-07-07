@@ -268,4 +268,29 @@ jd_def["j_twewy_lolitaSkull"] = {
         card.joker_display_values.xMult = (count >= 4) and card.ability.extra.xMult or 1
     end
 }
+
+-- Lolita Mic
+jd_def["j_twewy_lolitaMic"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "xMult" }
+            }
+        }
+    },
+    line_2 = {
+        { text = "(",                                                  colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.ability.extra", ref_value = "lastDiscard", colour = G.C.IMPORTANT,        scale = 0.3 },
+        { text = ")",                                                  colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+    },
+
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+        card.joker_display_values.xMult = text and (text == card.ability.extra.lastDiscard) and card.ability.extra.xMult or 1
+    end
+}
+
 -- End Lapin Angelique ---------------------------------------------
