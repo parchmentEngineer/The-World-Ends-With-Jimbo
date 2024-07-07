@@ -6,7 +6,7 @@ jd_def = JokerDisplay.Definitions
 -- Ice Blow
 jd_def["j_twewy_iceBlow"] = {
     line_1 = {
-        { text = "+",                              colour = lighten(G.C.RED, 0.1) },
+        { text = "+",                                                       colour = lighten(G.C.RED, 0.1) },
         { ref_table = "card.joker_display_values", ref_value = "aDiscards", colour = lighten(G.C.RED, 0.1) },
     },
     line_2 = {
@@ -39,7 +39,7 @@ jd_def["j_twewy_iceBlow"] = {
 -- Ice Risers
 jd_def["j_twewy_iceRisers"] = {
     line_1 = {
-        { text = "+",                              colour = lighten(G.C.CHIPS, 0.1) },
+        { text = "+",                                                    colour = lighten(G.C.CHIPS, 0.1) },
         { ref_table = "card.joker_display_values", ref_value = "aHands", colour = lighten(G.C.CHIPS, 0.1) }
     },
     line_2 = {
@@ -70,10 +70,10 @@ jd_def["j_twewy_straitjacket"] = {
         { ref_table = "card.joker_display_values", ref_value = "aHands", colour = lighten(G.C.BLUE, 0.2) }
     },
     line_2 = {
-        { text = "(Hands) ",                colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-        { text = "(",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-        { ref_table = "card.ability.extra", ref_value = "usesLeft",        colour = G.C.ORANGE, scale = 0.3 },
-        { text = "/6)",                     colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { text = "(Hands) ",                                        colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { text = "(",                                               colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.ability.extra", ref_value = "usesLeft", colour = G.C.ORANGE,           scale = 0.3 },
+        { text = "/6)",                                             colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
     },
 
     calc_function = function(card)
@@ -92,36 +92,36 @@ jd_def["j_twewy_straitjacket"] = {
 --Self Found
 jd_def["j_twewy_selfFound"] = {
     line_2 = {
-        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35},
+        { text = "(+",                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                                               colour = G.C.UI.TEXT_INACTIVE, scale = 0.35},
     }
 }
 
 -- One Stroke
 jd_def["j_twewy_oneStroke"] = {
     line_2 = {
-        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = "(+",                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                                               colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
 -- Swift Storm
 jd_def["j_twewy_swiftStorm"] = {
     line_2 = {
-        { text = "(+",                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = "(+",                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                                               colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
 -- Flames Apart
 jd_def["j_twewy_flamesApart"] = {
     line_2 = {
-        { text = "(",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { ref_table = "card.joker_display_values", ref_value = "active_text",     scale = 0.35 },
-        { text = ")",                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = "(",                                                         colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.joker_display_values", ref_value = "active_text",                                scale = 0.35 },
+        { text = ")",                                                         colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     },
 
     calc_function = function(card)
@@ -142,18 +142,18 @@ jd_def["j_twewy_flamesApart"] = {
 -- Black Sky
 jd_def["j_twewy_blackSky"] = {
     line_2 = {
-        { text = "(+",                                                     colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                                                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = "(+",                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                                               colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
 -- Fiery Spirit
 jd_def["j_twewy_fierySpirit"] = {
     line_2 = {
-        { text = "(+",                                                     colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { ref_table = "card.ability.extra", ref_value = "handSize",        colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-        { text = ")",                                                      colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
+        { text = "(+",                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { ref_table = "card.ability.extra", ref_value = "handSize", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+        { text = ")",                                               colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 }
     }
 }
 
@@ -321,6 +321,69 @@ jd_def["j_twewy_kaleidoscope"] = {
         end
 
         card.joker_display_values.xMult = tonumber(string.format("%.2f", card.ability.extra.xMult ^ count))
+    end
+}
+
+-- Lolita Chopper
+jd_def["j_twewy_lolitaChopper"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.ability.extra", ref_value = "xMult" }
+            }
+        }
+    },
+    line_2 = {
+        { text = "(",                                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.joker_display_values", ref_value = "most_played_hand", colour = G.C.IMPORTANT,        scale = 0.3 },
+        { text = ")",                                                              colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+    },
+
+    calc_function = function(card)
+        local most_played_hand = nil
+
+        -- Initializes the most played hand to the first poker hand in the list
+        for k, v in pairs(G.GAME.hands) do
+            most_played_hand = { k, v }
+            break
+        end
+        
+        -- Finds the most played poker hand; It's fine if there are more than one, handled later
+        for k, v in pairs(G.GAME.hands) do
+            if v.played == most_played_hand[2].played then
+                goto continue
+            elseif v.played > most_played_hand[2].played then
+                most_played_hand = { k, v }
+            end
+
+            ::continue::
+        end
+
+        local all_equal = true
+
+        -- Loops through each poker hand and checks if they are all equal
+        for k, v in pairs(G.GAME.hands) do
+            for l, w in pairs(G.GAME.hands) do
+                if v.played ~= w.played then
+                    all_equal = false
+                end
+            end
+        end
+
+        local multiple_most_played = false
+
+        -- If they are not all equal, checks if their are multiple most played poker hands
+        if not all_equal then
+            for k, v in pairs(G.GAME.hands) do
+                if k ~= most_played_hand[1] and v.played == most_played_hand[2].played then
+                    multiple_most_played = true
+                    break
+                end
+            end
+        end
+
+        card.joker_display_values.most_played_hand = all_equal and "All" or (multiple_most_played and "Multiple" or tostring(most_played_hand[1]))
     end
 }
 
