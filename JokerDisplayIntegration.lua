@@ -287,9 +287,40 @@ jd_def["j_twewy_lolitaMic"] = {
 
     calc_function = function(card)
         local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
-        local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+        local text, _, _ = JokerDisplay.evaluate_hand(hand)
 
         card.joker_display_values.xMult = text and (text == card.ability.extra.lastDiscard) and card.ability.extra.xMult or 1
+    end
+}
+
+-- Kaleidoscope
+jd_def["j_twewy_kaleidoscope"] = {
+    line_1 = {
+        {
+            border_nodes = {
+                { text = "X" },
+                { ref_table = "card.joker_display_values", ref_value = "xMult" }
+            }
+        }
+    },
+    
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local _, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+        local count = 0
+
+        -- Loops through each card in the scoring_hand and compares
+        -- its suit to the suits in the last scored hand (Indicated by card.ability.extra.progressList)
+        for i, v in ipairs(scoring_hand) do
+            for k, w in pairs(card.ability.extra.progressList) do
+                if v:is_suit(k.."") and not w then
+                    count = count + JokerDisplay.calculate_card_triggers(v)
+                end
+            end
+        end
+
+        card.joker_display_values.xMult = tonumber(string.format("%.2f", card.ability.extra.xMult ^ count))
     end
 }
 
