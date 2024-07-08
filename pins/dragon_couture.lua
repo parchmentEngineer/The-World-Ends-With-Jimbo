@@ -199,7 +199,14 @@ table.insert(stuffToAdd, {
 				G.E_MANAGER:add_event(Event({func = function() card:juice_up(0.3, 0.4) return true end}))
 				local toDraw = #G.deck.cards
 				for i=1, toDraw do
-					draw_card(G.deck, G.hand, i*100/toDraw, nil, true, nil, 0.07)
+					if G.hand:draw_card_from(G.deck) then drawn = true end
+					assert(drawn)
+					if drawn then
+						-- G.VIBRATION = G.VIBRATION + 0.6
+						-- local percent = i*100/toDraw
+						-- play_sound('card1', 0.85 + percent*0.2/100, 0.6*1)
+					end
+					G.hand:sort()
 				end
 			end
 		end
