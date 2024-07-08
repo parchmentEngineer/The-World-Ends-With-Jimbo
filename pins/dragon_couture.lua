@@ -186,14 +186,21 @@ table.insert(stuffToAdd, {
 		return {vars = {}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.after and not context.blueprint and 
-		(next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind']) or
-		next(context.poker_hands['Flush House']) or next(context.poker_hands['Flush Five']))  then
-			local toDraw = #G.deck.cards
-			for i=1, toDraw do
-				draw_card(G.deck,G.hand, i*100/toDraw ,true, card , nil, 0.03)
+		if context.cardarea == G.jokers and context.before and not context.blueprint then
+			local is_modded_secret_hand = false
+			for _, v in ipairs(G.handlist) do
+				if next(context.poker_hands[v]) and SMODS.PokerHands[v] and not SMODS.PokerHands[v].visible then
+					is_modded_secret_hand = true
+				end
+			end
+			-- TODO disallow Spectrum
+			if is_modded_secret_hand or next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind'])
+			or next(context.poker_hands['Flush House']) or next(context.poker_hands['Flush Five']) then
 				G.E_MANAGER:add_event(Event({func = function() card:juice_up(0.3, 0.4) return true end}))
-				G.E_MANAGER:add_event(Event({func = function() G.hand:sort() return true end}))
+				local toDraw = #G.deck.cards
+				for i=1, toDraw do
+					draw_card(G.deck, G.hand, i*100/toDraw, nil, true, nil, 0.07)
+				end
 			end
 		end
 	end
