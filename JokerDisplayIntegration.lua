@@ -365,10 +365,10 @@ jd_def["j_twewy_kaleidoscope"] = {
 
     style_function = function(card, line_1, line_2)
         if line_2 then
-            line_2.children[2].config.colour = card.ability.extra.progressList.Spades and G.C.SUITS.Spades or G.C.UI.TEXT_INACTIVE
-            line_2.children[5].config.colour = card.ability.extra.progressList.Clubs and G.C.SUITS.Clubs or G.C.UI.TEXT_INACTIVE
-            line_2.children[8].config.colour = card.ability.extra.progressList.Hearts and G.C.SUITS.Hearts or G.C.UI.TEXT_INACTIVE
-            line_2.children[11].config.colour = card.ability.extra.progressList.Diamonds and G.C.SUITS.Diamonds or G.C.UI.TEXT_INACTIVE
+            line_2.children[2].config.colour = card.ability.extra.progressList.Spades and lighten(G.C.SUITS.Spades, 0.35) or G.C.UI.TEXT_INACTIVE
+            line_2.children[5].config.colour = card.ability.extra.progressList.Clubs and lighten(G.C.SUITS.Clubs, 0.35) or G.C.UI.TEXT_INACTIVE
+            line_2.children[8].config.colour = card.ability.extra.progressList.Hearts and lighten(G.C.SUITS.Hearts, 0.35) or G.C.UI.TEXT_INACTIVE
+            line_2.children[11].config.colour = card.ability.extra.progressList.Diamonds and lighten(G.C.SUITS.Diamonds, 0.35) or G.C.UI.TEXT_INACTIVE
         end
     end
 }
