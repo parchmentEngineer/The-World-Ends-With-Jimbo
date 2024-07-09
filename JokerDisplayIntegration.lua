@@ -543,4 +543,35 @@ jd_def["j_twewy_candleService"] = {
 	end,
 }
 
+-- Aqua Monster
+jd_def['j_twewy_aquaMonster'] = {
+	line_2 = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'active_text',
+			scale = 0.3
+		},
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		-- if poker_hands and poker_hands["Three of a Kind"] then
+		-- 	sendDebugMessage(tprint(poker_hands["Three of a Kind"]))
+		-- end
+
+		card.joker_display_values.active = poker_hands and next(poker_hands["Three of a Kind"]) and true or false
+		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
+	end,
+	
+	style_function = function(card, line_1, line_2)
+		if line_2 then
+			line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+		end
+	end,
+}
+
 -- End Mus Rattus --------------------------------------------------
