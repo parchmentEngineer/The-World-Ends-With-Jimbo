@@ -559,10 +559,6 @@ jd_def["j_twewy_aquaMonster"] = {
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
 		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
 
-		-- if poker_hands and poker_hands["Three of a Kind"] then
-		-- 	sendDebugMessage(tprint(poker_hands["Three of a Kind"]))
-		-- end
-
 		card.joker_display_values.active = poker_hands and next(poker_hands["Three of a Kind"]) and true or false
 		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
 	end,
