@@ -1,4 +1,4 @@
-jd_def = JokerDisplay.Definitions
+local jd_def = JokerDisplay.Definitions
 
 
 -- D+B --------------------------------------------------------
@@ -307,8 +307,8 @@ jd_def["j_twewy_lolitaMic"] = {
         local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
         local text, _, _ = JokerDisplay.evaluate_hand(hand)
 
-        card.joker_display_values.xMult = text and (text == card.ability.extra.lastDiscard) and card.ability.extra.xMult or
-            1
+        card.joker_display_values.xMult = text and (text == card.ability.extra.lastDiscard)
+            and card.ability.extra.xMult or 1
     end
 }
 
@@ -422,7 +422,7 @@ jd_def["j_twewy_lolitaChopper"] = {
 
         local multiple_most_played = false
 
-        -- If they are not all equal, checks if their are multiple most played poker hands
+        -- If they are not all equal, checks if there are multiple most played poker hands
         if not all_equal then
             for k, v in pairs(G.GAME.hands) do
                 if k ~= most_played_hand[1] and v.played == most_played_hand[2].played then
@@ -438,3 +438,60 @@ jd_def["j_twewy_lolitaChopper"] = {
 }
 
 -- End Lapin Angelique ---------------------------------------------
+
+
+-- Mus Rattus ------------------------------------------------------
+
+-- Storm Warning
+jd_def["j_twewy_stormWarning"] = {
+    line_1 = {
+        { text = "+",                       colour = G.C.CHIPS },
+        { ref_table = "card.ability.extra", ref_value = "chips", colour = G.C.CHIPS }
+    }
+}
+
+-- TODO: Fix Candle Service. Currently does not work as intended when scoring a hand.
+-- Candle Service
+jd_def["j_twewy_candleService"] = {
+    line_1 = {
+        { text = "+",                       colour = G.C.CHIPS },
+        { ref_table = "card.joker_display_values", ref_value = "chips", colour = G.C.CHIPS }
+    },
+    line_2 = {
+        { text = "(",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.ability.extra", ref_value = "played",          colour = G.C.IMPORTANT,        scale = 0.3 },
+        { text = "/",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { ref_table = "card.ability.extra", ref_value = "req",             colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+        { text = ")",                       colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 }
+    },
+
+    calc_function = function(card)
+        local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+        local played = card.ability.extra.played
+        local in_hand_played = 0
+        local num_of_activations = 0
+
+        for k, v in pairs(scoring_hand) do
+            if v:get_id() == 2 or v:get_id() == 3 or v:get_id() == 4 or v:get_id() == 5 then
+                in_hand_played = in_hand_played + JokerDisplay.calculate_card_triggers(v, scoring_hand, false)
+
+                while in_hand_played > 0 do
+                    played = played + 1
+                    in_hand_played = in_hand_played - 1
+
+                    if played == card.ability.extra.req then
+                        num_of_activations = num_of_activations + 1
+                        played = 0
+                    end
+                end
+            end
+        end
+
+        card.joker_display_values.chips = card.ability.extra.chips * num_of_activations
+    end
+}
+
+
+-- End Mus Rattus --------------------------------------------------
