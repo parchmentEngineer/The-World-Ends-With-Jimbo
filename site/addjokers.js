@@ -895,14 +895,71 @@ let card_modifications = [
 ]
 
 let decks = [
-  // {
-  //   name: "Joker",
-  //   text: [
-  //     "{C:mult}+4{} Mult"
-  //   ],
-  //   image_url: "img/j_joker.png",
-  //   rarity: "Deck"
-  // },
+	{
+		name: "Mus Rattus",
+		text: [
+			"Begin with your {C:attention}2s{}",
+			"as {C:dark_edition}Foil{} {C:blue}Bonus{} {C:attention}Cards{}"
+		],
+		image_url: "site/img/tile000.png",
+		rarity: "Deck"
+	},
+	{
+		name: "Lapin Angelique",
+		text: [
+			"{C:attention}Steel{} and {C:attention}Glass{} cards",
+			"gain {X:mult,C:white} X0.1{} Mult every",
+			"time they trigger",
+			"Start with a {C:attention}Chariot{} and {C:attention}Justice{}"
+		],
+		image_url: "site/img/tile068.png",
+		rarity: "Deck"
+	},
+	{
+		name: "Sheep Heavenly",
+		text: [
+			"After playing a card with",
+			"a {C:red}Red Seal{}, move that",
+			"seal to the leftmost",
+			"card held in hand",
+			"Start with two {C:attention}Deja Vus{}"
+		],
+		image_url: "site/img/tile170.png",
+		rarity: "Deck"
+	},
+	{
+		name: "Jupiter of the Monkey",
+		text: [
+			"Reroll all held {C:tarot}Tarot{}",
+			"cards into new random",
+			"{C:tarot}Tarot{} cards each round",
+			"Start with an {C:attention}Emperor{}"
+		],
+		image_url: "site/img/tile051.png",
+		rarity: "Deck"
+	},
+	{
+		name: "Pavo Real",
+		text: [
+			"{C:attention}-2{} Joker slots",
+			"Gain a {C:dark_edition}Negative{} Tag",
+			"after each {C:attention}Boss Blind{}",
+			"if you have 6 or less Jokers"
+		],
+		image_url: "site/img/tile136.png",
+		rarity: "Deck"
+	},
+	{
+		name: "Natural Puppy",
+		text: [
+			"{C:attention}Standard Packs{} contain",
+			"only {C:attention}face cards{} and",
+			"allow you to choose",
+			"{C:attention}1{} more card"
+		],
+		image_url: "site/img/tile153.png",
+		rarity: "Deck"
+	},
 ]
 
 let stickers = [
