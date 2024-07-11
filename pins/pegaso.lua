@@ -13,7 +13,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Thunder Pawn',
 		text = {
-			"Gain {C:money}$#1#{} each round",
+			"Earn {C:money}$#1#{} each round",
 			"{C:attention}+1{} card slot in shop"
 		}
 	},
@@ -60,10 +60,10 @@ table.insert(stuffToAdd, {
 		and context.cardarea == G.play then
 			card.ability.extra_value = card.ability.extra_value + card.ability.extra.sellGain
 			card:set_cost()
-			card_eval_status_text(card, 'extra', nil, nil, nil, {
+			return {
 				message = "Value up!",
 				colour = G.C.MONEY
-			})
+			}
 		end
 	end
 })
@@ -157,7 +157,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Aqua Pawn',
 		text = {
-			"Gain {C:money}${} equal to twice",
+			"Earn {C:money}${} equal to",
 			"the level of the first",
 			"hand played each round"
 		}
@@ -177,17 +177,52 @@ table.insert(stuffToAdd, {
 		
 		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.readyToUse then
 			card.ability.extra.readyToUse = false
-			local moneyToAdd = G.GAME.hands[context.scoring_name].level * 2
+			local moneyToAdd = G.GAME.hands[context.scoring_name].level * 1
 			ease_dollars(moneyToAdd)
-				G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + moneyToAdd
-				G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
-				return {
-					message = localize('$')..moneyToAdd,
-					dollars = moneyToAdd,
-					colour = G.C.MONEY
-				}
+			G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + moneyToAdd
+			G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+			return {
+				message = localize('$')..moneyToAdd,
+				dollars = moneyToAdd,
+				colour = G.C.MONEY
+			}
 		end
 	end
 })
+
+-- Jack's Knight
+-- table.insert(stuffToAdd, {
+	-- object_type = "Joker",
+	-- name = "jacksKnight",
+	-- key = "jacksKnight",
+	-- config = {extra = {profit = 2}},
+	-- pos = {x = 6, y = 5},
+	-- loc_txt = {
+		-- name = 'Jack\'s Knight',
+		-- text = {
+			-- "Earn {C:money}$#1#{} whenever",
+			-- "you discard a {C:attention}Jack{}"
+		-- }
+	-- },
+	-- rarity = 1,
+	-- cost = 4,
+	-- discovered = true,
+	-- blueprint_compat = true,
+	-- atlas = "jokers",
+	-- loc_vars = function(self, info_queue, center)
+		-- return {vars = {center.ability.extra.profit}}
+	-- end,
+	-- calculate = function(self, card, context)
+		-- if context.discard and context.other_card:get_id() == 11 then
+			-- ease_dollars(card.ability.extra.profit)
+			-- G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + card.ability.extra.profit
+			-- G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+			-- card_eval_status_text(card, 'extra', nil, nil, nil, {
+				-- message = localize('$')..card.ability.extra.profit,
+				-- colour = G.C.MONEY
+			-- })
+		-- end
+	-- end
+-- })
 
 return{stuffToAdd = stuffToAdd}

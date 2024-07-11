@@ -47,13 +47,13 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Zantestu',
 		text = {
-			"When you play a {C:attention}Straight{}",
+			"When you play a hand",
 			"with all four suits, gain",
 			"a {C:tarot}Tarot{} and a {C:planet}Planet{}"
 		}
 	},
 	rarity = 1,
-	cost = 2,
+	cost = 3,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -61,7 +61,8 @@ table.insert(stuffToAdd, {
 		return {vars = {}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.before and next(context.poker_hands['Straight']) then
+		if context.cardarea == G.jokers and context.before then
+		--  and next(context.poker_hands['Straight'])
 			local suits = {
 				['Hearts'] = 0,
 				['Diamonds'] = 0,

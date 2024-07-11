@@ -13,7 +13,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Gimme Dat Hippo',
 		text = {
-			"{C:diamonds}Diamonds{} give {C:money}#1#${} when scored",
+			"Played {C:diamonds}Diamonds{} give {C:money}#1#${} when scored",
 			"Retrigger all {C:diamonds}Diamonds{} twice"
 		}
 	},
@@ -59,7 +59,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Vacu Squeeze',
 		text = {
-			"Cards with the same rank",
+			"Played cards with the same rank",
 			"as your last played {C:attention}High{}",
 			"{C:attention}Card{} are retriggered once",
 			"{C:inactive}(Currently: {C:attention}#1#{C:inactive}){}"
@@ -122,7 +122,6 @@ table.insert(stuffToAdd, {
 		if context.repetition
 		and context.cardarea == G.play
 		and next(context.poker_hands['Straight']) then
-			print("Test")
 			local lowestVal = 99
 			local lowestId = -1
 			for k, v in ipairs(context.scoring_hand) do
@@ -135,12 +134,65 @@ table.insert(stuffToAdd, {
 			if context.other_card.unique_val == lowestId then
 				return {
 					message = localize('k_again_ex'),
-					repetitions = card.ability.extra.retriggers-1,
+					repetitions = card.ability.extra.retriggers,
 					card = card
 				}
 			end
 		end
 	end
 })
+
+-- Healing Flamingo
+-- table.insert(stuffToAdd, {
+	-- object_type = "Joker",
+	-- name = "healingFlamingo",
+	-- key = "healingFlamingo",
+	-- config = {extra = {retriggers = 0}},
+	-- pos = {x = 4, y = 10},
+	-- loc_txt = {
+		-- name = 'Healing Flamingo',
+		-- text = {
+			-- "Retrigger all played cards if",
+			-- "you have discarded a hand",
+			-- "containing a {C:attention}Two Pair{} this round",
+			-- "{C:inactive}({V:1}#1#{C:inactive}){}"
+		-- }
+	-- },
+	-- rarity = 2,
+	-- cost = 6,
+	-- discovered = true,
+	-- blueprint_compat = true,
+	-- perishable_compat = false,
+	-- atlas = "jokers",
+	-- loc_vars = function(self, info_queue, center)
+		-- return {vars = {center.ability.extra.retriggers == 1 and 'Active!' or 'Inactive', 
+			-- colours = {
+				-- center.ability.extra.retriggers == 1 and G.C.FILTER or G.C.UI.TEXT_INACTIVE
+			-- }}
+		-- }
+	-- end,
+	-- calculate = function(self, card, context)
+		-- if context.repetition
+		-- and context.cardarea == G.play then
+			-- return {
+				-- message = localize('k_again_ex'),
+				-- repetitions = card.ability.extra.retriggers,
+				-- card = card
+			-- }
+		-- end
+		
+		-- if context.end_of_round then
+			-- card.ability.extra.retriggers = 0
+		-- end
+		
+		-- if context.pre_discard and card.ability.extra.retriggers == 0 then
+			-- local text,disp_text = G.FUNCS.get_poker_hand_info(G.hand.highlighted)
+			-- if text == "Two Pair" then
+				-- card.ability.extra.retriggers = 1
+				-- card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Active!"})
+			-- end
+		-- end
+	-- end
+-- })
 
 return {stuffToAdd = stuffToAdd}

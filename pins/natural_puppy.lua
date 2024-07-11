@@ -75,28 +75,21 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Playmate Beam',
 		text = {
-			"Cards in {C:attention}Standard Packs{}",
-			"are the same rank as",
-			"your last played {C:attention}High Card{}",
-			"{C:inactive}(Currently: {C:attention}#1#{C:inactive}){}"
+			"When you apply an {C:attention}Enhancement{}",
+			"to a {C:spades}Spades{} card, also",
+			"apply a random {C:dark_edition}Edition{}"
 		}
 	},
-	rarity = 1,
-	cost = 4,
+	rarity = 3,
+	cost = 8,
 	discovered = true,
-	blueprint_compat = true,
+	blueprint_compat = false,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.lastPlayed > 0 and center.ability.extra.lastPlayedValue or "None"}}
+		return {vars = {}}
 	end,
-	calculate = function(self, card, context)
-		if context.cardarea == G.play and context.individual and not context.blueprint then
-			if context.scoring_name == "High Card" then
-				card.ability.extra.lastPlayed = context.other_card:get_id()
-				card.ability.extra.lastPlayedValue = context.other_card.base.value
-				G.GAME.twewy_playmate_beam = context.other_card.base.value
-			end
-		end
+	add_to_deck = function(self, card, from_debuff)
+		G.GAME.twewy_playmate_beam = 1
 	end,
 	remove_from_deck = function(self, card, from_debuff)
 		G.GAME.twewy_playmate_beam = 0
@@ -299,13 +292,14 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Love Me Tether',
 		text = {
-			"All {C:hearts}Hearts{} held in hand",
-			"gain the {C:attention}Enhancement{} of",
-			"your leftmost scored {C:hearts}Heart{}"
+			"Increase the rank of all",
+			"cards held in hand by {C:attention}1{}",
+			"for each {C:hearts}Heart{} discarded",
+			"{C:inactive}(Does not increase Aces){}"
 		}
 	},
-	rarity = 1,
-	cost = 5,
+	rarity = 3,
+	cost = 8,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
@@ -313,26 +307,46 @@ table.insert(stuffToAdd, {
 		return {vars = {center.ability.extra.name}}
 	end,
 	calculate = function(self, card, context)
-		if context.individual
-		and context.other_card:is_suit("Hearts")
-		and not card.ability.extra.usedThisHand
-		and context.cardarea == G.play then
-			card.ability.extra.usedThisHand = true
-			if context.other_card.ability.effect ~= "Base" then
-				for _, v in ipairs(G.hand.cards) do
-					if v:is_suit("Hearts") then
-						G.E_MANAGER:add_event(Event({
-						func = function()
-							v:set_ability(G.P_CENTERS[context.other_card.config.center.key])
-							v:juice_up()
-							return true
-						end
-					}))
-					end
+		if context.discard
+		and context.other_card:is_suit("Hearts") then
+			for i, v in ipairs(G.hand.cards) do
+				if not v.highlighted and v.base.id ~= 14 then
+					G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+						local percent = 1.15 - (i - 0.999) / (#G.hand.cards - 0.998) * 0.3
+						play_sound('card1', percent)
+						v:flip()
+					return true end }))
+					delay(0.05)
+					card.ability.extra.usedThisHand = true
 				end
 			end
-		end
-		if context.cardarea == G.jokers and context.joker_main then
+			
+			if card.ability.extra.usedThisHand then
+				delay(0.1)
+				for i, v in ipairs(G.hand.cards) do
+					if not v.highlighted and v.base.id ~= 14 then
+						G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+							local _card = v
+							local suit_prefix = string.sub(_card.base.suit, 1, 1)..'_'
+							local rank_suffix = v.base.id + 1
+							if rank_suffix < 10 then rank_suffix = tostring(rank_suffix)
+							elseif rank_suffix == 10 then rank_suffix = 'T'
+							elseif rank_suffix == 11 then rank_suffix = 'J'
+							elseif rank_suffix == 12 then rank_suffix = 'Q'
+							elseif rank_suffix == 13 then rank_suffix = 'K'
+							elseif rank_suffix == 14 then rank_suffix = 'A'
+							elseif rank_suffix == 15 then rank_suffix = 'A'
+							end
+							_card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
+							local percent = 0.85 + (i - 0.999) / (#G.hand.cards - 0.998) * 0.3
+							play_sound('tarot2', percent, 0.6)
+							_card:flip()
+						return true end }))
+						delay(0.05)
+					end
+				end
+				delay(0.1)
+			end
 			card.ability.extra.usedThisHand = false
 		end
 	end

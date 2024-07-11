@@ -28,7 +28,7 @@ table.insert(stuffToAdd, {
 		return {vars = {center.ability.extra.name}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.before then
+		if context.cardarea == G.jokers and context.after then
 			local faces = 0
 			for _,v in ipairs(context.scoring_hand) do
 				if v:is_face() then
@@ -36,11 +36,17 @@ table.insert(stuffToAdd, {
 				end
 			end
 			if faces >= 3 and not card.ability.extra.triggered then
-				card.ability.extra.triggered = true
-				ease_discard(3)
+				G.E_MANAGER:add_event(Event({
+					func = (function()
+						card.ability.extra.triggered = true
+						ease_discard(3)
+						return true
+					end)
+				}))
 				return {
 					message = "+3 Discards!"
 				}
+				
 			end
 		end
 		
@@ -78,11 +84,17 @@ table.insert(stuffToAdd, {
 			local hasFace = false
 			for _,v in ipairs(context.full_hand) do
 				if v:is_face() then
-					ease_hands_played(1)
-					return {
-						message = "+1 Hand!"
-					}
+					hasFace = true
 				end
+			end
+			if hasFace then
+				G.E_MANAGER:add_event(Event({
+					func = (function()
+						card_eval_status_text(card, 'extra', nil, nil, nil, {message = "+1 Hand!"})
+						ease_hands_played(1)
+						return true
+					end)
+				}))
 			end
 		end
 	end

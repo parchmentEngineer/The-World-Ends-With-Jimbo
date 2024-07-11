@@ -76,7 +76,7 @@ table.insert(stuffToAdd, {
 				card.ability.extra.triggeredThisHand = true
 				G.E_MANAGER:add_event(Event({
 					func = (function()
-						for i=1,5 do
+						for i=1,card.ability.extra.tagsToMake do
 							if G.FORCE_TAG then return G.FORCE_TAG end
 							local _pool, _pool_key = get_current_pool('Tag', nil, nil, nil)
 							local _tag_name = pseudorandom_element(_pool, pseudoseed(_pool_key))
