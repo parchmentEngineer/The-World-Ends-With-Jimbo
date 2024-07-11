@@ -341,7 +341,7 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "lolitaChopper",
 	key = "lolitaChopper",
-	config = {extra = {xMult = 1, xMultGain = 0.5}},
+	config = {extra = {xMult = 1, xMultGain = 0.3}},
 	pos = {x = 8, y = 4},
 	loc_txt = {
 		name = 'Lolita Chopper',
@@ -367,10 +367,10 @@ table.insert(stuffToAdd, {
 			local mostPlayed = true
 			local play_more_than = (G.GAME.hands[context.scoring_name].played or 0)
 			for k, v in pairs(G.GAME.hands) do
-				print("Checking if "..k.." is not a "..context.scoring_name)
-				print("Checking if "..v.played.." >= "..play_more_than)
+				-- print("Checking if "..k.." is not a "..context.scoring_name)
+				-- print("Checking if "..v.played.." >= "..play_more_than)
 				if k ~= context.scoring_name and v.played >= play_more_than and v.visible then
-					print("It is! Setting most played to false")
+					-- print("It is! Setting most played to false")
 					mostPlayed = false
 				end
 			end

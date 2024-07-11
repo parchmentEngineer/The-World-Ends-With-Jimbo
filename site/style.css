@@ -67,7 +67,7 @@ h1 {
 
 .joker img {
   height: 190px;
-  image-rendering: pixelated;
+
 }
 img.hasback {
   background-image: url("img/sticker_bg.png");

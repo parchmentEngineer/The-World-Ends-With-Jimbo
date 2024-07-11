@@ -352,61 +352,41 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "lazyBomber",
 	key = "lazyBomber",
-	config = {extra = {mult = 40, timerMax = 3, timer = 0}},
+	config = {extra = {mult = 20, handReq = "High Card"}},
 	pos = {x = 8, y = 1},
 	loc_txt = {
 		name = 'Lazy Bomber',
 		text = {
-			--"{C:mult}+#1#{} Mult exactly {C:attention}#2#{} hands",
-			--"after using a {C:tarot}tarot{} card",
-			"When you use a {C:tarot}Tarot{} card,",
-			"starts a countdown for {C:attention}#2#{} hands",
-			"{C:mult}+#1#{} Mult on the hand the countdown ends",
-			"{C:inactive}(#3#){}"
+			"{C:mult}+#1#{} Mult when you",
+			"play a {C:attention}#2#{}",
+			"{C:inactive}(Hand changes when you{}",
+			"{C:inactive}play a {C:tarot}tarot{C:inactive} card){}"
 		}
 	},
 	rarity = 1,
-	cost = 5,
+	cost = 4,
 	discovered = true,
 	blueprint_compat = true,
 	atlas = "jokers",
 	loc_vars = function(self, info_queue, center)
-		return {vars = {
-			center.ability.extra.mult,
-			center.ability.extra.timerMax,
-			center.ability.extra.timer == 1 and "Active!" or (center.ability.extra.timer == 0 and "Inactive!" or (center.ability.extra.timer-1).." hands remaining") }}
+		return {vars = {center.ability.extra.mult, center.ability.extra.handReq}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.timer == 1 then
+		if context.cardarea == G.jokers and context.joker_main and context.scoring_name == card.ability.extra.handReq then
 			return {
 				message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
 				mult_mod = card.ability.extra.mult,
 			}
 		end
 		
-		if context.cardarea == G.jokers and context.after and card.ability.extra.timer > 0 and not context.blueprint then
-			card.ability.extra.timer = card.ability.extra.timer - 1
-			if card.ability.extra.timer == 1 then
-				local eval = function(card) return (card.ability.extra.timer == 1) end
-				juice_card_until(card, eval, true)
-				return {
-					message = "Gonna blow!"
-				}
-			end
-			if card.ability.extra.timer == 0 then
-				return {
-					message = "Inactive!"
-				}
-			end
-			return {
-				message = (card.ability.extra.timer-1).." remaining"
-			}
-		end
-		
 		if context.using_consumeable and not context.blueprint then
 			if context.consumeable.ability.set == "Tarot" then
-				card.ability.extra.timer = card.ability.extra.timerMax
-				card_eval_status_text(card, 'extra', nil, nil, nil, {message = (card.ability.extra.timer-1).." remaining"})
+				local _poker_hands = {}
+				for k, v in pairs(G.GAME.hands) do
+					if v.visible and k ~= card.ability.extra.handReq then _poker_hands[#_poker_hands+1] = k end
+				end
+				card.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('lazyBomber'))
+				card_eval_status_text(card, 'extra', nil, nil, nil, {message = card.ability.extra.handReq})
 			end
 		end
 	end

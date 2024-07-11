@@ -59,6 +59,52 @@ end
 '''
 match_indent = false
 
+# Natural Puppy Deck - Cards in standard packs are face cards
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')'''
+position = "at"
+payload = '''
+if G.GAME.twewy_naturalPuppyDeck then
+	playmate_suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('naturalPuppy'))
+	card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
+	local newCode = playmate_suit.."_"
+    local newVal = pseudorandom_element({'J','K','Q'}, pseudoseed('naturalPuppy'))
+    local new_card = G.P_CARDS[newCode..newVal]
+	card:set_base(new_card)
+else
+	card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
+end
+'''
+match_indent = false
+
+# Natural Puppy Deck - Standard packs have X extra rewards
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''G.GAME.pack_choices = self.config.center.config.choose or 1'''
+position = "after"
+payload = '''
+if G.GAME.twewy_naturalPuppyDeck and self.ability.name:find('Standard') then
+	G.GAME.pack_choices = G.GAME.pack_choices + 1
+end
+'''
+match_indent = false
+
+# Natural Puppy Deck - Update booster pack description
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''if not full_UI_table.name then full_UI_table.name = localize{type = 'name', set = 'Other', key = name_override, nodes = full_UI_table.name} end'''
+position = "before"
+payload = '''
+if G.GAME.twewy_naturalPuppyDeck and _c.kind == "Standard" then
+    loc_vars[1] = loc_vars[1] + 1
+end
+'''
+match_indent = false
+
 # Rakuyo - Booster packs have X extra options
 [[patches]]
 [patches.pattern]
@@ -94,6 +140,91 @@ position = "before"
 payload = '''
 if G.GAME.rakuyo_booster_bonus then
     loc_vars[2] = loc_vars[2] + G.GAME.rakuyo_booster_bonus
+end
+'''
+match_indent = false
+
+# Gatito - Get custom rarity in Gatito packs
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''rarity = (_legendary and 4) or (rarity > 0.95 and 3) or (rarity > 0.7 and 2) or 1'''
+position = "at"
+payload = '''
+if type(_rarity) == 'string' then
+	rarity = _rarity
+else
+	rarity = (_legendary and 4) or (rarity > 0.95 and 3) or (rarity > 0.7 and 2) or 1
+end
+'''
+match_indent = false
+
+# Lapin Angelique - Fixes display issue for Steel cards
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''elseif _c.effect == 'Steel Card' then loc_vars = {_c.config.h_x_mult}'''
+position = "at"
+payload = '''
+elseif _c.effect == 'Steel Card' then 
+	if card then
+		loc_vars = {card.ability.h_x_mult}
+	else
+		loc_vars = {_c.config.h_x_mult}
+	end
+'''
+match_indent = false
+
+# Lapin Angelique - Fixes display issue for Glass cards
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''elseif _c.effect == 'Glass Card' then loc_vars = {_c.config.Xmult, G.GAME.probabilities.normal, _c.config.extra}'''
+position = "at"
+payload = '''
+elseif _c.effect == 'Glass Card' then 
+	if card then
+		loc_vars = {card.ability.x_mult, G.GAME.probabilities.normal, _c.config.extra}
+	else
+		loc_vars = {_c.config.Xmult, G.GAME.probabilities.normal, _c.config.extra}
+	end
+'''
+match_indent = false
+
+# Sheep Heavenly - Move red seal from played cards onto leftmost held card
+# TRIGGERS ONCE PER JOKER AND THAT'S BAD
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = '''if hand_chips*mult > 0 then'''
+position = "before"
+payload = '''
+if G.GAME.twewy_sheepHeavenlyDeck then
+	G.E_MANAGER:add_event(Event({
+		func = function() 
+			local maxRedSeals = math.min(#scoring_hand, #G.hand.cards)
+			local sealsToAdd = 0
+			for k, v in ipairs(scoring_hand) do
+				if (v.seal and v.seal == 'Red') then
+					sealsToAdd = sealsToAdd + 1
+					if sealsToAdd > maxRedSeals then
+						sealsToAdd = maxRedSeals
+					else
+						v:set_seal()
+						v:juice_up()
+					end
+				end
+			end
+			for k, v in ipairs(G.hand.cards) do
+				if not v.seal and sealsToAdd > 0 then
+					sealsToAdd = sealsToAdd - 1
+					v:set_seal('Red')
+					v:juice_up()
+				end
+			end
+			return true
+		end
+	}))
 end
 '''
 match_indent = false

@@ -14,6 +14,11 @@
 local mod_path = ''..SMODS.current_mod.path
 local stuffToAdd = {}
 
+--JokerDisplay mod integration
+if SMODS.Mods["JokerDisplay"] then
+	JOKER_DISPLAY = NFS.load(mod_path .. "/JokerDisplayIntegration.lua")()
+end
+
 -- G.localization.descriptions["Other"]["p_twewy_gatitoPack"] = {
   -- name = "Colour Pack",
   -- text = {
@@ -47,11 +52,13 @@ local stuffToAdd = {}
 
 --table.insert(G.P_JOKER_RARITY_POOLS, {})
 --table.insert(G.C.RARITY, HEX("CC9977"))
---local gatitoRarity = #G.P_JOKER_RARITY_POOLS
---loc_colour("mult", nil)
---G.ARGS.LOC_COLOURS["gatito"] = G.C.RARITY[gatitoRarity]
---G.gatitoRarity = gatitoRarity
---G.gatitoOdds = 0.3
+local gatitoRarity = 'gatitoRarity'
+G.P_JOKER_RARITY_POOLS.gatitoRarity = {}
+G.C.RARITY.gatitoRarity = HEX("745C56")
+loc_colour("mult", nil)
+G.ARGS.LOC_COLOURS["gatito"] = G.C.RARITY[gatitoRarity]
+G.gatitoRarity = gatitoRarity
+G.gatitoOdds = 0.3
 
 
 table.insert(stuffToAdd, {
@@ -80,31 +87,34 @@ table.insert(stuffToAdd, {
 })
 
 local debugMode = false
-local testingJokers = {'lolitaChopper', 'ohabari', 'masamune', 'blackSky', 'loveMeTether'}
+local testingJokers = {'mitama'}
 local vanillaJokers = {}
 local testingConsumables = {'c_empress', 'c_pluto'}
 
--- here's an example booster pack
--- SMODS.Booster {
-    -- key = 'test_booster_pack_2',
-    -- weight = 100,
-    -- loc_txt = {
-        -- name = "Arst",
-        -- text = {
-            -- "This is a test Booster Pack"
-        -- },
-        -- group_name = "Test Pack",
-    -- },
-    -- create_card = function(self, card)
-        -- return create_card("Tarot", G.pack_cards, nil, nil, true, true, nil, 'buf')
-    -- end,
-    -- config = {extra = 5, choose = 5},
-    -- draw_hand = true,
-    -- sparkles = {
-        -- colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
-        -- lifespan = 1
-    -- }
--- }
+--here's an example booster pack
+SMODS.Booster {
+    key = 'test_booster_pack_2',
+    weight = 0,
+	pos = {x = 0, y = 0},
+    loc_txt = {
+        name = "Gatito Pack",
+        text = {
+            "This is a test Booster Pack"
+        },
+        group_name = "Gatito Pack",
+    },
+    create_card = function(self, card)
+        local _card = create_card("Joker", G.pack_cards, nil, gatitoRarity, true, true, nil, 'gatito')
+		return _card
+    end,
+    config = {extra = 4, choose = 1},
+	atlas = 'packs',
+    draw_hand = false,
+    sparkles = {
+        colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
+        lifespan = 1
+    }
+}
 
 
 -- Testing card back
@@ -123,6 +133,23 @@ table.insert(stuffToAdd, {
 	atlas = "jokers"
 })
 
+-- table.insert(stuffToAdd, {
+	-- object_type = "Back",
+	-- name = "juptierOfTheMonkey",
+	-- key = "juptierOfTheMonkey",
+	-- config = {},
+	-- pos = {x = 0, y = 4},
+	-- loc_txt = {
+		-- name = "Jupiter of the Monkey",
+		-- text = {
+			-- "At the end of each round",
+			-- "transform all held {C:tarot}Tarots{}",
+			-- "into other random {C:tarot}Tarots{}"
+		-- }
+	-- },
+	-- atlas = "jokers"
+-- })
+
 -- Sprite Atlas
 table.insert(stuffToAdd, {
 	object_type = "Atlas",
@@ -131,6 +158,15 @@ table.insert(stuffToAdd, {
 	px = 71,
 	py = 95
 })
+
+table.insert(stuffToAdd, {
+	object_type = "Atlas",
+	key = "packs",
+	path = "packs.png",
+	px = 71,
+	py = 95
+})
+
 
 -- SMODS.Shader({key = 'glitter', path = 'glitter.fs'})
 -- SMODS.Sound({key = 'rhinestone', path = 'glitter.ogg'})
@@ -249,14 +285,20 @@ end
 local Card_set_ability = Card.set_ability
 function Card.set_ability(self, center, initial, delay_sprites)
 	Card_set_ability(self, center, initial, delay_sprites)
-	if self.ability.name == 'burningCherry' then
+	if self.ability.name == 'burningCherry' or self.ability.name == 'lazyBomber' then
 		local _poker_hands = {}
 		for k, v in pairs(G.GAME.hands) do
 			if v.visible and k ~= self.ability.extra.handReq then _poker_hands[#_poker_hands+1] = k end
 		end
-		self.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed('burningCherry'))
+		self.ability.extra.handReq = pseudorandom_element(_poker_hands, pseudoseed(self.ability.name))
 	end
-	
+	if not initial and G.GAME and G.GAME.twewy_playmate_beam == 1 and self.playing_card and self:is_suit("Spades")then
+		G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            local edition = poll_edition('playmateBeam', nil, true, true)
+            local aura_card = self
+            aura_card:set_edition(edition, true)
+        return true end }))
+	end
 end
 
 local Original_ease_dollars = ease_dollars
@@ -273,6 +315,10 @@ end
 
 local Card_add_to_deck_ref = Card.add_to_deck 
 function Card.add_to_deck(self, from_debuff)
+	if G.GAME.twewy_dBDeck and self.ability.set == "Joker" then
+		G.GAME.round_resets.hands = G.GAME.round_resets.hands - 1
+        ease_hands_played(-1)
+	end
 	if not self.added_to_deck then
 		if self.ability.name == 'kewlLine' or self.ability.name == 'selfFound' or self.ability.name == 'swiftStorm'
 		or self.ability.name == 'blackSky' or self.ability.name == 'fierySpirit' then
@@ -314,9 +360,13 @@ end
 
 local Card_remove_from_deck_ref = Card.remove_from_deck 
 function Card.remove_from_deck(self, from_debuff)
+	if G.GAME.twewy_dBDeck and self.ability.set == "Joker" then
+		G.GAME.round_resets.hands = G.GAME.round_resets.hands + 1
+        ease_hands_played(1)
+	end
 	for k,v in ipairs(SMODS.find_card("j_twewy_live", true)) do
 		if self.getting_sliced then
-			print("Removing a "..self.ability.name)
+			--print("Removing a "..self.ability.name)
 			v.ability.extra.countdown = v.ability.extra.countdown - 1
 			if v.ability.extra.countdown < 0 then
 				v.ability.extra.countdown = 0
@@ -414,6 +464,24 @@ function Card.set_cost(self)
 	
 end
 
+local Card_get_h_x_mult = Card.get_chip_h_x_mult
+function Card.get_chip_h_x_mult(self)
+	local retVal = Card_get_h_x_mult(self)
+	if retVal and retVal > 0 and G.GAME.twewy_lapinAngelique then
+		self.ability.h_x_mult = self.ability.h_x_mult + 0.1
+	end
+	return retVal
+end
+
+local Card_get_x_mult = Card.get_chip_x_mult
+function Card.get_chip_x_mult(self)
+	local retVal = Card_get_x_mult(self)
+	if retVal and retVal > 0 and G.GAME.twewy_lapinAngelique then
+		self.ability.x_mult = self.ability.x_mult + 0.1
+	end
+	return retVal
+end
+
 function destroyCard(card)
 	G.E_MANAGER:add_event(Event({
 		func = function()
@@ -433,540 +501,6 @@ function destroyCard(card)
 	})) 
 end
 
--- == Scrapped Ideas
--- == Most still work, they're just not good ideas
-
--- Kewl Line
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "kewlLinescrapped",
-	key = "kewlLinescrapped",
-	config = {extra = {handSize = -1, mult = 8}},
-	pos = {x = 1, y = 1},
-	loc_txt = {
-		name = 'Kewl Line',
-		text = {
-			"{C:red}#1#{} hand size, {C:mult}+#2#{} Mult",
-			"Scored {C:attention}8s{} double both",
-			"values until end of round"
-		}
-	},
-	rarity = 1,
-	cost = 5,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.handSize, center.ability.extra.mult}}
-	end,
-	calculate = function(self, card, context)
-		if context.individual
-		and context.other_card:get_id() == 8
-		and context.cardarea == G.play then
-			G.hand:change_size(card.ability.extra.handSize)
-			card.ability.extra.mult = card.ability.extra.mult * 2
-			card.ability.extra.handSize = card.ability.extra.handSize * 2
-			return { 
-				extra = {
-					message = "Double!",
-					colour = G.C.FILTER
-				},
-				card = card
-			}
-		end
-		
-		if context.cardarea == G.jokers and context.joker_main then
-			return {
-				message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
-				mult_mod = card.ability.extra.mult,
-			}
-		end
-		
-		if context.end_of_round and not context.individual and not context.repetition
-		and not context.blueprint and card.ability.extra.mult > 8 then
-			G.hand:change_size(-card.ability.extra.handSize-1)
-			card.ability.extra.mult = 8
-			card.ability.extra.handSize = -1
-			return {
-				message = localize('k_reset'),
-				colour = G.C.RED
-			}
-		end
-	end
-})
-
--- Dope Line
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "dopeLinescrapped",
-	key = "dopeLinescrapped",
-	config = {extra = {mult = 1}},
-	pos = {x = 2, y = 1},
-	loc_txt = {
-		name = 'Dope Line',
-		text = {
-			"If your scoring hand",
-			"has an {C:attention}Ace{}, {C:mult}+#1#{} Mult",
-			"and {C:red}destroy{} this joker.",
-			"Value doubles every round"
-		}
-	},
-	rarity = 1,
-	cost = 4,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.mult}}
-	end,
-	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.joker_main then
-			local aces = 0
-			for i = 1, #context.scoring_hand do
-				if context.scoring_hand[i]:get_id() == 14 then aces = aces + 1 end
-			end
-			if aces >= 1 then
-				G.E_MANAGER:add_event(Event({
-					func = function()
-						play_sound('tarot1')
-						card.T.r = -0.2
-						card:juice_up(0.3, 0.4)
-						card.states.drag.is = true
-						card.children.center.pinch.x = true
-						G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
-							func = function()
-									G.jokers:remove_card(card)
-									card:remove()
-									card = nil
-								return true; end})) 
-						return true
-					end
-				})) 
-				return {
-					message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
-					mult_mod = card.ability.extra.mult
-				}
-			end
-		end
-		
-		if context.end_of_round and not context.individual and not context.repetition
-		and not context.blueprint then
-			card.ability.extra.mult = card.ability.extra.mult * 2
-			return {
-				message = 'Doubled!',
-				colour = G.C.RED
-			}
-		end
-	end
-})
-
--- Wild Line
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "wildLinescrapped",
-	key = "wildLinescrapped",
-	config = {extra = {mult = 4}},
-	pos = {x = 3, y = 1},
-	loc_txt = {
-		name = 'Wild Line',
-		text = {
-			"{C:mult}+#1#{} Mult",
-			"Doubles when a {C:attention}Mult Card{}",
-			"is scored, but breaks after",
-			"going over {C:mult}128{} mult"
-		}
-	},
-	rarity = 2,
-	cost = 8,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.mult}}
-	end,
-	calculate = function(self, card, context)
-	
-		if context.individual
-		and context.other_card.ability.effect == "Mult Card"
-		and context.cardarea == G.play then
-			card.ability.extra.mult = card.ability.extra.mult * 2
-			if card.ability.extra.mult > 128 then
-				G.E_MANAGER:add_event(Event({
-					func = function()
-						play_sound('tarot1')
-						card.T.r = -0.2
-						card:juice_up(0.3, 0.4)
-						card.states.drag.is = true
-						card.children.center.pinch.x = true
-						G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
-							func = function()
-									G.jokers:remove_card(card)
-									card:remove()
-									card = nil
-								return true; end})) 
-						return true
-					end
-				}))
-				return {
-					message = localize('Broken!'),
-					colour = G.C.FILTER
-				}
-			else
-				return { 
-					extra = {
-						message = "Double!",
-						colour = G.C.FILTER
-					},
-					card = card
-				}
-			end
-		end
-	
-		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.mult <= 128 then
-			return {
-				message = localize{type='variable',key='a_mult',vars={card.ability.extra.mult}},
-				mult_mod = card.ability.extra.mult,
-			}
-		end
-	end
-})
-
--- Swift Storm, Swift End
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "swiftStormScrapped",
-	key = "swiftStormScrapped",
-	config = {extra = {handSize = 4, handSizeLoss = 1}},
-	pos = {x = 4, y = 2},
-	loc_txt = {
-		name = 'Swift Storm, Swift End',
-		text = {
-			"{C:attention}+4{} hand size, permanently drops",
-			"to {C:attention}+#2#{} hand size if you don't",
-			"skip the {C:attention}Small{} or {C:attention}Big Blind{}",
-			"{C:inactive}(Currently {C:attention}+#1#{C:inactive} hand size)"
-		}
-	},
-	rarity = 2,
-	cost = 8,
-	discovered = true,
-	blueprint_compat = false,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.handSize, center.ability.extra.handSizeLoss}}
-	end,
-	calculate = function(self, card, context)
-		if context.setting_blind and not context.blueprint and not context.blind.boss and card.ability.extra.handSize == 4 then
-			G.hand:change_size(-(card.ability.extra.handSize - card.ability.extra.handSizeLoss))
-			card.ability.extra.handSize = card.ability.extra.handSizeLoss
-		end
-	end
-})
-
--- Sizzling Gaze
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "sizzlingGazeScrapped",
-	key = "sizzlingGaze",
-	config = {extra = {payouts = 4}},
-	pos = {x = 2, y = 6},
-	loc_txt = {
-		name = 'Sizzling Gaze',
-		text = {
-			"The next {C:attention}#1#{} times you",
-			"play a {C:attention}Full House{}, gain",
-			"the {C:attention}tag{} for this blind",
-			"{C:inactive}(Currently: #2#){}",
-			"{C:inactive}Not actually 100% implemented{}"
-		}
-	},
-	rarity = 1,
-	cost = 6,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.payouts, "Uncommon Tag"}}
-	end,
-	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.before and next(context.poker_hands['Full House']) then
-			local _tag = Tag('tag_uncommon')
-            add_tag(_tag)
-			if not context.blueprint then
-				card.ability.extra.payouts = card.ability.extra.payouts - 1
-			end
-		end
-	end
-})
-
--- Vacu Squeeze
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "vacuSqueezeScrapped",
-	key = "vacuSqueezeScrapped",
-	config = {extra = {retriggers = 4}},
-	pos = {x = 2, y = 10},
-	loc_txt = {
-		name = 'Vacu Squeeze',
-		text = {
-			"If your scoring hand has only",
-			"one {C:attention}face card{}, retrigger it {C:attention}#1#{} times"
-		}
-	},
-	rarity = 1,
-	cost = 4,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.retriggers}}
-	end,
-	calculate = function(self, card, context)
-		if context.repetition
-		and context.other_card:is_face()
-		and context.cardarea == G.play then
-			local faces = {}
-			for k, v in ipairs(context.scoring_hand) do
-				if v:is_face() then 
-					faces[#faces+1] = v
-				end
-			end
-			if #faces == 1 then
-				return {
-					message = localize('k_again_ex'),
-					repetitions = card.ability.extra.retriggers,
-					card = card
-				}
-			end
-		end
-	end
-})
-
--- Impact Warning
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "impactWarningScrapped",
-	key = "impactWarningScrapped",
-	config = {extra = {chips = 0, chipsGain = 50}},
-	pos = {x = 8, y = 0},
-	loc_txt = {
-		name = 'Impact Warning',
-		text = {
-			"This joker gains {C:chips}+#1#{} Chips",
-			"when a {C:planet}Planet{} card is used",
-			"{C:attention}Resets{} on playing a {C:attention}Level 1{} hand",
-			"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)"
-		}
-	},
-	rarity = 2,
-	cost = 6,
-	discovered = true,
-	blueprint_compat = true,
-	perishable_compat = false,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.chipsGain, center.ability.extra.chips}}
-	end,
-	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.before and G.GAME.hands[context.scoring_name].level == 1 and card.ability.extra.chips > 0 then
-			card.ability.extra.chips = 0
-			card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Reset!"})
-		end
-		
-		if context.cardarea == G.jokers and context.joker_main and card.ability.extra.chips > 0 then
-			return {
-				message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
-				chip_mod = card.ability.extra.chips,
-			}
-		end
-		
-		if context.using_consumeable and not context.blueprint then
-			if context.consumeable.ability.set == "Planet" then
-				card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chipsGain
-				card_eval_status_text(card, 'extra', nil, nil, nil, {
-					message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
-					chip_mod = card.ability.extra.chips,
-				})
-			end
-		end
-	end
-})
-
--- Long Live The Ice
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "longLiveTheIceScrapped",
-	key = "longLiveTheIceScrapped",
-	config = {extra = {chips = 50, dollars = 2, flipside = false}},
-	pos = {x = 1, y = 6},
-	loc_txt = {
-		name = 'Long Live The Ice',
-		text = {
-			"When you play a hand,",
-			"{V:1}#3#: {C:chips}+#1#{V:1} chips{}",
-			"{V:2}#4#: Gain {C:money}$#2#{}",
-			"Swap effects on blind skip"
-		}
-	},
-	rarity = 1,
-	cost = 3,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-				return {vars = {
-			center.ability.extra.chips,
-			center.ability.extra.dollars,
-			center.ability.extra.flipside and "Inactive" or "Active",
-			center.ability.extra.flipside and "Active" or "Inactive",
-			colours = {
-				center.ability.extra.flipside and G.C.UI.TEXT_INACTIVE or G.C.UI.TEXT_DARK,
-				center.ability.extra.flipside and G.C.UI.TEXT_DARK or G.C.UI.TEXT_INACTIVE
-			}
-		}}
-	end,
-	calculate = function(self, card, context)
-		if context.skip_blind and not context.blueprint then
-			card.ability.extra.flipside = not card.ability.extra.flipside
-			card_eval_status_text(card, 'extra', nil, nil, nil, {
-				message = "Flip!",
-				card = card
-			}) 
-		end
-		
-		if context.cardarea == G.jokers and context.joker_main then
-			if not card.ability.extra.flipside then
-				return {
-					message = localize{type='variable',key='a_chips',vars={card.ability.extra.chips}},
-					chip_mod = card.ability.extra.chips,
-				}
-			else
-				ease_dollars(card.ability.extra.dollars)
-				G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + card.ability.extra.dollars
-				G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
-				return {
-					message = localize('$')..card.ability.extra.dollars,
-					dollars = card.ability.extra.dollars,
-					colour = G.C.MONEY
-				}
-			end
-		end
-	end
-})
-
--- Love Me Tether
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "loveMeTetherScrapped",
-	key = "loveMeTetherScrapped",
-	config = {extra = {}},
-	pos = {x = 7,  y = 9},
-	loc_txt = {
-		name = 'Love Me Tether',
-		text = {
-			"After scoring, if your scored",
-			"hand had exactly {C:attention}1{} {C:hearts}Heart{}, set",
-			"the rank of all scored cards",
-			"equal to that {C:hearts}Heart's{} rank"
-		}
-	},
-	rarity = 1,
-	cost = 4,
-	discovered = true,
-	blueprint_compat = true,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.name}}
-	end,
-	calculate = function(self, card, context)
-		local heartsVal = -1
-		if context.cardarea == G.jokers and context.after then
-			for k,v in pairs(context.scoring_hand) do
-				if v:is_suit("Hearts") then
-					if heartsVal == -1 then
-						heartsVal = v.base.id
-					else
-						heartsVal = -2
-					end
-				end
-			end
-			if heartsVal > 0 then
-				for k,v in pairs(context.scoring_hand) do
-					G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
-						local _card = v
-						local suit_prefix = string.sub(_card.base.suit, 1, 1)..'_'
-						local rank_suffix = heartsVal
-						if rank_suffix < 10 then rank_suffix = tostring(rank_suffix)
-						elseif rank_suffix == 10 then rank_suffix = 'T'
-						elseif rank_suffix == 11 then rank_suffix = 'J'
-						elseif rank_suffix == 12 then rank_suffix = 'Q'
-						elseif rank_suffix == 13 then rank_suffix = 'K'
-						elseif rank_suffix == 14 then rank_suffix = 'A'
-						end
-						_card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
-						_card:juice_up()
-					return true end }))
-				end
-				G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.3,func = function()
-					card_eval_status_text(card, 'extra', nil, nil, nil, {message = "Tethered!"})
-				return true end }))
-				for k,v in pairs(context.scoring_hand) do
-					G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
-						v:juice_up()
-					return true end }))
-				end
-			end
-		end	
-	end
-})
-
--- Whirlygig Juggle
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "whirlygigJuggle",
-	key = "whirlygigJuggle",
-	config = {extra = {retriggers = 1}},
-	pos = {x = 3, y = 10},
-	loc_txt = {
-		name = 'Whirlygig Juggle',
-		text = {
-			"When you play a {C:attention}Straight{},",
-			"retrigger the lowest value",
-			"card {C:attention}#1#{} time#2# and increase the",
-			"number of retriggers by {C:attention}1{}"
-		}
-	},
-	rarity = 1,
-	cost = 5,
-	discovered = true,
-	blueprint_compat = true,
-	perishable_compat = false,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.retriggers, center.ability.extra.retriggers == 1 and '' or 's'}}
-	end,
-	calculate = function(self, card, context)
-		if context.repetition
-		and context.cardarea == G.play
-		and next(context.poker_hands['Straight']) then
-			print("Test")
-			local lowestVal = 99
-			local lowestId = -1
-			for k, v in ipairs(context.scoring_hand) do
-				if v:get_id() <= lowestVal then
-					lowestVal = v:get_id()
-					lowestId = v.unique_val
-					print(lowestVal.." has ID "..lowestId)
-				end
-			end
-			if context.other_card.unique_val == lowestId then
-				card.ability.extra.retriggers = card.ability.extra.retriggers + 1
-				return {
-					message = localize('k_again_ex'),
-					repetitions = card.ability.extra.retriggers-1,
-					card = card
-				}
-			end
-		end
-	end
-})
+function evalMessage(message)
+	card_eval_status_text(card, 'extra', nil, nil, nil, {message = message})
+end

@@ -105,7 +105,7 @@ let jokers = [
 	{
 		name: 'Shout!',
 		text: [
-			"{C:chips}+100{} Chips if your last {C:attention}3{}",
+			"{C:chips}+150{} Chips if your last {C:attention}3{}",
 			"hands contained a scoring face card",
 			"{C:inactive}(Current streak: {C:attention}0{C:inactive}){}"
 		],
@@ -124,6 +124,64 @@ let jokers = [
 		image_url: "site/img/tile010.png",
 		rarity: "Common",
 		brand: "Mus Rattus"
+	},
+	{
+		name: 'Lightning Storm',
+		text: [
+			"Scored cards that share",
+			"a suit with {C:attention}Jacks{} held",
+			"in hand give {C:chips}+50{} Chips"
+		],
+		image_url: "site/img/tile011.png",
+		rarity: "Common",
+		brand: "Mus Rattus"
+	},
+	{
+		name: 'Stopper Spark',
+		text: [
+			"{C:attention}Stone Cards{} held in",
+			"hand give {C:chips}+500{} Chips"
+		],
+		image_url: "site/img/tile012.png",
+		rarity: "Rare",
+		brand: "Mus Rattus"
+	},
+	{
+		name: 'Microcosmic Pull',
+		text: [
+			"If you play a hand with",
+			"exactly {C:attention}1{} card, {C:mult}+20{} Mult",
+			"and {C:attention}+1{} to cards needed",
+			"to trigger this effect",
+			"{C:inactive}(Rolls over after 5){}"
+		],
+		image_url: "site/img/tile023.png",
+		rarity: "Common",
+		brand: "Wild Boar"
+	},
+	{
+		name: 'Lazy Bomber',
+		text: [
+			"{C:mult}+20{} Mult when you",
+			"play a {C:attention}High Card{}",
+			"{C:inactive}(Hand changes when you{}",
+			"{C:inactive}play a {C:tarot}tarot{C:inactive} card){}"
+		],
+		image_url: "site/img/tile025.png",
+		rarity: "Common",
+		brand: "Wild Boar"
+	},
+	{
+		name: 'Diss',
+		text: [
+			"This joker gains {C:mult}+30{} Mult",
+			"if played hand triggers",
+			"the {C:attention}Boss Blind{} effect",
+			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
+		],
+		image_url: "site/img/tile024.png",
+		rarity: "Rare",
+		brand: "Wild Boar"
 	},
 	{
 		name: 'Kewl Line',
@@ -177,43 +235,6 @@ let jokers = [
 		],
 		image_url: "site/img/tile022.png",
 		rarity: "Uncommon",
-		brand: "Wild Boar"
-	},
-	{
-		name: 'Microcosmic Pull',
-		text: [
-			"If you play a hand with",
-			"exactly {C:attention}1{} card, {C:mult}+20{} Mult",
-			"and {C:attention}+1{} to cards needed",
-			"to trigger this effect",
-			"{C:inactive}(Rolls over after 5){}"
-		],
-		image_url: "site/img/tile023.png",
-		rarity: "Common",
-		brand: "Wild Boar"
-	},
-	{
-		name: 'Lazy Bomber',
-		text: [
-			"When you use a {C:tarot}Tarot{}",
-			"card, starts a countdown",
-			"for {C:attention}3{} hands. {C:mult}+40{} Mult on the hand it ends",
-			"{C:inactive}(Inactive!){}"
-		],
-		image_url: "site/img/tile025.png",
-		rarity: "Common",
-		brand: "Wild Boar"
-	},
-	{
-		name: 'Diss',
-		text: [
-			"This joker gains {C:mult}+30{} Mult",
-			"if played hand triggers",
-			"the {C:attention}Boss Blind{} effect",
-			"{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
-		],
-		image_url: "site/img/tile024.png",
-		rarity: "Rare",
 		brand: "Wild Boar"
 	},
 	{
@@ -304,6 +325,16 @@ let jokers = [
 		brand: "Dragon Couture"
 	},
 	{
+		name: 'Fiery Spirit, Spirited Fire',
+		text: [
+			"{C:attention}+2{} hand size if you",
+			"have no {C:green}Uncommon{C:attention} Jokers{}"
+		],
+		image_url: "site/img/tile041.png",
+		rarity: "Common",
+		brand: "Dragon Couture"
+	},
+	{
 		name: 'Spider\'s Silk',
 		text: [
 			"Played {C:attention}Steel{} cards become {C:attention}Glass{}, and held {C:attention}Glass{}",
@@ -383,6 +414,19 @@ let jokers = [
 		brand: "Lapin Angelique"
 	},
 	{
+		name: 'Lolita Chopper',
+		text: [
+			"When you play your most",
+			"played hand, set its level",
+			"to {C:attention}1{} and this joker gains",
+			"{X:mult,C:white} X0.3{} Mult for each level lost this way",
+			"{C:inactive}(Currently {X:mult,C:white} X1{C:inactive} Mult){}"
+		],
+		image_url: "site/img/tile076.png",
+		rarity: "Uncommon",
+		brand: "Lapin Angelique"
+	},
+	{
 		name: 'Thunder Pawn',
 		text: [
 			"Gain {C:money}$2{} each round",
@@ -427,9 +471,20 @@ let jokers = [
 		brand: "Pegaso"
 	},
 	{
+		name: 'Aqua Pawn',
+		text: [
+			"Earn {C:money}${} equal to",
+			"the level of the first",
+			"hand played each round"
+		],
+		image_url: "site/img/tile090.png",
+		rarity: "Common",
+		brand: "Pegaso"
+	},
+	{
 		name: 'Zantestu',
 		text: [
-			"When you play a {C:attention}Straight{}",
+			"When you play a hand",
 			"with all four suits, gain",
 			"a {C:tarot}Tarot{} and a {C:planet}Planet{}"
 		],
@@ -499,13 +554,23 @@ let jokers = [
 		rarity: "Uncommon",
 		brand: "Jupiter of the Monkey"
 	},
-	/*{
+	{
+		name: 'Ohabari',
+		text: [
+			"Make a {C:dark_edition}Negative{} copy",
+			"of the first {C:attention}Consumable{}",
+			"used each ante",
+		],
+		image_url: "site/img/tile059.png",
+		rarity: "Uncommon",
+		brand: "Jupiter of the Monkey"
+	},
+	{
 		name: 'Long Live<br>The Ice',
 		text: [
-			"When you play a hand,",
-			"Active: {C:chips}+50{} chips{}",
-			"{C:inactive}Inactive: Gain {C:money}$2{}",
-			"Swap effects on skip"
+			"When you skip both blinds",
+			"in a single ante, disable",
+			"that ante's {C:attention}Boss Blind{}"
 		],
 		image_url: "site/img/tile103.png",
 		rarity: "Common",
@@ -534,7 +599,7 @@ let jokers = [
 		image_url: "site/img/tile105.png",
 		rarity: "Uncommon",
 		brand: "Hip Snake"
-	},*/
+	},
 	{
 		name: 'Thanx',
 		text: [
@@ -636,7 +701,7 @@ let jokers = [
 		text: [
 			"Cards with the same rank",
 			"as your last played {C:attention}High{}",
-			"{C:attention}Card{} are retriggered twice",
+			"{C:attention}Card{} are retriggered once",
 			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}"
 		],
 		image_url: "site/img/tile172.png",
@@ -647,7 +712,8 @@ let jokers = [
 		name: 'Whirlygig Juggle',
 		text: [
 			"When you play a {C:attention}Straight{},",
-			"retrigger the lowest value card {C:attention}1{} time and increase the number of retriggers by {C:attention}1{}"
+			"retrigger the lowest",
+			"value card {C:attention}5{} times"
 		],
 		image_url: "site/img/tile173.png",
 		rarity: "Uncommon",
@@ -665,13 +731,12 @@ let jokers = [
 	{
 		name: 'Playmate Beam',
 		text: [
-			"Cards in {C:attention}Standard Packs{}",
-			"are the same rank as",
-			"your last played {C:attention}High Card{}",
-			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}"
+			"When you apply an",
+			"{C:attention}Enhancement{} to a {C:attention}Spades{}",
+			"card, also apply a random {C:dark_edition}Edition{}"
 		],
 		image_url: "site/img/tile155.png",
-		rarity: "Common",
+		rarity: "Rare",
 		brand: "Natural Puppy"
 	},
 	{
@@ -703,6 +768,74 @@ let jokers = [
 		image_url: "site/img/tile157.png",
 		rarity: "Uncommon",
 		brand: "Natural Puppy"
+	},
+	{
+		name: 'Superfine Beam',
+		text: [
+			"When you discard an",
+			"{C:attention}enhanced{} card, create a",
+			"temporary {C:attention}Ace{} with the same {C:attention}enhancement{}"
+		],
+		image_url: "site/img/tile159.png",
+		rarity: "Uncommon",
+		brand: "Natural Puppy"
+	},
+	{
+		name: 'Love Me Tether',
+		text: [
+			"Increase the rank of all",
+			"cards held in hand by {C:attention}1{}",
+			"for each {C:hearts}Heart{} discarded",
+			"{C:inactive}(Does not increase Aces){}"
+		],
+		image_url: "site/img/tile160.png",
+		rarity: "Rare",
+		brand: "Natural Puppy"
+	},
+	{
+		name: 'Ice Blow',
+		text: [
+			"The first time each round",
+			"you play a hand with {C:attention}3{} or",
+			"more scoring {C:attention}face cards{},",
+			"gain {C:red}+3{} discards this round"
+		],
+		image_url: "site/img/tile188.png",
+		rarity: "Common",
+		brand: "D+B"
+	},
+	{
+		name: 'Ice Risers',
+		text: [
+			"When you discard a hand",
+			"containing any {C:attention}face cards{},",
+			"gain {C:blue}+1{} hand this round"
+		],
+		image_url: "site/img/tile189.png",
+		rarity: "Uncommon",
+		brand: "D+B"
+	},
+	{
+		name: 'Earthshake',
+		text: [
+			"Unused discards carry",
+			"over between rounds",
+			"Resets after {C:attention}Boss Blind{}",
+		],
+		image_url: "site/img/tile190.png",
+		rarity: "Uncommon",
+		brand: "D+B"
+	},
+	{
+		name: 'Ice Blow',
+		text: [
+			"When you play a {C:attention}Straight{}",
+			"gain {C:blue}+1{} hand this round",
+			"{C:inactive}({C:attention}6{C:inactive} uses left)"
+		],
+		image_url: "site/img/tile191.png",
+		rarity: "Common",
+		brand: "D+B"
 	},
 ]
 
