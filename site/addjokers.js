@@ -307,7 +307,7 @@ let jokers = [
 	{
 		name: 'Flames Apart, Foes Aflame',
 		text: [
-			"When you play a {C:attention}Straight{}",
+			"After playing a {C:attention}Straight{}",
 			"{C:attention}Flush{} or a {C:attention}secret hand{}, draw your {C:dark_edition}entire deck{}"
 		],
 		image_url: "site/img/tile039.png",

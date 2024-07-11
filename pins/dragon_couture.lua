@@ -173,7 +173,7 @@ table.insert(stuffToAdd, {
 	loc_txt = {
 		name = 'Flames Apart, Foes Aflame',
 		text = {
-			"When you play a {C:attention}Straight Flush{} or",
+			"After playing a {C:attention}Straight Flush{} or",
 			"a {C:attention}secret hand{}, draw your {C:dark_edition}entire deck{}"
 		}
 	},
@@ -186,12 +186,12 @@ table.insert(stuffToAdd, {
 		return {vars = {}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.before and not context.blueprint and 
+		if context.cardarea == G.jokers and context.after and not context.blueprint and 
 		(next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind']) or
 		next(context.poker_hands['Flush House']) or next(context.poker_hands['Flush Five']))  then
 			local toDraw = #G.deck.cards
 			for i=1, toDraw do
-				draw_card(G.deck,G.hand, i*100/toDraw ,true, card , nil, 0.07)
+				draw_card(G.deck,G.hand, i*100/toDraw ,true, card , nil, 0.03)
 				G.E_MANAGER:add_event(Event({func = function() card:juice_up(0.3, 0.4) return true end}))
 				G.E_MANAGER:add_event(Event({func = function() G.hand:sort() return true end}))
 			end
