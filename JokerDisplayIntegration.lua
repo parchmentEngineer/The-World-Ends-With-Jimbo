@@ -570,4 +570,176 @@ jd_def["j_twewy_aquaMonster"] = {
 	end,
 }
 
+-- Aqua Ghost
+jd_def["j_twewy_aquaGhost"] = {
+	line_2 = {
+		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = "card.joker_display_values",
+			ref_value = "active_text",
+			scale = 0.3,
+		},
+		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+		card.joker_display_values.active = poker_hands and next(poker_hands["Three of a Kind"]) and true or false
+		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
+	end,
+
+	style_function = function(card, line_1, line_2)
+		if line_2 then
+			line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+		end
+	end,
+}
+
+-- Aqua Demon
+jd_def["j_twewy_aquaDemon"] = {
+	line_1 = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	line_2 = {
+		{ text = '(Three of a Kind)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		card.joker_display_values.chips = poker_hands and next(poker_hands["Three of a Kind"]) and 666 or 0
+	end
+}
+
+-- Lightning Moon
+jd_def['j_twewy_lightningMoon'] = {
+	line_1 = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	line_2 = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'count',
+			colour = G.C.IMPORTANT,
+			scale = 0.3
+		},
+		{ text = ' Clubs', colour = lighten(G.C.SUITS.Clubs, 0.35), scale = 0.3 },
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+	
+	calc_function = function(card)
+		local playing_hand = next(G.play.cards)
+		local count = 0
+
+		for k, v in ipairs(G.hand.cards) do
+			if playing_hand or not v.highlighted then
+				if not (v.facing == "back") and not v.debuff and v:is_suit("Clubs") then
+					count = count + 1
+				end
+			end
+		end
+
+		card.joker_display_values.chips = card.ability.extra.chips * count
+		card.joker_display_values.count = count
+
+	end,
+}
+
+-- Burning Cherry
+jd_def['j_twewy_burningCherry'] = {
+	line_1 = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	line_2 = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'handReq',
+			colour = G.C.UI.TEXT_INACTIVE,
+			scale = 0.3
+		},
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+}
+
+-- Impact Warning
+jd_def['j_twewy_impactWarning'] = {
+	line_1 = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	line_2 = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'lastUsed',
+			colour = G.C.UI.TEXT_INACTIVE,
+			scale = 0.3
+		},
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+}
+
+-- Shout
+jd_def['j_twewy_shout'] = {
+	line_1 = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	line_2 = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'currentStreak',
+			colour = G.C.IMPORTANT,
+			scale = 0.3
+		},
+		{ text = '/3)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		local currentStreak = card.ability.extra.currentStreak
+
+		for k, v in pairs(scoring_hand) do
+			if v:is_face() then
+				currentStreak = currentStreak + 1
+				break
+			end
+		end
+
+		card.joker_display_values.currentStreak = currentStreak
+		card.joker_display_values.chips = currentStreak >= 3 and card.ability.extra.chips or 0
+	end,
+}
+
 -- End Mus Rattus --------------------------------------------------
