@@ -197,10 +197,10 @@ table.insert(stuffToAdd, {
 			local string_endpos = #context.scoring_name
 			local _, found_endpos = context.scoring_name:find('_spectrum')
 			if found_endpos == string_endpos then is_base_spectrum = true end
-			if next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind'])
+			if is_modded_secret_hand or next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind'])
 			or next(context.poker_hands['Flush House']) or next(context.poker_hands['Flush Five']) then
 				if not is_base_spectrum then
-				local toDraw = #G.deck.cards
+					local toDraw = #G.deck.cards
 					for i=1, toDraw do
 						G.E_MANAGER:add_event(Event({func = function() card:juice_up(0.3, 0.4) return true end}))
 						draw_card(G.deck, G.hand, i*100/toDraw, nil, true, nil, 0.07)
