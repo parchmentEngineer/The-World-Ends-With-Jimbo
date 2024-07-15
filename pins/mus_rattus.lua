@@ -536,14 +536,22 @@ table.insert(stuffToAdd, {
 	calculate = function(self, card, context)
 		if context.individual and context.cardarea == G.play then
 			local matchSuit = false
+			local matchedCard = nil
 			for _, v in ipairs(G.hand.cards) do
 				for _, suit in ipairs({"Spades", "Hearts", "Clubs", "Diamonds"}) do
 					if v:is_suit(suit) and context.other_card:is_suit(suit) and v:get_id() == 11 then
 						matchSuit = true
+						matchedCard = v
 					end
 				end
 			end
 			if matchSuit then
+				G.E_MANAGER:add_event(Event({
+					func = function()
+						matchedCard:juice_up()
+						return true
+					end
+				})) 
 				return {
 					chips = card.ability.extra.chips,
 					card = card

@@ -91,30 +91,30 @@ local testingJokers = {'mitama'}
 local vanillaJokers = {}
 local testingConsumables = {'c_empress', 'c_pluto'}
 
---here's an example booster pack
-SMODS.Booster {
-    key = 'test_booster_pack_2',
-    weight = 0,
-	pos = {x = 0, y = 0},
-    loc_txt = {
-        name = "Gatito Pack",
-        text = {
-            "This is a test Booster Pack"
-        },
-        group_name = "Gatito Pack",
-    },
-    create_card = function(self, card)
-        local _card = create_card("Joker", G.pack_cards, nil, gatitoRarity, true, true, nil, 'gatito')
-		return _card
-    end,
-    config = {extra = 4, choose = 1},
-	atlas = 'packs',
-    draw_hand = false,
-    sparkles = {
-        colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
-        lifespan = 1
-    }
-}
+-- here's an example booster pack
+-- SMODS.Booster {
+    -- key = 'test_booster_pack_2',
+    -- weight = 0,
+	-- pos = {x = 0, y = 0},
+    -- loc_txt = {
+        -- name = "Gatito Pack",
+        -- text = {
+            -- "This is a test Booster Pack"
+        -- },
+        -- group_name = "Gatito Pack",
+    -- },
+    -- create_card = function(self, card)
+        -- local _card = create_card("Joker", G.pack_cards, nil, gatitoRarity, true, true, nil, 'gatito')
+		-- return _card
+    -- end,
+    -- config = {extra = 4, choose = 1},
+	-- atlas = 'packs',
+    -- draw_hand = false,
+    -- sparkles = {
+        -- colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
+        -- lifespan = 1
+    -- }
+-- }
 
 
 -- Testing card back
@@ -165,6 +165,13 @@ table.insert(stuffToAdd, {
 	path = "packs.png",
 	px = 71,
 	py = 95
+})
+
+SMODS.Atlas({
+    key = "modifiers",
+    path = "modifiers.png",
+    px = 71,
+    py = 95
 })
 
 
@@ -400,11 +407,12 @@ function Card.remove_from_deck(self, from_debuff)
 end
 
 function SMODS.current_mod.set_debuff(card)
-	if next(SMODS.find_card('j_twewy_blackSky')) and (card:is_suit('Spades', true) or card:is_suit('Clubs', true)) then
+	if (next(SMODS.find_card('j_twewy_blackSky')) and (card:is_suit('Spades', true) or card:is_suit('Clubs', true))) then
 		return true
 	end
 end
 
+--Code copied from Codex Arcanum
 local update_round_evalref = Game.update_round_eval
 function Game:update_round_eval(dt)
 	update_round_evalref(self, dt)
@@ -501,6 +509,6 @@ function destroyCard(card)
 	})) 
 end
 
-function evalMessage(message)
-	card_eval_status_text(card, 'extra', nil, nil, nil, {message = message})
+function evalMessage(card, message, colour)
+	card_eval_status_text(card, 'extra', nil, nil, nil, {message = message, colour = colour})
 end
