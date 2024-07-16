@@ -105,16 +105,14 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "earthshake",
 	key = "earthshake",
-	config = {extra = {discards = 0, carryOver = false}},
+	config = {extra = {discards = 0}},
 	pos = {x = 3, y = 11},
 	loc_txt = {
 		name = 'Earthshake',
 		text = {
-			"Unused discards carry",
-			"over between rounds",
-			"Resets after {C:attention}Boss Blind{}",
-			"{C:inactive}(Currently: {C:attention}#1#{C:inactive}){}",
-			"#2"
+			"Unused discards in non-Boss rounds",
+			"carry over to next round",
+			"{C:inactive}(Currently {C:red}+#1#{C:inactive} discard#2#)",
 		}
 	},
 	rarity = 2,
@@ -122,30 +120,12 @@ table.insert(stuffToAdd, {
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.discards, center.ability.extra.discards and "True" or "False"}}
+	loc_vars = function(self, info_queue, card)
+		return {vars = {
+			card.ability.extra.discards, 
+			card.ability.extra.discards ~= 1 and "s" or ""}}
 	end,
-	calculate = function(self, card, context)
-		if context.setting_blind then
-			if context.blind.boss then
-				card.ability.extra.carryOver = false
-			else
-				card.ability.extra.carryOver = true
-			end
-		end
-		
-		if context.first_hand_drawn and card.ability.extra.discards > 0 then
-			card:juice_up()
-			ease_discard(card.ability.extra.discards)
-			card.ability.extra.discards = 0
-		end
-		
-		if context.end_of_round and not context.repetition then
-			if card.ability.extra.carryOver then
-				card.ability.extra.discards = G.GAME.current_round.discards_left
-			end
-		end
-	end
+	-- Effect injected into G.FUNCS.cash_out
 })
 
 table.insert(stuffToAdd, {
