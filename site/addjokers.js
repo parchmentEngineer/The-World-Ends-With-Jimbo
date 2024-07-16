@@ -393,8 +393,8 @@ let jokers = [
 		name: 'Lolita Mic',
 		text: [
 			"{X:mult,C:white}X2{} Mult if you play",
-			"your recently discarded",
-			"hand type",
+			"your most recently",
+			"discarded hand type",
 			"{C:inactive}(Currently: {C:attention}None{C:inactive}){}",
 		],
 		image_url: "site/img/tile074.png",

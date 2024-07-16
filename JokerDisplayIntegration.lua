@@ -4,12 +4,12 @@ local jd_def = JokerDisplay.Definitions
 
 -- Ice Blow
 jd_def["j_twewy_iceBlow"] = {
-	line_1 = {
-		{ text = "+", colour = lighten(G.C.RED, 0.1) },
-		{ ref_table = "card.joker_display_values", ref_value = "aDiscards", colour = lighten(G.C.RED, 0.1) },
+	text = {
+		{ text = "+",                              colour = lighten(G.C.RED, 0.1) },
+		{ ref_table = "card.joker_display_values", ref_value = "aDiscards",       colour = lighten(G.C.RED, 0.1) },
 	},
-	line_2 = {
-		{ text = "(Discards)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(Discards)" },
 	},
 
 	calc_function = function(card)
@@ -37,12 +37,12 @@ jd_def["j_twewy_iceBlow"] = {
 
 -- Ice Risers
 jd_def["j_twewy_iceRisers"] = {
-	line_1 = {
-		{ text = "+", colour = lighten(G.C.CHIPS, 0.1) },
-		{ ref_table = "card.joker_display_values", ref_value = "aHands", colour = lighten(G.C.CHIPS, 0.1) },
+	text = {
+		{ text = "+",                              colour = lighten(G.C.CHIPS, 0.1) },
+		{ ref_table = "card.joker_display_values", ref_value = "aHands",            colour = lighten(G.C.CHIPS, 0.1) },
 	},
-	line_2 = {
-		{ text = "(Hands)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(Hands)" },
 	},
 
 	calc_function = function(card)
@@ -63,15 +63,15 @@ jd_def["j_twewy_iceRisers"] = {
 
 -- Straitjacket
 jd_def["j_twewy_straitjacket"] = {
-	line_1 = {
-		{ text = "+", colour = lighten(G.C.BLUE, 0.2) },
-		{ ref_table = "card.joker_display_values", ref_value = "aHands", colour = lighten(G.C.BLUE, 0.2) },
+	text = {
+		{ text = "+",                              colour = lighten(G.C.BLUE, 0.2) },
+		{ ref_table = "card.joker_display_values", ref_value = "aHands",           colour = lighten(G.C.BLUE, 0.2) },
 	},
-	line_2 = {
-		{ text = "(Hands) ", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ ref_table = "card.ability.extra", ref_value = "usesLeft", colour = G.C.ORANGE, scale = 0.3 },
-		{ text = "/6)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(Hands) " },
+		{ text = "(" },
+		{ ref_table = "card.ability.extra", ref_value = "usesLeft", colour = G.C.ORANGE },
+		{ text = "/6)" },
 	},
 
 	calc_function = function(card)
@@ -88,67 +88,56 @@ jd_def["j_twewy_straitjacket"] = {
 
 --Self Found
 jd_def["j_twewy_selfFound"] = {
-	line_2 = {
-		{ text = "(+", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-		{
-			ref_table = "card.ability.extra",
-			ref_value = "handSize",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.35,
-		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+	reminder_text = {
+		{ text = "(+" },
+		{ ref_table = "card.ability.extra", ref_value = "handSize" },
+		{ text = ")" },
 	},
+	reminder_text_config = { scale = 0.35 }
 }
 
 -- One Stroke
 jd_def["j_twewy_oneStroke"] = {
-	line_2 = {
-		{ text = "(+", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-		{
-			ref_table = "card.ability.extra",
-			ref_value = "handSize",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.35,
-		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+	reminder_text = {
+		{ text = "(+" },
+		{ ref_table = "card.ability.extra", ref_value = "handSize" },
+		{ text = ")" },
 	},
+	reminder_text_config = { scale = 0.35 }
 }
 
 -- Swift Storm
 jd_def["j_twewy_swiftStorm"] = {
-	line_2 = {
-		{ text = "(+", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-		{
-			ref_table = "card.ability.extra",
-			ref_value = "handSize",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.35,
-		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+	reminder_text = {
+		{ text = "(+" },
+		{ ref_table = "card.ability.extra", ref_value = "handSize" },
+		{ text = ")" },
 	},
+	reminder_text_config = { scale = 0.35 }
 }
 
 -- Flames Apart
 jd_def["j_twewy_flamesApart"] = {
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-		{ ref_table = "card.joker_display_values", ref_value = "active_text", scale = 0.35 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+	reminder_text = {
+		{ text = "(" },
+		{ ref_table = "card.joker_display_values", ref_value = "active_text" },
+		{ text = ")" },
 	},
-
+	reminder_text_config = { scale = 0.35 },
 	calc_function = function(card)
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
 		local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
 
 		card.joker_display_values.active = text
-					== ("Straight Flush" or "Flush House" or "Flush Five" or "Five of a Kind")
-				and true
+			== ("Straight Flush" or "Flush House" or "Flush Five" or "Five of a Kind")
+			and true
 			or false
 		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
 	end,
-	style_function = function(card, line_1, line_2)
-		if line_2 then
-			line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+	style_function = function(card, text, reminder_text, extra)
+		if reminder_text and reminder_text.children[2] then
+			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or
+				G.C.UI.TEXT_INACTIVE
 		end
 		return false
 	end,
@@ -156,30 +145,22 @@ jd_def["j_twewy_flamesApart"] = {
 
 -- Black Sky
 jd_def["j_twewy_blackSky"] = {
-	line_2 = {
-		{ text = "(+", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-		{
-			ref_table = "card.ability.extra",
-			ref_value = "handSize",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.35,
-		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+	reminder_text = {
+		{ text = "(+" },
+		{ ref_table = "card.ability.extra", ref_value = "handSize" },
+		{ text = ")" },
 	},
+	reminder_text_config = { scale = 0.35 }
 }
 
 -- Fiery Spirit
 jd_def["j_twewy_fierySpirit"] = {
-	line_2 = {
-		{ text = "(+", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
-		{
-			ref_table = "card.ability.extra",
-			ref_value = "handSize",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.35,
-		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.35 },
+	reminder_text = {
+		{ text = "(+" },
+		{ ref_table = "card.ability.extra", ref_value = "handSize", },
+		{ text = ")" },
 	},
+	reminder_text_config = { scale = 0.35 }
 }
 
 -- End Dragon Couture ----------------------------------------------
@@ -200,7 +181,7 @@ jd_def["j_twewy_fierySpirit"] = {
 
 -- Lolita Bat
 jd_def["j_twewy_lolitaBat"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -208,27 +189,22 @@ jd_def["j_twewy_lolitaBat"] = {
 			},
 		},
 	},
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(" },
 		{
 			ref_table = "card.joker_display_values",
 			ref_value = "inactive_text",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.3,
 		},
 		{
 			ref_table = "card.joker_display_values",
 			ref_value = "timer_text",
 			colour = G.C.IMPORTANT,
-			scale = 0.3,
 		},
 		{
 			ref_table = "card.joker_display_values",
 			ref_value = "hands_remaining_text",
-			colour = G.C.UI.TEXT_INACTIVE,
-			scale = 0.3,
 		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = ")" },
 	},
 
 	calc_function = function(card)
@@ -243,7 +219,7 @@ jd_def["j_twewy_lolitaBat"] = {
 
 -- Skull Rabbit
 jd_def["j_twewy_skullRabbit"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -251,26 +227,27 @@ jd_def["j_twewy_skullRabbit"] = {
 			},
 		},
 	},
-	line_2 = {
-		{ text = "(<", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = "$4", scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(<" },
+		{ text = "$4" },
+		{ text = ")" },
 	},
 
 	calc_function = function(card)
 		card.joker_display_values.active = G.GAME.dollars < 5
 	end,
 
-	style_function = function(card, line_1, line_2)
-		if line_2 then
-			line_2.children[2].config.colour = card.joker_display_values.active and G.C.MONEY or G.C.UI.TEXT_INACTIVE
+	style_function = function(card, text, reminder_text, extra)
+		if reminder_text and reminder_text.children[2] then
+			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.MONEY or
+				G.C.UI.TEXT_INACTIVE
 		end
 	end,
 }
 
 -- Web Spider
 jd_def["j_twewy_webSpider"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -278,8 +255,8 @@ jd_def["j_twewy_webSpider"] = {
 			},
 		},
 	},
-	line_2 = {
-		{ text = "(Level 2)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(Level 2)" },
 	},
 
 	calc_function = function(card)
@@ -287,16 +264,16 @@ jd_def["j_twewy_webSpider"] = {
 		local text, _, _ = JokerDisplay.evaluate_hand(hand)
 
 		card.joker_display_values.xMult = text
-				and G.GAME.hands[text]
-				and (G.GAME.hands[text].level == 2)
-				and card.ability.extra.xMult
+			and G.GAME.hands[text]
+			and (G.GAME.hands[text].level == 2)
+			and card.ability.extra.xMult
 			or 1
 	end,
 }
 
 -- Lolita Skull
 jd_def["j_twewy_lolitaSkull"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -304,10 +281,10 @@ jd_def["j_twewy_lolitaSkull"] = {
 			},
 		},
 	},
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ ref_table = "card.joker_display_values", ref_value = "count", colour = G.C.IMPORTANT, scale = 0.3 },
-		{ text = "/4)", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(" },
+		{ ref_table = "card.joker_display_values", ref_value = "count", colour = G.C.IMPORTANT },
+		{ text = "/4)" },
 	},
 
 	calc_function = function(card)
@@ -328,7 +305,7 @@ jd_def["j_twewy_lolitaSkull"] = {
 
 -- Lolita Mic
 jd_def["j_twewy_lolitaMic"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -336,10 +313,10 @@ jd_def["j_twewy_lolitaMic"] = {
 			},
 		},
 	},
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ ref_table = "card.ability.extra", ref_value = "lastDiscard", colour = G.C.IMPORTANT, scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(" },
+		{ ref_table = "card.ability.extra", ref_value = "lastDiscard", colour = G.C.IMPORTANT },
+		{ text = ")" },
 	},
 
 	calc_function = function(card)
@@ -353,7 +330,7 @@ jd_def["j_twewy_lolitaMic"] = {
 
 -- Kaleidoscope
 jd_def["j_twewy_kaleidoscope"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -361,26 +338,26 @@ jd_def["j_twewy_kaleidoscope"] = {
 			},
 		},
 	},
-	line_2 = {
+	reminder_text = {
 		-- Spades
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = "S", scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = "(" },
+		{ text = "S" },
+		{ text = ")" },
 
 		-- Clubs
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = "C", scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = "(" },
+		{ text = "C" },
+		{ text = ")" },
 
 		-- Hearts
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = "H", scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = "(" },
+		{ text = "H" },
+		{ text = ")" },
 
 		-- Diamonds
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = "D", scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = "(" },
+		{ text = "D" },
+		{ text = ")" },
 	},
 
 	calc_function = function(card)
@@ -402,26 +379,33 @@ jd_def["j_twewy_kaleidoscope"] = {
 		card.joker_display_values.xMult = tonumber(string.format("%.2f", card.ability.extra.xMult ^ count))
 	end,
 
-	style_function = function(card, line_1, line_2)
-		if line_2 then
-			line_2.children[2].config.colour = card.ability.extra.progressList.Spades
-					and lighten(G.C.SUITS.Spades, 0.35)
-				or G.C.UI.TEXT_INACTIVE
-			line_2.children[5].config.colour = card.ability.extra.progressList.Clubs and lighten(G.C.SUITS.Clubs, 0.35)
-				or G.C.UI.TEXT_INACTIVE
-			line_2.children[8].config.colour = card.ability.extra.progressList.Hearts
+	style_function = function(card, text, reminder_text, extra)
+		if reminder_text then
+			if reminder_text.children[2] then
+				reminder_text.children[2].config.colour = card.ability.extra.progressList.Spades and
+				lighten(G.C.SUITS.Spades, 0.35) or G.C.UI.TEXT_INACTIVE
+			end
+			if reminder_text.children[5] then 
+				reminder_text.children[5].config.colour = card.ability.extra.progressList.Clubs and
+				lighten(G.C.SUITS.Clubs, 0.35) or G.C.UI.TEXT_INACTIVE 
+			end
+			if reminder_text.children[8] then 
+				reminder_text.children[8].config.colour = card.ability.extra.progressList.Hearts
 					and lighten(G.C.SUITS.Hearts, 0.35)
-				or G.C.UI.TEXT_INACTIVE
-			line_2.children[11].config.colour = card.ability.extra.progressList.Diamonds
+					or G.C.UI.TEXT_INACTIVE
+			end
+			if reminder_text.children[11] then 
+				reminder_text.children[11].config.colour = card.ability.extra.progressList.Diamonds
 					and lighten(G.C.SUITS.Diamonds, 0.35)
-				or G.C.UI.TEXT_INACTIVE
+					or G.C.UI.TEXT_INACTIVE
+			end
 		end
 	end,
 }
 
 -- Lolita Chopper
 jd_def["j_twewy_lolitaChopper"] = {
-	line_1 = {
+	text = {
 		{
 			border_nodes = {
 				{ text = "X" },
@@ -429,15 +413,14 @@ jd_def["j_twewy_lolitaChopper"] = {
 			},
 		},
 	},
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "(" },
 		{
 			ref_table = "card.joker_display_values",
 			ref_value = "most_played_hand",
 			colour = G.C.IMPORTANT,
-			scale = 0.3,
 		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = ")"},
 	},
 
 	calc_function = function(card)
@@ -494,25 +477,27 @@ jd_def["j_twewy_lolitaChopper"] = {
 
 -- Storm Warning
 jd_def["j_twewy_stormWarning"] = {
-	line_1 = {
-		{ text = "+", colour = G.C.CHIPS },
-		{ ref_table = "card.ability.extra", ref_value = "chips", colour = G.C.CHIPS },
+	text = {
+		{ text = "+" },
+		{ ref_table = "card.ability.extra", ref_value = "chips" },
 	},
+	text_config = { colour = G.C.CHIPS }
 }
 
 -- TODO: Fix Candle Service. Currently does not work as intended when scoring a hand.
 -- Candle Service
 jd_def["j_twewy_candleService"] = {
-	line_1 = {
-		{ text = "+", colour = G.C.CHIPS },
-		{ ref_table = "card.joker_display_values", ref_value = "chips", colour = G.C.CHIPS },
+	text = {
+		{ text = "+" },
+		{ ref_table = "card.joker_display_values", ref_value = "chips"},
 	},
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ ref_table = "card.ability.extra", ref_value = "played", colour = G.C.IMPORTANT, scale = 0.3 },
-		{ text = "/", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ ref_table = "card.ability.extra", ref_value = "req", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	text_config = { colour = G.C.CHIPS },
+	reminder_text = {
+		{ text = "("},
+		{ ref_table = "card.ability.extra", ref_value = "played",          colour = G.C.IMPORTANT },
+		{ text = "/" },
+		{ ref_table = "card.ability.extra", ref_value = "req"},
+		{ text = ")" },
 	},
 
 	calc_function = function(card)
@@ -545,14 +530,13 @@ jd_def["j_twewy_candleService"] = {
 
 -- Aqua Monster
 jd_def["j_twewy_aquaMonster"] = {
-	line_2 = {
-		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	reminder_text = {
+		{ text = "("},
 		{
 			ref_table = "card.joker_display_values",
 			ref_value = "active_text",
-			scale = 0.3,
 		},
-		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{ text = ")"},
 	},
 
 	calc_function = function(card)
@@ -563,9 +547,9 @@ jd_def["j_twewy_aquaMonster"] = {
 		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
 	end,
 
-	style_function = function(card, line_1, line_2)
-		if line_2 then
-			line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+	style_function = function(card, text, reminder_text, extra)
+		if reminder_text and reminder_text.children[2] then
+			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
 		end
 	end,
 }

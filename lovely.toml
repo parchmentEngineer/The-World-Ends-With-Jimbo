@@ -192,7 +192,6 @@ elseif _c.effect == 'Glass Card' then
 match_indent = false
 
 # Sheep Heavenly - Move red seal from played cards onto leftmost held card
-# TRIGGERS ONCE PER JOKER AND THAT'S BAD
 [[patches]]
 [patches.pattern]
 target = "functions/state_events.lua"
@@ -228,3 +227,41 @@ if G.GAME.twewy_sheepHeavenlyDeck then
 end
 '''
 match_indent = false
+
+# Sheep Heavenly - Same as previous patch but works if Tailsman overwrites first
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = '''if to_big(hand_chips)*mult > to_big(0) then'''
+position = "before"
+payload = '''
+if G.GAME.twewy_sheepHeavenlyDeck then
+	G.E_MANAGER:add_event(Event({
+		func = function() 
+			local maxRedSeals = math.min(#scoring_hand, #G.hand.cards)
+			local sealsToAdd = 0
+			for k, v in ipairs(scoring_hand) do
+				if (v.seal and v.seal == 'Red') then
+					sealsToAdd = sealsToAdd + 1
+					if sealsToAdd > maxRedSeals then
+						sealsToAdd = maxRedSeals
+					else
+						v:set_seal()
+						v:juice_up()
+					end
+				end
+			end
+			for k, v in ipairs(G.hand.cards) do
+				if not v.seal and sealsToAdd > 0 then
+					sealsToAdd = sealsToAdd - 1
+					v:set_seal('Red')
+					v:juice_up()
+				end
+			end
+			return true
+		end
+	}))
+end
+'''
+match_indent = false
+

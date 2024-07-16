@@ -186,14 +186,26 @@ table.insert(stuffToAdd, {
 		return {vars = {}}
 	end,
 	calculate = function(self, card, context)
-		if context.cardarea == G.jokers and context.after and not context.blueprint and 
-		(next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind']) or
-		next(context.poker_hands['Flush House']) or next(context.poker_hands['Flush Five']))  then
-			local toDraw = #G.deck.cards
-			for i=1, toDraw do
-				draw_card(G.deck,G.hand, i*100/toDraw ,true, card , nil, 0.03)
-				G.E_MANAGER:add_event(Event({func = function() card:juice_up(0.3, 0.4) return true end}))
-				G.E_MANAGER:add_event(Event({func = function() G.hand:sort() return true end}))
+		if context.cardarea == G.jokers and context.after and not context.blueprint then
+			local is_modded_secret_hand = false
+			for _, v in ipairs(G.handlist) do
+				if next(context.poker_hands[v]) and SMODS.PokerHands[v] and not SMODS.PokerHands[v].visible then
+					is_modded_secret_hand = true
+				end
+			end
+			local is_base_spectrum = false
+			local string_endpos = #context.scoring_name
+			local _, found_endpos = context.scoring_name:find('_spectrum')
+			if found_endpos == string_endpos then is_base_spectrum = true end
+			if is_modded_secret_hand or next(context.poker_hands['Straight Flush']) or next(context.poker_hands['Five of a Kind'])
+			or next(context.poker_hands['Flush House']) or next(context.poker_hands['Flush Five']) then
+				if not is_base_spectrum then
+					local toDraw = #G.deck.cards
+					for i=1, toDraw do
+						G.E_MANAGER:add_event(Event({func = function() card:juice_up(0.3, 0.4) return true end}))
+						draw_card(G.deck, G.hand, i*100/toDraw, nil, true, nil, 0.07)
+					end
+				end
 			end
 		end
 	end

@@ -3,40 +3,6 @@
 
 local stuffToAdd = {}
 
--- Rakuyo
-table.insert(stuffToAdd, {
-	object_type = "Joker",
-	name = "blank",
-	key = "rakuyo",
-	config = {extra = {options = 3}},
-	pos = {x = 7, y = 3},
-	loc_txt = {
-		name = 'Rakuyo',
-		text = {
-			"All booster packs have",
-			"{C:attention}#1#{} extra options"
-		}
-	},
-	rarity = 2,
-	cost = 5,
-	discovered = true,
-	blueprint_compat = false,
-	atlas = "jokers",
-	loc_vars = function(self, info_queue, center)
-		return {vars = {center.ability.extra.options}}
-	end,
-	add_to_deck = function(self, card, from_debuff)
-		if G.GAME.rakuyo_booster_bonus then
-			G.GAME.rakuyo_booster_bonus = G.GAME.rakuyo_booster_bonus + card.ability.extra.options
-		else
-			G.GAME.rakuyo_booster_bonus = card.ability.extra.options
-		end
-	end,
-	remove_from_deck = function(self, card, from_debuff)
-		G.GAME.rakuyo_booster_bonus = G.GAME.rakuyo_booster_bonus - card.ability.extra.options
-	end
-})
-
 -- Zantestu
 table.insert(stuffToAdd, {
 	object_type = "Joker",
@@ -365,5 +331,38 @@ table.insert(stuffToAdd, {
 	end
 })
 
+-- Rakuyo
+table.insert(stuffToAdd, {
+	object_type = "Joker",
+	name = "blank",
+	key = "rakuyo",
+	config = {extra = {options = 3}},
+	pos = {x = 7, y = 3},
+	loc_txt = {
+		name = 'Rakuyo',
+		text = {
+			"All booster packs have",
+			"{C:attention}#1#{} extra options"
+		}
+	},
+	rarity = 2,
+	cost = 5,
+	discovered = true,
+	blueprint_compat = false,
+	atlas = "jokers",
+	loc_vars = function(self, info_queue, center)
+		return {vars = {center.ability.extra.options}}
+	end,
+	add_to_deck = function(self, card, from_debuff)
+		if G.GAME.rakuyo_booster_bonus then
+			G.GAME.rakuyo_booster_bonus = G.GAME.rakuyo_booster_bonus + card.ability.extra.options
+		else
+			G.GAME.rakuyo_booster_bonus = card.ability.extra.options
+		end
+	end,
+	remove_from_deck = function(self, card, from_debuff)
+		G.GAME.rakuyo_booster_bonus = G.GAME.rakuyo_booster_bonus - card.ability.extra.options
+	end
+})
 
 return {stuffToAdd = stuffToAdd}

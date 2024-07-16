@@ -715,3 +715,25 @@ table.insert(stuffToAdd, {
 		G.GAME.twewy_playmate_beam = 0
 	end
 })
+
+-- Lapin Angelique Deck
+table.insert(stuffToAdd, {
+	object_type = "Back",
+	name = "lapinAngeliqueScrapped",
+	key = "lapinAngeliqueScrapped",
+	config = {consumables = {'c_chariot', 'c_justice'}},
+	pos = {x = 0, y = 4},
+	loc_txt = {
+		name = "Lapin Angelique",
+		text = {
+			"{C:attention}Steel{} and {C:attention}Glass{} cards",
+			"gain {X:mult,C:white} X0.1 {} Mult every",
+			"time they trigger",
+			"Start with a {C:attention}Chariot{} and {C:attention}Justice{}"
+		}
+	},
+	atlas = "jokers",
+	apply = function(self)
+		G.GAME.twewy_lapinAngelique = true
+	end
+})
