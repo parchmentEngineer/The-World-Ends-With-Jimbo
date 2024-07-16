@@ -15,9 +15,23 @@ if effects[ii].h_chips then
 	hand_chips = mod_chips(hand_chips + effects[ii].h_chips)
 	update_hand_text({delay = 0}, {chips = hand_chips})
 	card_eval_status_text(G.hand.cards[i], 'chips', effects[ii].h_chips, percent)
-end
-'''
-match_indent = false
+end'''
+match_indent = true
+
+# Earthshake - Unused discards carry over
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = "G.GAME.current_round.discards_left = math.max(0, G.GAME.round_resets.discards + G.GAME.round_bonus.discards)"
+position = "before"
+payload = '''
+if not G.GAME.blind.boss then
+	for _, c in ipairs(SMODS.find_card('j_twewy_earthshake')) do
+		c:juice_up()
+		G.GAME.round_bonus.discards = G.GAME.round_bonus.discards + G.GAME.current_round.discards_left
+	end
+end'''
+match_indent = true
 
 # Top Gear - Common jokers in shop are polychrome
 [[patches]]
@@ -30,9 +44,8 @@ if G.GAME.twewy_top_gear then
 	if card.ability.set == 'Joker' and card.config.center.rarity == 1 then
 		card:set_edition({polychrome = true})
 	end
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Playmate Beam - Cards in standard packs match your last played high card
 [[patches]]
@@ -55,9 +68,8 @@ if G.GAME.twewy_playmate_beam and G.GAME.twewy_playmate_beam ~= 0 then
 	card:set_base(new_card)
 else
 	card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Natural Puppy Deck - Cards in standard packs are face cards
 [[patches]]
@@ -75,9 +87,8 @@ if G.GAME.twewy_naturalPuppyDeck then
 	card:set_base(new_card)
 else
 	card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Natural Puppy Deck - Standard packs have X extra rewards
 [[patches]]
@@ -88,9 +99,8 @@ position = "after"
 payload = '''
 if G.GAME.twewy_naturalPuppyDeck and self.ability.name:find('Standard') then
 	G.GAME.pack_choices = G.GAME.pack_choices + 1
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Natural Puppy Deck - Update booster pack description
 [[patches]]
@@ -101,9 +111,8 @@ position = "before"
 payload = '''
 if G.GAME.twewy_naturalPuppyDeck and _c.kind == "Standard" then
     loc_vars[1] = loc_vars[1] + 1
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Rakuyo - Booster packs have X extra options
 [[patches]]
@@ -114,9 +123,8 @@ position = "after"
 payload = '''
 if G.GAME.rakuyo_booster_bonus then
 	G.GAME.pack_size = G.GAME.pack_size + G.GAME.rakuyo_booster_bonus
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Rakuyo - Booster packs have X extra options
 [[patches]]
@@ -127,9 +135,8 @@ position = "after"
 payload = '''
 if G.GAME.rakuyo_booster_bonus then
 	_size = _size + G.GAME.rakuyo_booster_bonus
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Rakuyo - Update booster pack description
 [[patches]]
@@ -140,9 +147,8 @@ position = "before"
 payload = '''
 if G.GAME.rakuyo_booster_bonus then
     loc_vars[2] = loc_vars[2] + G.GAME.rakuyo_booster_bonus
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Gatito - Get custom rarity in Gatito packs
 [[patches]]
@@ -155,41 +161,8 @@ if type(_rarity) == 'string' then
 	rarity = _rarity
 else
 	rarity = (_legendary and 4) or (rarity > 0.95 and 3) or (rarity > 0.7 and 2) or 1
-end
-'''
-match_indent = false
-
-# Lapin Angelique - Fixes display issue for Steel cards
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = '''elseif _c.effect == 'Steel Card' then loc_vars = {_c.config.h_x_mult}'''
-position = "at"
-payload = '''
-elseif _c.effect == 'Steel Card' then 
-	if card then
-		loc_vars = {card.ability.h_x_mult}
-	else
-		loc_vars = {_c.config.h_x_mult}
-	end
-'''
-match_indent = false
-
-# Lapin Angelique - Fixes display issue for Glass cards
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = '''elseif _c.effect == 'Glass Card' then loc_vars = {_c.config.Xmult, G.GAME.probabilities.normal, _c.config.extra}'''
-position = "at"
-payload = '''
-elseif _c.effect == 'Glass Card' then 
-	if card then
-		loc_vars = {card.ability.x_mult, G.GAME.probabilities.normal, _c.config.extra}
-	else
-		loc_vars = {_c.config.Xmult, G.GAME.probabilities.normal, _c.config.extra}
-	end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Sheep Heavenly - Move red seal from played cards onto leftmost held card
 [[patches]]
@@ -224,9 +197,8 @@ if G.GAME.twewy_sheepHeavenlyDeck then
 			return true
 		end
 	}))
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
 # Sheep Heavenly - Same as previous patch but works if Tailsman overwrites first
 [[patches]]
@@ -261,7 +233,6 @@ if G.GAME.twewy_sheepHeavenlyDeck then
 			return true
 		end
 	}))
-end
-'''
-match_indent = false
+end'''
+match_indent = true
 
