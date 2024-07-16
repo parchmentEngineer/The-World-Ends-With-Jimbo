@@ -27,7 +27,7 @@ pattern = "G.FUNCS.cash_out = function(e)"
 position = "after"
 payload = '''
 	for _, c in ipairs(SMODS.find_card('j_twewy_earthshake')) do
-		if G.GAME.blind.boss then
+		if G.GAME.round_resets.blind_states.Boss == 'Defeated' then
 			c.ability.extra.discards = 0
 		else
 			c:juice_up()
