@@ -19,18 +19,22 @@ end'''
 match_indent = true
 
 # Earthshake - Unused discards carry over
+# G.FUNCS.cash_out
 [[patches]]
 [patches.pattern]
-target = "functions/state_events.lua"
-pattern = "G.GAME.current_round.discards_left = math.max(0, G.GAME.round_resets.discards + G.GAME.round_bonus.discards)"
-position = "before"
+target = "functions/button_callbacks.lua"
+pattern = "G.FUNCS.cash_out = function(e)"
+position = "after"
 payload = '''
-if not G.GAME.blind.boss then
 	for _, c in ipairs(SMODS.find_card('j_twewy_earthshake')) do
-		c:juice_up()
-		G.GAME.round_bonus.discards = G.GAME.round_bonus.discards + G.GAME.current_round.discards_left
-	end
-end'''
+		if G.GAME.blind.boss then
+			c.ability.extra.discards = 0
+		else
+			c:juice_up()
+			c.ability.extra.discards = G.GAME.current_round.discards_left
+			G.GAME.round_bonus.discards = G.GAME.round_bonus.discards + G.GAME.current_round.discards_left
+		end
+	end'''
 match_indent = true
 
 # Top Gear - Common jokers in shop are polychrome

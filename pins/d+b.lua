@@ -105,13 +105,14 @@ table.insert(stuffToAdd, {
 	object_type = "Joker",
 	name = "earthshake",
 	key = "earthshake",
-	config = {extra = {}},
+	config = {extra = {discards = 0}},
 	pos = {x = 3, y = 11},
 	loc_txt = {
 		name = 'Earthshake',
 		text = {
 			"Unused discards in non-Boss rounds",
 			"carry over to next round",
+			"{C:inactive}(Currently {C:red}+#1#{C:inactive} discard#2#)",
 		}
 	},
 	rarity = 2,
@@ -119,7 +120,12 @@ table.insert(stuffToAdd, {
 	discovered = true,
 	blueprint_compat = false,
 	atlas = "jokers",
-	-- Effect injected into new_round()
+	loc_vars = function(self, info_queue, card)
+		return {vars = {
+			card.ability.extra.discards, 
+			card.ability.extra.discards ~= 1 and "s" or ""}}
+	end,
+	-- Effect injected into G.FUNCS.cash_out
 })
 
 table.insert(stuffToAdd, {
