@@ -484,7 +484,6 @@ jd_def["j_twewy_stormWarning"] = {
 	text_config = { colour = G.C.CHIPS }
 }
 
--- TODO: Fix Candle Service. Currently does not work as intended when scoring a hand.
 -- Candle Service
 jd_def["j_twewy_candleService"] = {
 	text = {
@@ -512,15 +511,7 @@ jd_def["j_twewy_candleService"] = {
 			if v:get_id() == 2 or v:get_id() == 3 or v:get_id() == 4 or v:get_id() == 5 then
 				in_hand_played = in_hand_played + JokerDisplay.calculate_card_triggers(v, scoring_hand, false)
 
-				while in_hand_played > 0 do
-					played = played + 1
-					in_hand_played = in_hand_played - 1
-
-					if played == card.ability.extra.req then
-						num_of_activations = num_of_activations + 1
-						played = 0
-					end
-				end
+				num_of_activations = math.floor( (in_hand_played + card.ability.extra.played) / card.ability.extra.req)
 			end
 		end
 
@@ -556,7 +547,7 @@ jd_def["j_twewy_aquaMonster"] = {
 
 -- Aqua Ghost
 jd_def["j_twewy_aquaGhost"] = {
-	line_2 = {
+	reminder_text = {
 		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
 		{
 			ref_table = "card.joker_display_values",
@@ -574,16 +565,16 @@ jd_def["j_twewy_aquaGhost"] = {
 		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
 	end,
 
-	style_function = function(card, line_1, line_2)
-		if line_2 then
-			line_2.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+	style_function = function(card, text, reminder_text)
+		if reminder_text then
+			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
 		end
 	end,
 }
 
 -- Aqua Demon
 jd_def["j_twewy_aquaDemon"] = {
-	line_1 = {
+	text = {
 		{ text = '+', colour = G.C.CHIPS },
 		{
 			ref_table = 'card.joker_display_values',
@@ -591,7 +582,7 @@ jd_def["j_twewy_aquaDemon"] = {
 			colour = G.C.CHIPS,
 		},
 	},
-	line_2 = {
+	reminder_text = {
 		{ text = '(Three of a Kind)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
 	},
 
@@ -605,7 +596,7 @@ jd_def["j_twewy_aquaDemon"] = {
 
 -- Lightning Moon
 jd_def['j_twewy_lightningMoon'] = {
-	line_1 = {
+	text = {
 		{ text = '+', colour = G.C.CHIPS },
 		{
 			ref_table = 'card.joker_display_values',
@@ -613,7 +604,7 @@ jd_def['j_twewy_lightningMoon'] = {
 			colour = G.C.CHIPS,
 		},
 	},
-	line_2 = {
+	reminder_text = {
 		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
 		{
 			ref_table = 'card.joker_display_values',
@@ -645,7 +636,7 @@ jd_def['j_twewy_lightningMoon'] = {
 
 -- Burning Cherry
 jd_def['j_twewy_burningCherry'] = {
-	line_1 = {
+	text = {
 		{ text = '+', colour = G.C.CHIPS },
 		{
 			ref_table = 'card.ability.extra',
@@ -653,7 +644,7 @@ jd_def['j_twewy_burningCherry'] = {
 			colour = G.C.CHIPS,
 		},
 	},
-	line_2 = {
+	reminder_text = {
 		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
 		{
 			ref_table = 'card.ability.extra',
@@ -667,7 +658,7 @@ jd_def['j_twewy_burningCherry'] = {
 
 -- Impact Warning
 jd_def['j_twewy_impactWarning'] = {
-	line_1 = {
+	text = {
 		{ text = '+', colour = G.C.CHIPS },
 		{
 			ref_table = 'card.ability.extra',
@@ -675,7 +666,7 @@ jd_def['j_twewy_impactWarning'] = {
 			colour = G.C.CHIPS,
 		},
 	},
-	line_2 = {
+	reminder_text = {
 		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
 		{
 			ref_table = 'card.ability.extra',
@@ -689,7 +680,7 @@ jd_def['j_twewy_impactWarning'] = {
 
 -- Shout
 jd_def['j_twewy_shout'] = {
-	line_1 = {
+	text = {
 		{ text = '+', colour = G.C.CHIPS },
 		{
 			ref_table = 'card.joker_display_values',
@@ -697,7 +688,7 @@ jd_def['j_twewy_shout'] = {
 			colour = G.C.CHIPS,
 		},
 	},
-	line_2 = {
+	reminder_text = {
 		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
 		{
 			ref_table = 'card.joker_display_values',
@@ -726,4 +717,34 @@ jd_def['j_twewy_shout'] = {
 	end,
 }
 
+-- Burning Melon
+jd_def['j_twewy_burningMelon'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		-- { text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'chipsLoss',
+			colour = G.C.CHIPS,
+			scale = 0.3
+		},
+		{ text = '(Round)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		local finalRoundChips = card.ability.extra.chips + card.ability.extra.bigChips
+
+		card.joker_display_values.chips = G.GAME.current_round.hands_left == 1 and finalRoundChips or card.ability.extra.chips
+	end,
+}
 -- End Mus Rattus --------------------------------------------------
