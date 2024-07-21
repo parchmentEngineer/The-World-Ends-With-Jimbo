@@ -566,7 +566,7 @@ jd_def["j_twewy_aquaGhost"] = {
 	end,
 
 	style_function = function(card, text, reminder_text)
-		if reminder_text then
+		if reminder_text and reminder_text.children[2] then
 			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
 		end
 	end,
