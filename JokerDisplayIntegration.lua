@@ -723,7 +723,7 @@ jd_def['j_twewy_burningMelon'] = {
 	end,
 }
 
--- Lightning Storm
+-- Lightning Storm --TODO: Calculate retriggers on Jacks held in hand
 jd_def['j_twewy_lightningStorm'] = {
 	text = {
 		{ text = '+', colour = G.C.CHIPS },
@@ -762,6 +762,25 @@ jd_def['j_twewy_lightningStorm'] = {
 			end
 		end
 
+		card.joker_display_values.chips = card.ability.extra.chips * count
+	end,
+}
+
+-- Stopper Spark
+jd_def['j_twewy_stopperSpark'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{ ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS },
+	},
+	calc_function = function(card)
+		local count = 0
+
+		for k, v in pairs(G.hand.cards) do
+			if v.ability.name == "Stone Card" and not v.debuff and v.facing == "front" and not v.highlighted then
+				count = count + JokerDisplay.calculate_card_triggers(v, nil, true)
+			end
+		end
+		
 		card.joker_display_values.chips = card.ability.extra.chips * count
 	end,
 }
