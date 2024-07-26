@@ -424,50 +424,25 @@ jd_def["j_twewy_lolitaChopper"] = {
 	},
 
 	calc_function = function(card)
-		local most_played_hand = nil
-
-		-- Initializes the most played hand to the first poker hand in the list
-		for k, v in pairs(G.GAME.hands) do
-			most_played_hand = { k, v }
-			break
-		end
-
-		-- Finds the most played poker hand; It's fine if there are more than one, handled later
-		for k, v in pairs(G.GAME.hands) do
-			if v.played == most_played_hand[2].played then
-				goto continue
-			elseif v.played > most_played_hand[2].played then
-				most_played_hand = { k, v }
-			end
-
-			::continue::
-		end
-
-		local all_equal = true
-
-		-- Loops through each poker hand and checks if they are all equal
-		for k, v in pairs(G.GAME.hands) do
-			for l, w in pairs(G.GAME.hands) do
-				if v.played ~= w.played then
-					all_equal = false
-				end
-			end
-		end
-
-		local multiple_most_played = false
-
-		-- If they are not all equal, checks if there are multiple most played poker hands
-		if not all_equal then
+		if next(G.GAME.hands) then
+			local play_count = 0
+			local most_played = nil
 			for k, v in pairs(G.GAME.hands) do
-				if k ~= most_played_hand[1] and v.played == most_played_hand[2].played then
-					multiple_most_played = true
-					break
-				end
+			   if v.played >= play_count then
+				  play_count = v.played
+				  most_played = k
+			   end
 			end
-		end
-
-		card.joker_display_values.most_played_hand = all_equal and "All"
-			or (multiple_most_played and "Multiple" or tostring(most_played_hand[1]))
+			local equal_count = 0
+			for k, v in pairs(G.GAME.hands) do
+			   if v.played == play_count then
+				  equal_count = equal_count + 1
+			   end
+			end
+			local all_equal = equal_count == #G.GAME.hands
+			card.joker_display_values.most_played_hand = all_equal and "All" 
+					or (equal_count > 1 and "Multiple" or tostring(most_played))
+		 end
 	end,
 }
 
@@ -484,7 +459,6 @@ jd_def["j_twewy_stormWarning"] = {
 	text_config = { colour = G.C.CHIPS }
 }
 
--- TODO: Fix Candle Service. Currently does not work as intended when scoring a hand.
 -- Candle Service
 jd_def["j_twewy_candleService"] = {
 	text = {
@@ -512,15 +486,7 @@ jd_def["j_twewy_candleService"] = {
 			if v:get_id() == 2 or v:get_id() == 3 or v:get_id() == 4 or v:get_id() == 5 then
 				in_hand_played = in_hand_played + JokerDisplay.calculate_card_triggers(v, scoring_hand, false)
 
-				while in_hand_played > 0 do
-					played = played + 1
-					in_hand_played = in_hand_played - 1
-
-					if played == card.ability.extra.req then
-						num_of_activations = num_of_activations + 1
-						played = 0
-					end
-				end
+				num_of_activations = math.floor( (in_hand_played + card.ability.extra.played) / card.ability.extra.req)
 			end
 		end
 
@@ -551,6 +517,271 @@ jd_def["j_twewy_aquaMonster"] = {
 		if reminder_text and reminder_text.children[2] then
 			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
 		end
+	end,
+}
+
+-- Aqua Ghost
+jd_def["j_twewy_aquaGhost"] = {
+	reminder_text = {
+		{ text = "(", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = "card.joker_display_values",
+			ref_value = "active_text",
+			scale = 0.3,
+		},
+		{ text = ")", colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
+
+		card.joker_display_values.active = poker_hands and next(poker_hands["Three of a Kind"]) and true or false
+		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
+	end,
+
+	style_function = function(card, text, reminder_text)
+		if reminder_text and reminder_text.children[2] then
+			reminder_text.children[2].config.colour = card.joker_display_values.active and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+		end
+	end,
+}
+
+-- Aqua Demon
+jd_def["j_twewy_aquaDemon"] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		{ text = '(Three of a Kind)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		card.joker_display_values.chips = poker_hands and next(poker_hands["Three of a Kind"]) and 666 or 0
+	end
+}
+
+-- Lightning Moon
+jd_def['j_twewy_lightningMoon'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'count',
+			colour = G.C.IMPORTANT,
+			scale = 0.3
+		},
+		{ text = ' Clubs', colour = lighten(G.C.SUITS.Clubs, 0.35), scale = 0.3 },
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+	
+	calc_function = function(card)
+		local playing_hand = next(G.play.cards)
+		local count = 0
+
+		for k, v in ipairs(G.hand.cards) do
+			if playing_hand or not v.highlighted then
+				if not (v.facing == "back") and not v.debuff and v:is_suit("Clubs") then
+					count = count + 1
+				end
+			end
+		end
+
+		card.joker_display_values.chips = card.ability.extra.chips * count
+		card.joker_display_values.count = count
+
+	end,
+}
+
+-- Burning Cherry
+jd_def['j_twewy_burningCherry'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'handReq',
+			colour = G.C.UI.TEXT_INACTIVE,
+			scale = 0.3
+		},
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+}
+
+-- Impact Warning
+jd_def['j_twewy_impactWarning'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'lastUsed',
+			colour = G.C.UI.TEXT_INACTIVE,
+			scale = 0.3
+		},
+		{ text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+}
+
+-- Shout
+jd_def['j_twewy_shout'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		{ text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'currentStreak',
+			colour = G.C.IMPORTANT,
+			scale = 0.3
+		},
+		{ text = '/3)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		local currentStreak = card.ability.extra.currentStreak
+
+		for k, v in pairs(scoring_hand) do
+			if v:is_face() then
+				currentStreak = currentStreak + 1
+				break
+			end
+		end
+
+		card.joker_display_values.currentStreak = currentStreak
+		card.joker_display_values.chips = currentStreak >= 3 and card.ability.extra.chips or 0
+	end,
+}
+
+-- Burning Melon
+jd_def['j_twewy_burningMelon'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{
+			ref_table = 'card.joker_display_values',
+			ref_value = 'chips',
+			colour = G.C.CHIPS,
+		},
+	},
+	reminder_text = {
+		-- { text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+		{
+			ref_table = 'card.ability.extra',
+			ref_value = 'chipsLoss',
+			colour = G.C.CHIPS,
+			scale = 0.3
+		},
+		{ text = '(Round)', colour = G.C.UI.TEXT_INACTIVE, scale = 0.3 },
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		
+		local finalRoundChips = card.ability.extra.chips + card.ability.extra.bigChips
+
+		card.joker_display_values.chips = G.GAME.current_round.hands_left == 1 and finalRoundChips or card.ability.extra.chips
+	end,
+}
+
+-- Lightning Storm --TODO: Calculate retriggers on Jacks held in hand
+jd_def['j_twewy_lightningStorm'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{ ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS },
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		local suits = {
+			["Spades"] = false,
+			["Hearts"] = false,
+			["Clubs"] = false,
+			["Diamonds"] = false
+		}
+		local count = 0
+
+		for _, v in ipairs(G.hand.cards) do
+			if v:get_id() == 11 and not v.debuff and v.facing == "front" and not v.highlighted then
+				if v.ability.name == "Wild Card" then
+					for k, _ in pairs(suits) do
+						suits[k] = true
+					end
+				else
+					suits[v.config.card.suit] = true
+				end
+			end
+		end
+
+		for _, v in ipairs(scoring_hand) do
+			for k, valid in pairs(suits) do
+				if valid and v:is_suit(k) then
+					count = count + 1
+					break
+				end
+			end
+		end
+
+		card.joker_display_values.chips = card.ability.extra.chips * count
+	end,
+}
+
+-- Stopper Spark
+jd_def['j_twewy_stopperSpark'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{ ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS },
+	},
+	calc_function = function(card)
+		local count = 0
+
+		for k, v in pairs(G.hand.cards) do
+			if v.ability.name == "Stone Card" and not v.debuff and v.facing == "front" and not v.highlighted then
+				count = count + JokerDisplay.calculate_card_triggers(v, nil, true)
+			end
+		end
+		
+		card.joker_display_values.chips = card.ability.extra.chips * count
 	end,
 }
 
