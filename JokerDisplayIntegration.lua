@@ -424,50 +424,25 @@ jd_def["j_twewy_lolitaChopper"] = {
 	},
 
 	calc_function = function(card)
-		local most_played_hand = nil
-
-		-- Initializes the most played hand to the first poker hand in the list
-		for k, v in pairs(G.GAME.hands) do
-			most_played_hand = { k, v }
-			break
-		end
-
-		-- Finds the most played poker hand; It's fine if there are more than one, handled later
-		for k, v in pairs(G.GAME.hands) do
-			if v.played == most_played_hand[2].played then
-				goto continue
-			elseif v.played > most_played_hand[2].played then
-				most_played_hand = { k, v }
-			end
-
-			::continue::
-		end
-
-		local all_equal = true
-
-		-- Loops through each poker hand and checks if they are all equal
-		for k, v in pairs(G.GAME.hands) do
-			for l, w in pairs(G.GAME.hands) do
-				if v.played ~= w.played then
-					all_equal = false
-				end
-			end
-		end
-
-		local multiple_most_played = false
-
-		-- If they are not all equal, checks if there are multiple most played poker hands
-		if not all_equal then
+		if next(G.GAME.hands) then
+			local play_count = 0
+			local most_played = nil
 			for k, v in pairs(G.GAME.hands) do
-				if k ~= most_played_hand[1] and v.played == most_played_hand[2].played then
-					multiple_most_played = true
-					break
-				end
+			   if v.played >= play_count then
+				  play_count = v.played
+				  most_played = k
+			   end
 			end
-		end
-
-		card.joker_display_values.most_played_hand = all_equal and "All"
-			or (multiple_most_played and "Multiple" or tostring(most_played_hand[1]))
+			local equal_count = 0
+			for k, v in pairs(G.GAME.hands) do
+			   if v.played == play_count then
+				  equal_count = equal_count + 1
+			   end
+			end
+			local all_equal = equal_count == #G.GAME.hands
+			card.joker_display_values.most_played_hand = all_equal and "All" 
+					or (equal_count > 1 and "Multiple" or tostring(most_played))
+		 end
 	end,
 }
 
@@ -747,4 +722,48 @@ jd_def['j_twewy_burningMelon'] = {
 		card.joker_display_values.chips = G.GAME.current_round.hands_left == 1 and finalRoundChips or card.ability.extra.chips
 	end,
 }
+
+-- Lightning Storm
+jd_def['j_twewy_lightningStorm'] = {
+	text = {
+		{ text = '+', colour = G.C.CHIPS },
+		{ ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS },
+	},
+	
+	calc_function = function(card)
+		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		local suits = {
+			["Spades"] = false,
+			["Hearts"] = false,
+			["Clubs"] = false,
+			["Diamonds"] = false
+		}
+		local count = 0
+
+		for _, v in ipairs(G.hand.cards) do
+			if v:get_id() == 11 and not v.debuff and v.facing == "front" and not v.highlighted then
+				if v.ability.name == "Wild Card" then
+					for k, _ in pairs(suits) do
+						suits[k] = true
+					end
+				else
+					suits[v.config.card.suit] = true
+				end
+			end
+		end
+
+		for _, v in ipairs(scoring_hand) do
+			for k, valid in pairs(suits) do
+				if valid and v:is_suit(k) then
+					count = count + 1
+					break
+				end
+			end
+		end
+
+		card.joker_display_values.chips = card.ability.extra.chips * count
+	end,
+}
+
 -- End Mus Rattus --------------------------------------------------
