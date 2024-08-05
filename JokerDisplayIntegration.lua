@@ -16,7 +16,7 @@ jd_def["j_twewy_iceBlow"] = {
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
 		local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
 
-		if card.ability.extra.triggered and text == "Unknown" then
+		if card.ability.extra.triggered or text == "Unknown" then
 			card.joker_display_values.active = false
 		else
 			local faces = 0
