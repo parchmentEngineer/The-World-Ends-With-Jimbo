@@ -14,16 +14,16 @@ jd_def["j_twewy_iceBlow"] = {
 
 	calc_function = function(card)
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
-		local _, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
 
-		if card.ability.extra.triggered then
+		if card.ability.extra.triggered or text == "Unknown" then
 			card.joker_display_values.active = false
 		else
 			local faces = 0
 
 			-- Loops through the scoring_hand and increments the face card counter
 			for k, v in pairs(scoring_hand) do
-				if not v.debuff and v:is_face() then
+				if v:is_face() then
 					faces = faces + 1
 				end
 			end
@@ -46,12 +46,12 @@ jd_def["j_twewy_iceRisers"] = {
 	},
 
 	calc_function = function(card)
-		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
+		local hand = G.hand.highlighted
 		local faces = false
 
 		-- Checks the scoring_hand for a face card
 		for k, v in pairs(hand) do
-			if v:is_face() and not v.debuff then
+			if v:is_face() then
 				faces = true
 				break
 			end
@@ -76,7 +76,7 @@ jd_def["j_twewy_straitjacket"] = {
 
 	calc_function = function(card)
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
-		local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		local text, _, _ = JokerDisplay.evaluate_hand(hand)
 
 		card.joker_display_values.aHands = text == "Straight" and 1 or 0
 	end,
@@ -126,12 +126,9 @@ jd_def["j_twewy_flamesApart"] = {
 	reminder_text_config = { scale = 0.35 },
 	calc_function = function(card)
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
-		local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		local text, _, _ = JokerDisplay.evaluate_hand(hand)
 
-		card.joker_display_values.active = text
-			== ("Straight Flush" or "Flush House" or "Flush Five" or "Five of a Kind")
-			and true
-			or false
+		card.joker_display_values.active = text == "Straight Flush" or text == "Flush House" or text == "Flush Five" or text == "Five of a Kind"
 		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
 	end,
 	style_function = function(card, text, reminder_text, extra)
@@ -371,7 +368,7 @@ jd_def["j_twewy_kaleidoscope"] = {
 		for i, v in ipairs(scoring_hand) do
 			for k, w in pairs(card.ability.extra.progressList) do
 				if v:is_suit(k .. "") and not w then
-					count = count + JokerDisplay.calculate_card_triggers(v)
+					count = count + JokerDisplay.calculate_card_triggers(v, scoring_hand)
 				end
 			end
 		end
@@ -424,50 +421,25 @@ jd_def["j_twewy_lolitaChopper"] = {
 	},
 
 	calc_function = function(card)
-		local most_played_hand = nil
-
-		-- Initializes the most played hand to the first poker hand in the list
-		for k, v in pairs(G.GAME.hands) do
-			most_played_hand = { k, v }
-			break
-		end
-
-		-- Finds the most played poker hand; It's fine if there are more than one, handled later
-		for k, v in pairs(G.GAME.hands) do
-			if v.played == most_played_hand[2].played then
-				goto continue
-			elseif v.played > most_played_hand[2].played then
-				most_played_hand = { k, v }
-			end
-
-			::continue::
-		end
-
-		local all_equal = true
-
-		-- Loops through each poker hand and checks if they are all equal
-		for k, v in pairs(G.GAME.hands) do
-			for l, w in pairs(G.GAME.hands) do
-				if v.played ~= w.played then
-					all_equal = false
-				end
-			end
-		end
-
-		local multiple_most_played = false
-
-		-- If they are not all equal, checks if there are multiple most played poker hands
-		if not all_equal then
+		if next(G.GAME.hands) then
+			local play_count = 0
+			local most_played = nil
 			for k, v in pairs(G.GAME.hands) do
-				if k ~= most_played_hand[1] and v.played == most_played_hand[2].played then
-					multiple_most_played = true
-					break
-				end
+			   if v.played >= play_count then
+				  play_count = v.played
+				  most_played = k
+			   end
 			end
-		end
-
-		card.joker_display_values.most_played_hand = all_equal and "All"
-			or (multiple_most_played and "Multiple" or tostring(most_played_hand[1]))
+			local equal_count = 0
+			for k, v in pairs(G.GAME.hands) do
+			   if v.played == play_count then
+				  equal_count = equal_count + 1
+			   end
+			end
+			local all_equal = equal_count == #G.GAME.hands
+			card.joker_display_values.most_played_hand = all_equal and "All"
+					 or (equal_count > 1 and "Multiple") or localize(most_played, 'poker_hands')
+		 end
 	end,
 }
 
@@ -484,7 +456,6 @@ jd_def["j_twewy_stormWarning"] = {
 	text_config = { colour = G.C.CHIPS }
 }
 
--- TODO: Fix Candle Service. Currently does not work as intended when scoring a hand.
 -- Candle Service
 jd_def["j_twewy_candleService"] = {
 	text = {
@@ -504,27 +475,21 @@ jd_def["j_twewy_candleService"] = {
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
 		local text, _, scoring_hand = JokerDisplay.evaluate_hand(hand)
 
-		local played = card.ability.extra.played
-		local in_hand_played = 0
-		local num_of_activations = 0
+		local played = 0
 
-		for k, v in pairs(scoring_hand) do
-			if v:get_id() == 2 or v:get_id() == 3 or v:get_id() == 4 or v:get_id() == 5 then
-				in_hand_played = in_hand_played + JokerDisplay.calculate_card_triggers(v, scoring_hand, false)
-
-				while in_hand_played > 0 do
-					played = played + 1
-					in_hand_played = in_hand_played - 1
-
-					if played == card.ability.extra.req then
-						num_of_activations = num_of_activations + 1
-						played = 0
-					end
+		if text ~= "Unknown" then
+			for k, v in pairs(scoring_hand) do
+				if v:get_id() == 2 or v:get_id() == 3 or v:get_id() == 4 or v:get_id() == 5 then
+					played = played + JokerDisplay.calculate_card_triggers(v, scoring_hand, false)
 				end
 			end
 		end
 
-		card.joker_display_values.chips = card.ability.extra.chips * num_of_activations
+		local triggers_when_played = math.floor(played / card.ability.extra.req) + 
+			((card.ability.extra.played - (played % card.ability.extra.req)) < 0 and 1 or 0)
+		local triggers = next(G.play.cards) and triggers_when_played or math.floor((played + card.ability.extra.played) / card.ability.extra.req)
+
+		card.joker_display_values.chips = card.ability.extra.chips * triggers
 	end,
 }
 
@@ -541,9 +506,9 @@ jd_def["j_twewy_aquaMonster"] = {
 
 	calc_function = function(card)
 		local hand = next(G.play.cards) and G.play.cards or G.hand.highlighted
-		local text, poker_hands, scoring_hand = JokerDisplay.evaluate_hand(hand)
+		local _, poker_hands, _ = JokerDisplay.evaluate_hand(hand)
 
-		card.joker_display_values.active = poker_hands and next(poker_hands["Three of a Kind"]) and true or false
+		card.joker_display_values.active = poker_hands and poker_hands["Three of a Kind"] and next(poker_hands["Three of a Kind"]) and true or false
 		card.joker_display_values.active_text = card.joker_display_values.active and "Active!" or "Inactive"
 	end,
 
