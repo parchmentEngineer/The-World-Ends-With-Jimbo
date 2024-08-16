@@ -15,8 +15,8 @@ local mod_path = ''..SMODS.current_mod.path
 local stuffToAdd = {}
 
 --JokerDisplay mod integration
-if SMODS.Mods["JokerDisplay"] then
-	JOKER_DISPLAY = NFS.load(mod_path .. "/JokerDisplayIntegration.lua")()
+if JokerDisplay then
+	SMODS.load_file("JokerDisplayIntegration.lua")()
 end
 
 -- G.localization.descriptions["Other"]["p_twewy_gatitoPack"] = {
